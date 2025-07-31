@@ -1,5 +1,6 @@
 using Perennial.Core.Architecture.Event_Bus;
 using Perennial.Core.Architecture.Event_Bus.Events;
+using UnityEngine;
 
 namespace Perennial.TurnController.States
 {
@@ -12,6 +13,8 @@ namespace Perennial.TurnController.States
 
         public override void OnEnter()
         {
+            Debug.Log($"{this} started");
+            
             // Notify that a turn has started
             EventBus<TurnEnded>.Raise(new TurnEnded()
             {

@@ -3,13 +3,14 @@ using System.Threading.Tasks;
 using Perennial.Core.Architecture.Event_Bus;
 using Perennial.Core.Architecture.Event_Bus.Events;
 using Sirenix.OdinInspector;
+using UnityEngine;
 
 namespace Perennial.Actions
 {
     public class CommandManager : SerializedMonoBehaviour
     {
 
-        private Queue<ICommand> _commandsQueue;
+        [SerializeField] private Queue<ICommand> _commandsQueue;
         private EventBinding<PerformCommand> _performCommandEventBinding;
         private bool _isRunning; 
         

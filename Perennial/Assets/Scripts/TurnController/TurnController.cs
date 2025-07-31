@@ -1,11 +1,8 @@
-using System;
 using Perennial.Core.Architecture.Event_Bus;
 using Perennial.Core.Architecture.Event_Bus.Events;
 using UnityEngine;
 using Perennial.Core.Architecture.State_Machine;
 using Perennial.TurnController.States;
-using Unity.VisualScripting;
-using UnityEngine.Rendering;
 using StateMachine = Perennial.Core.Architecture.State_Machine.StateMachine;
 
 
@@ -31,10 +28,8 @@ namespace Perennial.TurnController
         private bool _endTurn;
 
         #region Properties
-        public State StateFinished { set => _stateFinished = value;}
-
-        public int ActionsTaken { set{ if (value < 0) value = 0; _actionsTaken = value; } }
-
+        public State StateFinished { get => _stateFinished; set => _stateFinished = value;}
+        
         #endregion
 
         private void Start()
@@ -85,17 +80,25 @@ namespace Perennial.TurnController
            _stateMachine.At(actionState, endTurnState, new FuncPredicate(() => _actionsTaken >= allowedActions || _endTurn)); 
            _stateMachine.At(endTurnState, startTurnState, new FuncPredicate(() => _stateFinished == State.End));
            
-           //start at start
-           _stateMachine.SetState(startTurnState);
-           
            //enum to end so it doesn't auto transition(start state sets it to start)
            _stateFinished = State.End;
+           
+           //start at start
+           _stateMachine.SetState(startTurnState);
         }
 
         /// <summary>
         /// Called when an action is taken
         /// </summary>
         private void TakeAction() => _actionsTaken++;
+
+        /// <summary>
+        /// Resets actions taken to 0
+        /// </summary>
+        public void ResetActions()
+        {
+            _actionsTaken = 0;
+        }
 
 
     }
