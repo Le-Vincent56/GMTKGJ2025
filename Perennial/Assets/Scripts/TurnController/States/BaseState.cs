@@ -9,7 +9,7 @@ namespace Perennial.TurnController.States
     public class BaseState : IState
     {
         protected readonly TurnController turnController;
-        public BaseState(TurnController turnController)
+        protected  BaseState(TurnController turnController)
         {
             this.turnController = turnController;
         }

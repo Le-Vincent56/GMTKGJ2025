@@ -16,6 +16,8 @@ namespace Perennial.TurnController.States
             {
             
             });
+            
+            turnController.StateFinished = State.Start;
         }
     }
 }
