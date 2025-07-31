@@ -4,8 +4,8 @@ namespace Perennial.Plants.Behaviors
 {
     public abstract class PlantBehaviorInstance
     {
-        protected Plant owner;
-        protected PlantBehavior definition;
+        protected readonly Plant owner;
+        protected readonly PlantBehavior definition;
         
         public Plant Owner => owner;
         public PlantBehavior Definition => definition;
