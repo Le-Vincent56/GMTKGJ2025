@@ -11,7 +11,7 @@ namespace Perennial.Actions.Commands
         public override  async Task Execute()
         {
             Debug.Log("Planting a plant");
-            await Awaitable.WaitForSecondsAsync(3f); //TODO temp line
+            await Awaitable.WaitForSecondsAsync(3f);  //TODO ADD LOGIC
             Debug.Log("Finished planting");
         }
     }
