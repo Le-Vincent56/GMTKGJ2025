@@ -1,0 +1,12 @@
+using UnityEngine;
+
+namespace Perennial.Actions
+{
+    public interface ICommand
+    {
+        /// <summary>
+        /// Executes a given command
+        /// </summary>
+        void Execute();
+    }
+}
