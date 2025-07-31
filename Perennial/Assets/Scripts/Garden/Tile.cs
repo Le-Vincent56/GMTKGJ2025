@@ -69,7 +69,7 @@ namespace Perennial.Garden
 			set
 			{
 				_gardenPosition = value;
-				IsAtGardenEdge = Garden.Instance.IsPositionAtGardenEdge(_gardenPosition.x, _gardenPosition.y);
+				IsAtGardenEdge = GardenManager.Instance.IsPositionAtGardenEdge(_gardenPosition.x, _gardenPosition.y);
 			}
 		}
 

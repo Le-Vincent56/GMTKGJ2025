@@ -1,13 +1,14 @@
-﻿using Perennial.Plants.Behaviors;
+﻿using Perennial.Garden;
+using Perennial.Plants.Behaviors;
 
 namespace Perennial.Plants
 {
     public static class PlantFactory
     {
-        public static PlantBase CreatePlant(PlantDefinition definition, Tile tile = null, Garden garden = null)
+        public static PlantBase CreatePlant(PlantDefinition definition, Tile tile = null, GardenManager gardenManager = null)
         {
             // Create a new plant
-            Plant plant = new Plant(definition, tile, garden);
+            Plant plant = new Plant(definition, tile, gardenManager);
 
             foreach (PlantBehavior behaviorDefinition in definition.Behaviors)
             {

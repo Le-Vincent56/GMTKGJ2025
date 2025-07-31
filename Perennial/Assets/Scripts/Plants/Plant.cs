@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using Perennial.Garden;
 using Perennial.Plants.Abilities;
 using Perennial.Plants.Behaviors;
 
@@ -12,8 +13,8 @@ namespace Perennial.Plants
         
         
 
-        public Plant(PlantDefinition definition, Tile tile, Garden garden)
-            : base(definition, tile, garden)
+        public Plant(PlantDefinition definition, Tile tile, GardenManager gardenManager)
+            : base(definition, tile, gardenManager)
         {
             // Behaviors are initialized by the factory
         }

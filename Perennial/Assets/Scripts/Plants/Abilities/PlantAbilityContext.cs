@@ -1,17 +1,19 @@
-﻿namespace Perennial.Plants.Abilities
+﻿using Perennial.Garden;
+
+namespace Perennial.Plants.Abilities
 {
     public class PlantAbilityContext
     {
         public PlantBase Plant { get; }
         public Tile OriginTile { get; }
-        public Garden Garden { get; }
+        public GardenManager GardenManager { get; }
         public int CurrentTurn { get; }
 
-        public PlantAbilityContext(PlantBase plant, Tile originTile, Garden garden, int currentTurn)
+        public PlantAbilityContext(PlantBase plant, Tile originTile, GardenManager gardenManager, int currentTurn)
         {
             Plant = plant;
             OriginTile = originTile;
-            Garden = garden;
+            GardenManager = gardenManager;
             CurrentTurn = currentTurn;
         }
     }

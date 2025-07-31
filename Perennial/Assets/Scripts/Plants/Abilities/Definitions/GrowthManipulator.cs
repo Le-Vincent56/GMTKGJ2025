@@ -12,7 +12,7 @@ namespace Perennial.Plants.Abilities.Definitions
         
         public override void OnTick(PlantAbilityContext context)
         {
-            List<PlantBase> affectedPlants = context.Garden.GetSurroundingPlants(
+            List<PlantBase> affectedPlants = context.GardenManager.GetSurroundingPlants(
                 context.OriginTile.GardenPosition.x,
                 context.OriginTile.GardenPosition.y,
                 effectRadius

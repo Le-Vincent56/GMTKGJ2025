@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using Perennial.Garden;
 using Perennial.Plants.Abilities;
 using Perennial.Plants.Behaviors;
 
@@ -11,7 +12,7 @@ namespace Perennial.Plants
         private PlantAbility[] _abilities;
         private readonly List<PlantBehaviorInstance> _behaviors = new List<PlantBehaviorInstance>();
         private Tile _currentTile;
-        private Garden _garden;
+        private GardenManager _gardenManager;
 
         public string Name => _definition.Name;
         public int CurrentLifetime { get; protected set; }
@@ -20,11 +21,11 @@ namespace Perennial.Plants
         public bool SkipPassive { get; set; }
         public List<PlantBehaviorInstance> Behaviors => _behaviors;
 
-        protected PlantBase(PlantDefinition definition, Tile currentTile, Garden garden)
+        protected PlantBase(PlantDefinition definition, Tile currentTile, GardenManager gardenManager)
         {
             this._definition = definition;
             this._currentTile = currentTile;
-            this._garden = garden;
+            this._gardenManager = gardenManager;
             _abilities = definition.Abilities;
             CurrentLifetime = 0;
         }
@@ -92,7 +93,7 @@ namespace Perennial.Plants
         {
             // TODO: Get the current turn from somewhere
             int currentTurn = 0;
-            return new PlantAbilityContext(this, _currentTile, _garden, currentTurn);
+            return new PlantAbilityContext(this, _currentTile, _gardenManager, currentTurn);
         }
         
         /// <summary>
