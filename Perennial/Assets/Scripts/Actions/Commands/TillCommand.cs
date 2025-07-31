@@ -11,6 +11,8 @@ namespace Perennial.Actions.Commands
         public override async Task Execute()
         {
             Debug.Log("Tilling ground");
+            await Awaitable.WaitForSecondsAsync(3f); //TODO temp line
+            Debug.Log("Finished tilling");
         }
     }
 }

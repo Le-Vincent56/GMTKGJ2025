@@ -1,5 +1,7 @@
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Perennial.Actions.Commands;
 using Perennial.Core.Architecture.Event_Bus;
 using Perennial.Core.Architecture.Event_Bus.Events;
 using Sirenix.OdinInspector;
@@ -7,13 +9,31 @@ using UnityEngine;
 
 namespace Perennial.Actions
 {
-    public class CommandManager : SerializedMonoBehaviour
+    public class CommandManager : MonoBehaviour
     {
 
-        [SerializeField] private Queue<ICommand> _commandsQueue;
+        private Queue<ICommand> _commandsQueue;
         private EventBinding<PerformCommand> _performCommandEventBinding;
-        private bool _isRunning; 
-        
+        private bool _isRunning;
+
+        private void Start()
+        {
+            _commandsQueue = new Queue<ICommand>();
+            
+            EventBus<PerformCommand>.Raise(new PerformCommand()
+            {
+               Command = BaseCommand.Create<PlantCommand>()
+            });
+            EventBus<PerformCommand>.Raise(new PerformCommand()
+            {
+                Command = BaseCommand.Create<HarvestCommand>()
+            });
+            EventBus<PerformCommand>.Raise(new PerformCommand()
+            {
+                Command = BaseCommand.Create<TillCommand>()
+            });
+        }
+
         private void OnEnable()
         {
             _performCommandEventBinding = new EventBinding<PerformCommand>((data) =>
