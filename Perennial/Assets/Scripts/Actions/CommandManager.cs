@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using Perennial.Core.Architecture.Event_Bus;
 using Perennial.Core.Architecture.Event_Bus.Events;
 using Sirenix.OdinInspector;
@@ -6,13 +8,17 @@ namespace Perennial.Actions
 {
     public class CommandManager : SerializedMonoBehaviour
     {
-        private EventBinding<PerformCommand> _performCommandEventBinding;
 
+        private Queue<ICommand> _commandsQueue;
+        private EventBinding<PerformCommand> _performCommandEventBinding;
+        private bool _isRunning; 
+        
         private void OnEnable()
         {
             _performCommandEventBinding = new EventBinding<PerformCommand>((data) =>
             {
-                ExecuteCommand(data.Command);
+                _commandsQueue.Enqueue(data.Command);
+                if (!_isRunning) ExecuteCommands(); // no need to await
             });
             
             EventBus<PerformCommand>.Register(_performCommandEventBinding);
@@ -22,14 +28,20 @@ namespace Perennial.Actions
         {
             EventBus<PerformCommand>.Deregister(_performCommandEventBinding);
         }
+        
 
         /// <summary>
-        /// Executes a given command. 
+        /// Executes the commands in order of oldest to newest.
         /// </summary>
-        /// <param name="command">ICommand to call its Execute function</param>
-        private void ExecuteCommand(ICommand command)
+        private  async Task ExecuteCommands()
         {
-            command.Execute();
+            _isRunning = true;
+            while (_commandsQueue.Count > 0)
+            {
+                ICommand command = _commandsQueue.Dequeue();
+                await command.Execute();
+            }
+            _isRunning = false;
         }
         
     }
