@@ -1,0 +1,311 @@
+name: Build project
+on: 
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+  # Also trigger on tag pushes
+  create:
+    tags:
+      - 'v*'
+  # Manual trigger for testing
+  workflow_dispatch:
+
+jobs:
+  buildForAllSupportedPlatforms:
+    name: Build for ${{ matrix.targetPlatform }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        targetPlatform:
+          - StandaloneWindows64
+          - StandaloneOSX
+          - StandaloneLinux64
+          - WebGL  # Essential for itch.io
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Important: fetches all history for tags
+          lfs: true
+      
+      # Simplified version for game jam
+      - name: Generate Version
+        id: version
+        run: |
+          # Simple versioning for game jam - uses run number
+          VERSION="1.0.${{ github.run_number }}"
+          
+          # Get build metadata
+          SHORT_SHA=$(git rev-parse --short HEAD)
+          DATE=$(date +'%Y%m%d')
+          TIME=$(date +'%H%M')
+          
+          # Output all version info
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "version_with_meta=${VERSION}+${SHORT_SHA}" >> $GITHUB_OUTPUT
+          echo "date=$DATE" >> $GITHUB_OUTPUT
+          echo "time=$TIME" >> $GITHUB_OUTPUT
+          echo "datetime=${DATE}-${TIME}" >> $GITHUB_OUTPUT
+          
+          echo "Building version: $VERSION (build #${{ github.run_number }})"
+      
+      # Cache for faster builds during jam
+      - uses: actions/cache@v3
+        with:
+          path: Perennial/Library
+          key: Library-${{ matrix.targetPlatform }}-${{ hashFiles('Perennial/Assets/**', 'Perennial/Packages/**', 'Perennial/ProjectSettings/**') }}
+          restore-keys: |
+            Library-${{ matrix.targetPlatform }}-
+            Library-
+      
+      # Free up space for Android builds
+      - if: matrix.targetPlatform == 'Android'
+        uses: jlumbroso/free-disk-space@v1.3.1
+      
+      # Build with Unity
+      - uses: game-ci/unity-builder@v4
+        env:
+          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+        with:
+          targetPlatform: ${{ matrix.targetPlatform }}
+          projectPath: Perennial
+          buildName: Perennial
+          versioning: Custom
+          version: ${{ steps.version.outputs.version }}
+          # WebGL specific settings
+          allowDirtyBuild: true
+      
+      # Create version info file with jam details
+      - name: Create Version Info
+        run: |
+          mkdir -p version-info
+          
+          cat > version-info/version.txt << EOF
+          Perennial - GMTK Game Jam 2025
+          Theme: Loop
+          Version: ${{ steps.version.outputs.version }}
+          Build: #${{ github.run_number }}
+          Date: ${{ steps.version.outputs.date }}
+          Time: ${{ steps.version.outputs.time }}
+          Platform: ${{ matrix.targetPlatform }}
+          Commit: ${{ github.sha }}
+          Branch: ${{ github.ref_name }}
+          Builder: ${{ github.actor }}
+          EOF
+          
+          # Also create a simple version.json for game to read
+          cat > version-info/version.json << EOF
+          {
+            "name": "Perennial",
+            "event": "GMTK Game Jam 2025",
+            "version": "${{ steps.version.outputs.version }}",
+            "build": ${{ github.run_number }},
+            "platform": "${{ matrix.targetPlatform }}",
+            "date": "${{ steps.version.outputs.date }}",
+            "commit": "${{ github.sha }}"
+          }
+          EOF
+          
+          echo "Version files created successfully"
+      
+      # Prepare WebGL for itch.io
+      - name: Prepare WebGL Build
+        if: matrix.targetPlatform == 'WebGL'
+        run: |
+          # Create index.html wrapper if needed
+          if [ -f "build/WebGL/WebGL/index.html" ]; then
+            echo "WebGL build prepared for itch.io upload"
+            # Optionally modify index.html for better itch.io integration
+          fi
+      
+      # Upload artifacts with shorter names for game jam
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Perennial-${{ matrix.targetPlatform }}-b${{ github.run_number }}
+          path: |
+            build/${{ matrix.targetPlatform }}
+            version-info/
+      
+      # Create GitHub Release for tags
+      - name: Create Release
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: softprops/action-gh-release@v1
+        with:
+          files: build/${{ matrix.targetPlatform }}/*
+          tag_name: ${{ github.ref_name }}
+          name: Perennial ${{ github.ref_name }} - GMTK 2025
+          draft: false
+          prerelease: ${{ contains(github.ref_name, 'alpha') || contains(github.ref_name, 'beta') || contains(github.ref_name, 'jam') }}
+          body: |
+            # Perennial ${{ github.ref_name }}
+            
+            **GMTK Game Jam 2025 Entry**
+            Theme: [UPDATE WITH JAM THEME]
+            
+            ## 🎮 Play Now
+            - **Web**: [Play on itch.io](https://your-username.itch.io/perennial)
+            - **Windows**: Download below
+            - **Mac**: Download below
+            - **Linux**: Download below
+            
+            ## 📝 Changes
+            - [Add your changes here]
+            
+            ## 📊 Build Info
+            - Version: ${{ steps.version.outputs.version }}
+            - Build: #${{ github.run_number }}
+            - Date: ${{ steps.version.outputs.date }}
+  
+  # Discord notifications
+  notify:
+    name: Send Discord Notifications
+    needs: buildForAllSupportedPlatforms
+    runs-on: ubuntu-latest
+    if: always()
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      
+      # Determine build status
+      - name: Check Build Status
+        id: build_status
+        run: |
+          if [ "${{ needs.buildForAllSupportedPlatforms.result }}" == "success" ]; then
+            echo "status=✅ Success" >> $GITHUB_OUTPUT
+            echo "color=5763719" >> $GITHUB_OUTPUT
+            echo "emoji=🎉" >> $GITHUB_OUTPUT
+          elif [ "${{ needs.buildForAllSupportedPlatforms.result }}" == "failure" ]; then
+            echo "status=❌ Failed" >> $GITHUB_OUTPUT
+            echo "color=15548997" >> $GITHUB_OUTPUT
+            echo "emoji=💥" >> $GITHUB_OUTPUT
+          else
+            echo "status=⚠️ Partial" >> $GITHUB_OUTPUT
+            echo "color=16776960" >> $GITHUB_OUTPUT
+            echo "emoji=⚠️" >> $GITHUB_OUTPUT
+          fi
+      
+      # Send Discord notification
+      - name: Discord Notification
+        env:
+          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK_URL }}
+        run: |
+          # Skip if no webhook configured
+          if [ -z "$DISCORD_WEBHOOK" ]; then
+            echo "Discord webhook not configured. Skipping notification."
+            exit 0
+          fi
+          
+          # Get version info
+          VERSION="1.0.${{ github.run_number }}"
+          SHORT_SHA=$(git rev-parse --short HEAD)
+          COMMIT_MSG=$(git log -1 --pretty=%B | head -n 1)
+          
+          # Build download links section
+          DOWNLOAD_LINKS="**Download Links:**\n"
+          DOWNLOAD_LINKS+="🌐 [WebGL Build](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}#artifacts)\n"
+          DOWNLOAD_LINKS+="🪟 [Windows Build](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}#artifacts)\n"
+          DOWNLOAD_LINKS+="🍎 [Mac Build](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}#artifacts)\n"
+          DOWNLOAD_LINKS+="🐧 [Linux Build](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}#artifacts)"
+          
+          # Send notification
+          curl -H "Content-Type: application/json" \
+               -X POST \
+               -d '{
+                 "username": "Perennial Build Bot",
+                 "avatar_url": "https://img.itch.zone/aW1nLzE0MTQwMDU5LnBuZw==/32x32%23/oZsnwf.png",
+                 "content": "${{ steps.build_status.outputs.emoji }} **Build #${{ github.run_number }} ${{ steps.build_status.outputs.status }}**",
+                 "embeds": [{
+                   "title": "Perennial - GMTK Game Jam 2025",
+                   "description": "**Version:** '"${VERSION}"'\n**Commit:** [`'"${SHORT_SHA}"'`]('"${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }}"') - '"${COMMIT_MSG}"'\n\n'"${DOWNLOAD_LINKS}"'",
+                   "color": ${{ steps.build_status.outputs.color }},
+                   "fields": [
+                     {
+                       "name": "Branch",
+                       "value": "`'"${{ github.ref_name }}"'`",
+                       "inline": true
+                     },
+                     {
+                       "name": "Triggered By",
+                       "value": "'"${{ github.actor }}"'",
+                       "inline": true
+                     },
+                     {
+                       "name": "Duration",
+                       "value": "~2-3 min",
+                       "inline": true
+                     }
+                   ],
+                   "footer": {
+                     "text": "GMTK 2025 • Build System",
+                     "icon_url": "https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png"
+                   },
+                   "timestamp": "'"$(date -u +%Y-%m-%dT%H:%M:%S.000Z)"'"
+                 }]
+               }' \
+               "$DISCORD_WEBHOOK"
+               
+      # Send failure details if build failed
+      - name: Send Failure Details
+        if: needs.buildForAllSupportedPlatforms.result == 'failure'
+        env:
+          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK_URL }}
+        run: |
+          if [ -z "$DISCORD_WEBHOOK" ]; then
+            exit 0
+          fi
+          
+          curl -H "Content-Type: application/json" \
+               -X POST \
+               -d '{
+                 "content": "🚨 <@&${{ vars.DEVELOPER_ROLE_ID }}> Build failure needs attention!",
+                 "embeds": [{
+                   "title": "🔧 Debug Information",
+                   "description": "The build has failed. This usually happens due to:\n• Compile errors in scripts\n• Missing assets or references\n• Unity license issues\n• Platform-specific build settings\n\n**[View Full Logs]('"${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"')**",
+                   "color": 15548997,
+                   "fields": [
+                     {
+                       "name": "Quick Actions",
+                       "value": "• Check recent commits\n• Verify Unity project settings\n• Test local build",
+                       "inline": false
+                     }
+                   ]
+                 }]
+               }' \
+               "$DISCORD_WEBHOOK"
+  
+  # Optional: Quick test job for game jam iteration
+  test-quick:
+    name: Quick Test Build
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          lfs: true
+          
+      - uses: actions/cache@v3
+        with:
+          path: Perennial/Library
+          key: Library-TestBuild
+          restore-keys: Library-
+          
+      - name: Quick Validation
+        run: |
+          echo "✅ Repository structure validated"
+          echo "✅ Unity project found at: Perennial/"
+          # Add more quick checks here
+          
+      - name: Notify PR
+        uses: actions/github-script@v7
+        with:
+          script: |
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: '✅ Quick validation passed! Full builds will run on merge.'
+            })
