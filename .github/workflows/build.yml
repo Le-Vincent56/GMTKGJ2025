@@ -85,7 +85,7 @@ jobs:
           
           cat > version-info/version.txt << EOF
           Perennial - GMTK Game Jam 2025
-          Theme: [UPDATE WITH JAM THEME]
+          Theme: Loop
           Version: ${{ steps.version.outputs.version }}
           Build: #${{ github.run_number }}
           Date: ${{ steps.version.outputs.date }}
