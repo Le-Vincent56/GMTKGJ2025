@@ -15,6 +15,7 @@ namespace Perennial.Garden
 		[SerializeField, Range(1, 20)] private int _gardenHeight = 1;
 		[SerializeField, Range(0f, 1f)] private float startTilledPercentage = 0.5f;
 		[SerializeField, Range(0f, 1f)] private float _plantMutationPercentage = 0.1f;
+		[SerializeField, Range(0f, 1f)] private float _grassSpreadPercentage = 0.1f;
 
 		// [0, 0] corresponds to the bottom-left corner of the garden
 		private Tile[ , ] garden;
@@ -51,6 +52,11 @@ namespace Perennial.Garden
 		/// </summary>
 		public float PlantMutationPercentage => _plantMutationPercentage;
 
+		/// <summary>
+		/// The chance for grass to spread on any given check
+		/// </summary>
+		public float GrassSpreadPercentage => _grassSpreadPercentage;
+
 		protected override void Awake ( )
 		{
 			base.Awake( );
@@ -67,6 +73,19 @@ namespace Perennial.Garden
 			GenerateTiles( );
 		}
 
+		// For testing grass spread
+		//float timer = 0f;
+		//private void Update ( )
+		//{
+		//	timer += Time.deltaTime;
+		//	if (timer >= 1f)
+		//	{
+		//		Debug.Log("Updated Grass Spread");
+		//		UpdateGrassSpread( );
+		//		timer = 0f;
+		//	}
+		//}
+
 		/// <summary>
 		/// Check to see if a given position is inside the bounds of the garden
 		/// </summary>
@@ -76,6 +95,17 @@ namespace Perennial.Garden
 		public bool IsPositionInBounds (int x, int y)
 		{
 			return (x >= 0 && x < GardenWidth && y >= 0 && y < GardenHeight);
+		}
+
+		/// <summary>
+		/// Check to see if a specific position is along the edges of the garden
+		/// </summary>
+		/// <param name="x">The x coordinate to check</param>
+		/// <param name="y">The y coordinate to check</param>
+		/// <returns>true if the position is on the edges of the garden, false otherwise</returns>
+		public bool IsPositionAtGardenEdge (int x, int y)
+		{
+			return (x == 0 || x == GardenWidth - 1 || y == 0 || y == GardenHeight - 1);
 		}
 
 		/// <summary>
@@ -118,7 +148,7 @@ namespace Perennial.Garden
 		/// <param name="plant">The plant to add to the garden</param>
 		/// <param name="tile">The tile to add the plant to</param>
 		/// <returns>true if the plant was successfully placed in the garden, false otherwise</returns>
-		public bool AddPlantToTile(Plant plant, Tile tile)
+		public bool AddPlantToTile (Plant plant, Tile tile)
 		{
 			if (tile == null || tile.HasPlant)
 			{
@@ -171,21 +201,34 @@ namespace Perennial.Garden
 		}
 
 		/// <summary>
+		/// Get all of the surrounding tiles around a tile within a given radius. Surrounding tiles includes all cardinal directions as well as all four diagonal directions
+		/// </summary>
+		/// <param name="tile">The tile to check the surrounding tiles of</param>
+		/// <param name="radius">The radius around the specified tile to get the surrounding tiles of. The minimum value this can be is 1</param>
+		/// <param name="onlyEmptyTiles">If true, all tiles returned in the final list will be tiles without a plant on them</param>
+		/// <returns>A list of surrounding tiles to the specified tile, excluding the specified tile. There will be no null values in this list</returns>
+		public List<Tile> GetSurroundingTiles (Tile tile, int radius = 1, bool onlyEmptyTiles = false)
+		{
+			return GetSurroundingTiles(tile.GardenPosition.x, tile.GardenPosition.y, radius: radius, onlyEmptyTiles: onlyEmptyTiles);
+		}
+
+		/// <summary>
 		/// Get all of the surrounding tiles around a position within a given radius. Surrounding tiles includes all cardinal directions as well as all four diagonal directions
 		/// </summary>
 		/// <param name="x">The x position to get the surrounding tiles of</param>
 		/// <param name="y">The y position to get the surrounding tiles of</param>
-		/// <param name="radius">The radius around the specified to get the surrounding tiles of. The minimum value this can be is 1</param>
+		/// <param name="radius">The radius around the specified position to get the surrounding tiles of. The minimum value this can be is 1</param>
+		/// <param name="onlyEmptyTiles">If true, all tiles returned in the final list will be tiles without a plant on them</param>
 		/// <returns>A list of surrounding tiles to the specified position, excluding the tile at the specified position. There will be no null values in this list</returns>
-		public List<Tile> GetSurroundingTiles (int x, int y, int radius = 1)
+		public List<Tile> GetSurroundingTiles (int x, int y, int radius = 1, bool onlyEmptyTiles = false)
 		{
 			List<Tile> surroundingTiles = new List<Tile>( );
 			radius = Mathf.Max(1, radius);
 
 			Tile tile;
-			for (int i = -radius; i >= radius; i++)
+			for (int i = -radius; i <= radius; i++)
 			{
-				for (int j = -radius; j >= radius; j++)
+				for (int j = -radius; j <= radius; j++)
 				{
 					if (i == 0 && j == 0)
 					{
@@ -194,10 +237,17 @@ namespace Perennial.Garden
 
 					tile = GetTileAtPosition(x + i, y + j);
 
-					if (tile != null)
+					if (tile == null)
 					{
-						surroundingTiles.Add(tile);
+						continue;
 					}
+
+					if (onlyEmptyTiles && tile.HasPlant)
+					{
+						continue;
+					}
+
+					surroundingTiles.Add(tile);
 				}
 			}
 
@@ -217,9 +267,9 @@ namespace Perennial.Garden
 			radius = Mathf.Max(1, radius);
 
 			Plant plant;
-			for (int i = -radius; i >= radius; i++)
+			for (int i = -radius; i <= radius; i++)
 			{
-				for (int j = -radius; j >= radius; j++)
+				for (int j = -radius; j <= radius; j++)
 				{
 					if (i == 0 && j == 0)
 					{
@@ -331,6 +381,78 @@ namespace Perennial.Garden
 		}
 
 		/// <summary>
+		/// Get a list of tiles that have a certain soil state
+		/// </summary>
+		/// <param name="tiles">The list of tiles to check</param>
+		/// <param name="soilState">The soil state to check for</param>
+		/// <returns>A list of all the tiles within the inputted list that have the specified soil state</returns>
+		public List<Tile> GetTilesOfSoilState (List<Tile> tiles, SoilState soilState)
+		{
+			return tiles.Where(tile => tile.SoilState == soilState).ToList( );
+		}
+
+		/// <summary>
+		/// Get a list of tiles that do not have a certain soil state
+		/// </summary>
+		/// <param name="tiles">The list of tiles to check</param>
+		/// <param name="soilState">The soil state the returned tiles cannot be</param>
+		/// <returns>A list of all the tiles within the inputted list that do not have the specified soil state</returns>
+		public List<Tile> GetTilesNotOfSoilState (List<Tile> tiles, SoilState soilState)
+		{
+			return tiles.Where(tile => tile.SoilState != soilState).ToList( );
+		}
+
+		/// <summary>
+		/// Get a list of tiles that do not have a certain soil state and are empty
+		/// </summary>
+		/// <param name="tiles">The list of tiles to check</param>
+		/// <param name="soilState">THe soil state the returned tiles cannot have</param>
+		/// <returns>A list of all the tiles within the inputted list that do not have the specified soil state and are empty</returns>
+		public List<Tile> GetEmptyTilesNotOfSoilState (List<Tile> tiles, SoilState soilState)
+		{
+			return tiles.Where(tile => tile.SoilState != soilState && !tile.HasPlant).ToList( );
+		}
+
+		/// <summary>
+		/// Update the spread of grass throughout the garden
+		/// </summary>
+		public void UpdateGrassSpread ( )
+		{
+			List<Tile> spreadableTiles = GetGrassSpreadableTiles( );
+			for (int i = 0; i < spreadableTiles.Count; i++)
+			{
+				// Roll for a random chance to spread grass
+				if (Random.Range(0f, 1f) > GrassSpreadPercentage)
+				{
+					continue;
+				}
+
+				// The grass spread was successful
+				spreadableTiles[i].SoilState = SoilState.GRASS;
+			}
+		}
+
+		/// <summary>
+		/// Get a list of all the tiles that grass can currently spread to
+		/// </summary>
+		/// <returns>A list of all the tiles that grass can currently spread to</returns>
+		private List<Tile> GetGrassSpreadableTiles ( )
+		{
+			// Spreadable tiles are all tiles that are on the edge of the garden or are directly surrounding a current grass tile
+			// Spreadable tiles are also empty and have no plant on them, as grass does not get rid of plants
+			List<Tile> possibleTiles = new List<Tile>( );
+
+			// Add all edge tiles
+			possibleTiles.AddRange(Tiles.Where(tile => tile.IsAtGardenEdge));
+
+			// Add all tiles that surround grass tiles
+			GetTilesOfSoilState(Tiles, SoilState.GRASS).ForEach(grassTile => possibleTiles.AddRange(GetSurroundingTiles(grassTile)));
+
+			// Filter out all grass tiles and non-empty tiles
+			return GetEmptyTilesNotOfSoilState(possibleTiles, SoilState.GRASS).Distinct( ).ToList( );
+		}
+
+		/// <summary>
 		/// Check for and update all mutations for plants within the garden (Not Fully Implemented)
 		/// </summary>
 		public void UpdatePlantMutations ( )
@@ -412,9 +534,9 @@ namespace Perennial.Garden
 			// Randomly till a certain percentage of tiles at the start of the game
 			List<Tile> shuffledTileList = Tiles.OrderBy(x => Random.value).ToList( );
 			int tilledSoilCount = Mathf.CeilToInt(GardenArea * startTilledPercentage);
-			for (int i = 0; i < tilledSoilCount; i++)
+			for (int i = 0; i < Tiles.Count; i++)
 			{
-				shuffledTileList[i].SoilState = SoilState.TILLED;
+				shuffledTileList[i].SoilState = (i < tilledSoilCount ? SoilState.TILLED : SoilState.GRASS);
 			}
 		}
 	}

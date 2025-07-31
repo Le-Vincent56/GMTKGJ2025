@@ -22,6 +22,7 @@ namespace Perennial.Garden
 		[Space]
 		[SerializeField] private SoilState _soilState;
 		[SerializeField] private Vector2Int _gardenPosition;
+		[SerializeField] private bool _isAtGardenEdge;
 		private Plant _plant;
 
 		/// <summary>
@@ -63,7 +64,19 @@ namespace Perennial.Garden
 		/// <summary>
 		/// The position of this tile within the garden
 		/// </summary>
-		public Vector2Int GardenPosition { get => _gardenPosition; set => _gardenPosition = value; }
+		public Vector2Int GardenPosition {
+			get => _gardenPosition;
+			set
+			{
+				_gardenPosition = value;
+				IsAtGardenEdge = Garden.Instance.IsPositionAtGardenEdge(_gardenPosition.x, _gardenPosition.y);
+			}
+		}
+
+		/// <summary>
+		/// Whether or not this tile is at the edge of the garden
+		/// </summary>
+		public bool IsAtGardenEdge { get => _isAtGardenEdge; private set => _isAtGardenEdge = value; }
 
 		/// <summary>
 		/// Whether or not the tooltip for this tile is currently active and visible
