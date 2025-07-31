@@ -29,6 +29,7 @@ namespace Perennial.TurnController
 
         #region Properties
         public State StateFinished { get => _stateFinished; set => _stateFinished = value;}
+        public bool EndTurn { set => _endTurn = value; }
         
         #endregion
 

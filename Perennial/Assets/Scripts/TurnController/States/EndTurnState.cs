@@ -15,12 +15,15 @@ namespace Perennial.TurnController.States
         {
             Debug.Log($"{this} started");
             
+            //reset end turn
+            turnController.EndTurn = false;
+            
             // Notify that a turn has started
             EventBus<TurnEnded>.Raise(new TurnEnded()
             {
 
             });
-
+            
             turnController.StateFinished = State.End;
         }
     }
