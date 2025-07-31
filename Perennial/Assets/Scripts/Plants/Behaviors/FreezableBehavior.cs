@@ -10,9 +10,9 @@ namespace Perennial.Plants.Behaviors
         [Header("Freeze Settings")] 
         [SerializeField] bool canBeFrozen = true;
 
-        public override PlantBehaviorInstance CreateInstance(PlantBase plantBase)
+        public override PlantBehaviorInstance CreateInstance(Plant plant)
         {
-            return new FreezableBehaviorInstance(plantBase, this, canBeFrozen);
+            return new FreezableBehaviorInstance(plant, this, canBeFrozen);
         }
     }
     
@@ -23,7 +23,7 @@ namespace Perennial.Plants.Behaviors
         
         public bool IsFrozen => _frozenTurnsRemaining > 0;
 
-        public FreezableBehaviorInstance(PlantBase owner, FreezableBehavior definition, bool canBeFrozen)
+        public FreezableBehaviorInstance(Plant owner, FreezableBehavior definition, bool canBeFrozen)
             : base(owner, definition)
         {
             _canBeFrozen = canBeFrozen;

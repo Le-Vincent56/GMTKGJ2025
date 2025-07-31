@@ -10,6 +10,6 @@ namespace Perennial.Plants.Behaviors
         public string Name => behaviorName;
         public  string Description => description;
         
-        public abstract PlantBehaviorInstance CreateInstance(PlantBase plantBase);
+        public abstract PlantBehaviorInstance CreateInstance(Plant plant);
     }
 }

@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using Perennial.Core.Extensions;
 using Perennial.Plants.Abilities;
 using Perennial.Plants.Behaviors;
+using Perennial.Plants.Stats;
 using UnityEngine;
 
 namespace Perennial.Plants
@@ -13,6 +14,7 @@ namespace Perennial.Plants
         [SerializeField] protected SerializableGuid id;
         [SerializeField] protected string plantName;
         [SerializeField] [TextArea(3,5)] protected string description;
+        [SerializeField] private PlantBaseStats baseStats;
         [SerializeField] protected int lifetime;
         [SerializeField] protected Sprite sprite;
 
@@ -29,6 +31,7 @@ namespace Perennial.Plants
         public Sprite Sprite => sprite;
         public PlantAbility[] Abilities => abilities;
         public List<PlantBehavior> Behaviors => behaviors;
+        public PlantBaseStats BaseStats => baseStats;
 
         /// <summary>
         /// Create an instance of a Plant using this definition
