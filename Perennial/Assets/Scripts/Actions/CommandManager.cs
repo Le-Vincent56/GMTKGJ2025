@@ -17,8 +17,7 @@ namespace Perennial.Actions
         {
             _performCommandEventBinding = new EventBinding<PerformCommand>((data) =>
             {
-                _commandsQueue.Enqueue(data.Command);
-                if (!_isRunning) ExecuteCommands(); // no need to await
+               EnqueueNewCommand(data.Command);
             });
             
             EventBus<PerformCommand>.Register(_performCommandEventBinding);
@@ -29,7 +28,6 @@ namespace Perennial.Actions
             EventBus<PerformCommand>.Deregister(_performCommandEventBinding);
         }
         
-
         /// <summary>
         /// Executes the commands in order of oldest to newest.
         /// </summary>
@@ -42,6 +40,16 @@ namespace Perennial.Actions
                 await command.Execute();
             }
             _isRunning = false;
+        }
+
+        /// <summary>
+        /// Enqueue a command and startup execution command if not running
+        /// </summary>
+        /// <param name="command">Command to add to the Queue</param>
+        private void EnqueueNewCommand(ICommand command)
+        {
+            _commandsQueue.Enqueue(Command);
+            if (!_isRunning) ExecuteCommands(); // no need to await
         }
         
     }
