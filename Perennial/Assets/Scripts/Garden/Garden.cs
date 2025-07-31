@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-namespace Perennial
+namespace Perennial.Garden
 {
 	public class Garden : MonoBehaviour
 	{
@@ -12,6 +12,7 @@ namespace Perennial
 		[SerializeField, Range(1, 20)] private int _gardenWidth = 1;
 		[SerializeField, Range(1, 20)] private int _gardenHeight = 1;
 		[SerializeField, Range(0f, 1f)] private float startTilledPercentage = 0.5f;
+		[SerializeField, Range(0f, 1f)] private float _plantMutationPercentage = 0.15f;
 
 		// [0, 0] corresponds to the bottom-left corner of the garden
 		private Tile[ , ] garden;
@@ -42,6 +43,11 @@ namespace Perennial
 		/// A list of all the tiles that make up the garden
 		/// </summary>
 		public List<Tile> Tiles { get => _tiles; private set => _tiles = value; }
+
+		/// <summary>
+		/// The chance for plants to mutate on any given check
+		/// </summary>
+		public float PlantMutationPercentage => _plantMutationPercentage;
 
 		private void Awake ( )
 		{

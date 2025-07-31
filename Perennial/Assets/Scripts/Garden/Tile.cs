@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.Rendering;
 
-namespace Perennial
+namespace Perennial.Garden
 {
 	/// <summary>
 	/// The different states that a tile's soil can be
