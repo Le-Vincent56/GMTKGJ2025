@@ -48,7 +48,7 @@ namespace Perennial.Actions
         /// <param name="command">Command to add to the Queue</param>
         private void EnqueueNewCommand(ICommand command)
         {
-            _commandsQueue.Enqueue(Command);
+            _commandsQueue.Enqueue(command);
             if (!_isRunning) ExecuteCommands(); // no need to await
         }
         
