@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6782d897d19d1044db0e7d84a3c6734f, type: 3}
+  m_Name: Snowpea
+  m_EditorClassIdentifier: 
+  id:
+    Part1: 3203014433
+    Part2: 1182182491
+    Part3: 887689904
+    Part4: 2625028554
+  plantName: Snowpea
+  description: Freezes other plants on harvest
+  lifetime: 3
+  sprite: {fileID: 0}
+  abilities:
+  - {fileID: 11400000, guid: c767463c6a94b3b44b79077ec0c811b8, type: 2}
+  behaviors:
+  - {fileID: 11400000, guid: eb423a30c41a72f46b1fd0526f3a5852, type: 2}
