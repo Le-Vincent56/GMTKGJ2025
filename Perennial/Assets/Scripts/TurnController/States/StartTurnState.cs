@@ -11,8 +11,11 @@ namespace Perennial.TurnController.States
         }
         public override void OnEnter()
         {
+            //reset actions
+            turnController.ActionsTaken = 0;
+            
             // Notify that a turn has started
-            EventBus<StartTurn>.Raise(new StartTurn()
+            EventBus<TurnStarted>.Raise(new TurnStarted()
             {
             
             });

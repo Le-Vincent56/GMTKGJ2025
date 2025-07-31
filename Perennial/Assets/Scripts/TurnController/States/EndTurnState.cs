@@ -13,7 +13,7 @@ namespace Perennial.TurnController.States
         public override void OnEnter()
         {
             // Notify that a turn has started
-            EventBus<EndTurn>.Raise(new EndTurn()
+            EventBus<TurnEnded>.Raise(new TurnEnded()
             {
 
             });
