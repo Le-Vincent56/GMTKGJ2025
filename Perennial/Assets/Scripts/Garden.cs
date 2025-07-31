@@ -14,7 +14,9 @@ namespace Perennial
 		[SerializeField, Range(0f, 1f)] private float startTilledPercentage = 0.5f;
 
 		// [0, 0] corresponds to the bottom-left corner of the garden
-		private Tile[ , ] tiles;
+		private Tile[ , ] garden;
+		private List<Tile> _plantedTiles;
+		private List<Tile> _tiles;
 
 		/// <summary>
 		/// The width of the garden in tiles
@@ -31,14 +33,26 @@ namespace Perennial
 		/// </summary>
 		public int GardenArea => GardenWidth * GardenHeight;
 
+		/// <summary>
+		/// A list of all the tiles that currently have plants on them
+		/// </summary>
+		public List<Tile> PlantedTiles { get => _plantedTiles; private set => _plantedTiles = value; }
+
+		/// <summary>
+		/// A list of all the tiles that make up the garden
+		/// </summary>
+		public List<Tile> Tiles { get => _tiles; private set => _tiles = value; }
+
 		private void Awake ( )
 		{
-			tiles = new Tile[GardenWidth, GardenHeight];
+			garden = new Tile[GardenWidth, GardenHeight];
+			PlantedTiles = new List<Tile>( );
+			Tiles = new List<Tile>( );
 		}
 
 		private void Start ( )
 		{
-			// This can be changed later to load in static tiles that were placed in the scene manually
+			// NOTE: This can be changed later to load in static tiles that were placed in the scene manually
 			// Having them generate might be good for playtesting a get a good size for the garden
 			GenerateTiles( );
 		}
@@ -64,7 +78,7 @@ namespace Perennial
 		{
 			if (IsPositionInBounds(x, y))
 			{
-				return tiles[x, y];
+				return garden[x, y];
 			}
 
 			return null;
@@ -86,6 +100,47 @@ namespace Perennial
 			}
 
 			return null;
+		}
+
+		/// <summary>
+		/// Add a specific plant at a position in the garden
+		/// </summary>
+		/// <param name="plant">The plant to add to the garden</param>
+		/// <param name="x">The x coordinate to place the plant at</param>
+		/// <param name="y">The y coordinate to place the plant at</param>
+		/// <returns>true if the plant was successfully placed in the garden, false otherwise</returns>
+		public bool AddPlantAtPosition (Plant plant, int x, int y)
+		{
+			Tile tile = GetTileAtPosition(x, y);
+
+			if (tile == null || tile.HasPlant)
+			{
+				return false;
+			}
+
+			tile.Plant = plant;
+			PlantedTiles.Add(tile);
+			return true;
+		}
+
+		/// <summary>
+		/// Remove a plant at a specific position in the garden
+		/// </summary>
+		/// <param name="x">The x coordinate to remove the plant at</param>
+		/// <param name="y">The y coordinate to remove the plant at</param>
+		/// <returns>true if a plant was successfully removed from the garden at the specified position, false otherwise</returns>
+		public bool RemovePlantAtPosition (int x, int y)
+		{
+			Tile tile = GetTileAtPosition(x, y);
+
+			if (tile == null || !tile.HasPlant)
+			{
+				return false;
+			}
+
+			tile.Plant = null;
+			PlantedTiles.Remove(tile);
+			return true;
 		}
 
 		/// <summary>
@@ -133,20 +188,89 @@ namespace Perennial
 		{
 			List<Plant> surroundingPlants = new List<Plant>( );
 			radius = Mathf.Max(1, radius);
-			List<Tile> surroundingTiles = GetSurroundingTiles(x, y, radius: radius);
 
 			Plant plant;
-			for (int i = 0; i < surroundingTiles.Count; i++)
+			for (int i = -radius; i >= radius; i++)
 			{
-				plant = surroundingTiles[i].Plant;
-
-				if (plant != null)
+				for (int j = -radius; j >= radius; j++)
 				{
-					surroundingPlants.Add(plant);
+					if (i == 0 && j == 0)
+					{
+						continue;
+					}
+
+					plant = GetPlantAtPosition(x + i, y + j);
+
+					if (plant != null)
+					{
+						surroundingPlants.Add(plant);
+					}
 				}
 			}
 
 			return surroundingPlants;
+		}
+
+		/// <summary>
+		/// Get a list of all the tiles that fall within a specific rectangular section of the garden
+		/// </summary>
+		/// <param name="x">The x position of the rectangular section. This corresponds to the bottom-left corner</param>
+		/// <param name="y">The y position of the rectangular section. This corresponds to the bottom-left corner</param>
+		/// <param name="width">The width of the rectangular section. The minimum value this can be is 1</param>
+		/// <param name="height">The height of the rectangular section. The minimum value this can be is 1</param>
+		/// <returns>A list of all the tiles that fall within the rectangular section. There will be no null values in this list</returns>
+		public List<Tile> GetTilesInSection (int x, int y, int width, int height)
+		{
+			List<Tile> tilesInSection = new List<Tile>( );
+			width = Mathf.Max(1, width);
+			height = Mathf.Max(1, height);
+
+			Tile tile;
+			for (int i = 0; i < width; i++)
+			{
+				for (int j = 0; j < height; j++)
+				{
+					tile = GetTileAtPosition(x + i, y + j);
+
+					if (tile != null)
+					{
+						tilesInSection.Add(tile);
+					}
+				}
+			}
+
+			return tilesInSection;
+		}
+
+		/// <summary>
+		/// Get a list of all the plants that fall within a specific rectangular section of the garden
+		/// </summary>
+		/// <param name="x">The x position of the rectangular section. This corresponds to the bottom-left corner</param>
+		/// <param name="y">The y position of the rectangular section. This corresponds to the bottom-left corner</param>
+		/// <param name="width">The width of the rectangular section. The minimum value this can be is 1</param>
+		/// <param name="height">The height of the rectangular section. The minimum value this can be is 1</param>
+		/// <returns>A list of all the plants that fall within the rectangular section. There will be no null values in this list</returns>
+		public List<Plant> GetPlantsInSection (int x, int y, int width, int height)
+		{
+			List<Plant> plantsInSection = new List<Plant>( );
+			width = Mathf.Max(1, width);
+			height = Mathf.Max(1, height);
+
+			Plant plant;
+			for (int i = 0; i < width; i++)
+			{
+				for (int j = 0; j < height; j++)
+				{
+					plant = GetPlantAtPosition(x + i, y + j);
+
+					if (plant != null)
+					{
+						plantsInSection.Add(plant);
+					}
+				}
+			}
+
+			return plantsInSection;
 		}
 
 		/// <summary>
@@ -156,7 +280,6 @@ namespace Perennial
 		{
 			float offsetX = transform.position.x - (GardenWidth / 2f) + 0.5f;
 			float offsetY = transform.position.y - (GardenHeight / 2f) + 0.5f;
-			List<Tile> tileList = new List<Tile>();
 
 			// Spawn in tile objects
 			for (int i = 0; i < GardenWidth; i++)
@@ -166,15 +289,16 @@ namespace Perennial
 					// Tiles will parented to the garden object
 					// The position of the garden object will be the center of the tile grid
 					Tile tile = Instantiate(tilePrefab, transform).GetComponent<Tile>( );
+					tile.GardenPosition = new Vector2Int(i, j);
 					tile.transform.localPosition = new Vector3(offsetX + i, offsetY + j);
 
-					tiles[i, j] = tile;
-					tileList.Add(tile);
+					garden[i, j] = tile;
+					Tiles.Add(tile);
 				}
 			}
 
 			// Randomly till a certain percentage of tiles at the start of the game
-			List<Tile> shuffledTileList = tileList.OrderBy(x => Random.value).ToList( );
+			List<Tile> shuffledTileList = Tiles.OrderBy(x => Random.value).ToList( );
 			int tilledSoilCount = Mathf.CeilToInt(GardenArea * startTilledPercentage);
 			for (int i = 0; i < tilledSoilCount; i++)
 			{
