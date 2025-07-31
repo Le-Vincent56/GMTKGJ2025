@@ -29,6 +29,11 @@ namespace Perennial
 			get => _plant;
 			set
 			{
+				if (_plant != null)
+				{
+					return;
+				}
+
 				_plant = value;
 				UpdatePlantSprite( );
 			}

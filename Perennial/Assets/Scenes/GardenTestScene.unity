@@ -149,8 +149,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   tilePrefab: {fileID: 7902424495938158857, guid: f9b2b4d3ebabf6f40ba832d964f65177, type: 3}
-  _gardenWidth: 8
-  _gardenHeight: 4
+  _gardenWidth: 9
+  _gardenHeight: 5
+  startTilledPercentage: 0.5
 --- !u!4 &639493306
 Transform:
   m_ObjectHideFlags: 0
@@ -202,8 +203,8 @@ Camera:
   m_GameObject: {fileID: 1422858042}
   m_Enabled: 1
   serializedVersion: 2
-  m_ClearFlags: 1
-  m_BackGroundColor: {r: 0.19215687, g: 0.3019608, b: 0.4745098, a: 0}
+  m_ClearFlags: 2
+  m_BackGroundColor: {r: 0.09019608, g: 0.09019608, b: 0.09019608, a: 0}
   m_projectionMatrixMode: 1
   m_GateFitMode: 2
   m_FOVAxisMode: 0

@@ -1,5 +1,6 @@
 using Perennial.Plants;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace Perennial
@@ -10,6 +11,7 @@ namespace Perennial
 		[Space]
 		[SerializeField, Range(1, 20)] private int _gardenWidth = 1;
 		[SerializeField, Range(1, 20)] private int _gardenHeight = 1;
+		[SerializeField, Range(0f, 1f)] private float startTilledPercentage = 0.5f;
 
 		// [0, 0] corresponds to the bottom-left corner of the garden
 		private Tile[ , ] tiles;
@@ -24,6 +26,11 @@ namespace Perennial
 		/// </summary>
 		public int GardenHeight => _gardenHeight;
 
+		/// <summary>
+		/// The total area of the garden, or the total number of tiles within the garden
+		/// </summary>
+		public int GardenArea => GardenWidth * GardenHeight;
+
 		private void Awake ( )
 		{
 			tiles = new Tile[GardenWidth, GardenHeight];
@@ -31,7 +38,8 @@ namespace Perennial
 
 		private void Start ( )
 		{
-			// This can be changed later to load in static tiles that were placed in the scene manually, but having them generate might be good for playtesting a good size for the garden
+			// This can be changed later to load in static tiles that were placed in the scene manually
+			// Having them generate might be good for playtesting a get a good size for the garden
 			GenerateTiles( );
 		}
 
@@ -146,17 +154,31 @@ namespace Perennial
 		/// </summary>
 		private void GenerateTiles ( )
 		{
-			float offsetX = transform.position.x - (GardenWidth / 2f);
-			float offsetY = transform.position.y - (GardenHeight / 2f);
+			float offsetX = transform.position.x - (GardenWidth / 2f) + 0.5f;
+			float offsetY = transform.position.y - (GardenHeight / 2f) + 0.5f;
+			List<Tile> tileList = new List<Tile>();
 
+			// Spawn in tile objects
 			for (int i = 0; i < GardenWidth; i++)
 			{
 				for (int j = 0; j < GardenHeight; j++)
 				{
 					// Tiles will parented to the garden object
 					// The position of the garden object will be the center of the tile grid
-					tiles[i, j] = Instantiate(tilePrefab, new Vector3(offsetX + i, offsetY + j), Quaternion.identity, transform).GetComponent<Tile>( );
+					Tile tile = Instantiate(tilePrefab, transform).GetComponent<Tile>( );
+					tile.transform.localPosition = new Vector3(offsetX + i, offsetY + j);
+
+					tiles[i, j] = tile;
+					tileList.Add(tile);
 				}
+			}
+
+			// Randomly till a certain percentage of tiles at the start of the game
+			List<Tile> shuffledTileList = tileList.OrderBy(x => Random.value).ToList( );
+			int tilledSoilCount = Mathf.CeilToInt(GardenArea * startTilledPercentage);
+			for (int i = 0; i < tilledSoilCount; i++)
+			{
+				shuffledTileList[i].SoilState = SoilState.TILLED;
 			}
 		}
 	}
