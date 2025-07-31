@@ -1,22 +1,24 @@
+using Perennial.Core.Architecture.Singletons;
 using Perennial.Plants;
 using System.Collections.Generic;
 using System.Linq;
+using Unity.VisualScripting;
 using UnityEngine;
 
 namespace Perennial.Garden
 {
-	public class Garden : MonoBehaviour
+	public class Garden : PersistentSingleton<Garden>
 	{
 		[SerializeField] private GameObject tilePrefab;
 		[Space]
 		[SerializeField, Range(1, 20)] private int _gardenWidth = 1;
 		[SerializeField, Range(1, 20)] private int _gardenHeight = 1;
 		[SerializeField, Range(0f, 1f)] private float startTilledPercentage = 0.5f;
-		[SerializeField, Range(0f, 1f)] private float _plantMutationPercentage = 0.15f;
+		[SerializeField, Range(0f, 1f)] private float _plantMutationPercentage = 0.1f;
 
 		// [0, 0] corresponds to the bottom-left corner of the garden
 		private Tile[ , ] garden;
-		private List<Tile> _plantedTiles;
+		private List<Plant> _plants;
 		private List<Tile> _tiles;
 
 		/// <summary>
@@ -37,7 +39,7 @@ namespace Perennial.Garden
 		/// <summary>
 		/// A list of all the tiles that currently have plants on them
 		/// </summary>
-		public List<Tile> PlantedTiles { get => _plantedTiles; private set => _plantedTiles = value; }
+		public List<Plant> Plants { get => _plants; private set => _plants = value; }
 
 		/// <summary>
 		/// A list of all the tiles that make up the garden
@@ -49,10 +51,12 @@ namespace Perennial.Garden
 		/// </summary>
 		public float PlantMutationPercentage => _plantMutationPercentage;
 
-		private void Awake ( )
+		protected override void Awake ( )
 		{
+			base.Awake( );
+
 			garden = new Tile[GardenWidth, GardenHeight];
-			PlantedTiles = new List<Tile>( );
+			Plants = new List<Plant>( );
 			Tiles = new List<Tile>( );
 		}
 
@@ -109,6 +113,24 @@ namespace Perennial.Garden
 		}
 
 		/// <summary>
+		/// Add a specific plant to a tile in the garden
+		/// </summary>
+		/// <param name="plant">The plant to add to the garden</param>
+		/// <param name="tile">The tile to add the plant to</param>
+		/// <returns>true if the plant was successfully placed in the garden, false otherwise</returns>
+		public bool AddPlantToTile(Plant plant, Tile tile)
+		{
+			if (tile == null || tile.HasPlant)
+			{
+				return false;
+			}
+
+			Plants.Add(plant);
+			tile.Plant = plant;
+			return true;
+		}
+
+		/// <summary>
 		/// Add a specific plant at a position in the garden
 		/// </summary>
 		/// <param name="plant">The plant to add to the garden</param>
@@ -117,15 +139,23 @@ namespace Perennial.Garden
 		/// <returns>true if the plant was successfully placed in the garden, false otherwise</returns>
 		public bool AddPlantAtPosition (Plant plant, int x, int y)
 		{
-			Tile tile = GetTileAtPosition(x, y);
+			return AddPlantToTile(plant, GetTileAtPosition(x, y));
+		}
 
-			if (tile == null || tile.HasPlant)
+		/// <summary>
+		/// Remove a plant on a specific tile in the garden
+		/// </summary>
+		/// <param name="tile">The tile to remove the plant from</param>
+		/// <returns>true if a plant was successfully removed from the garden at the specified position, false otherwise</returns>
+		public bool RemovePlantFromTile (Tile tile)
+		{
+			if (tile == null || !tile.HasPlant)
 			{
 				return false;
 			}
 
-			tile.Plant = plant;
-			PlantedTiles.Add(tile);
+			Plants.Remove(tile.Plant);
+			tile.Plant = null;
 			return true;
 		}
 
@@ -137,16 +167,7 @@ namespace Perennial.Garden
 		/// <returns>true if a plant was successfully removed from the garden at the specified position, false otherwise</returns>
 		public bool RemovePlantAtPosition (int x, int y)
 		{
-			Tile tile = GetTileAtPosition(x, y);
-
-			if (tile == null || !tile.HasPlant)
-			{
-				return false;
-			}
-
-			tile.Plant = null;
-			PlantedTiles.Remove(tile);
-			return true;
+			return RemovePlantFromTile(GetTileAtPosition(x, y));
 		}
 
 		/// <summary>
@@ -224,8 +245,9 @@ namespace Perennial.Garden
 		/// <param name="y">The y position of the rectangular section. This corresponds to the bottom-left corner</param>
 		/// <param name="width">The width of the rectangular section. The minimum value this can be is 1</param>
 		/// <param name="height">The height of the rectangular section. The minimum value this can be is 1</param>
+		/// <param name="onlyEmptyTiles">If true, all tiles returned in the final list will be tiles without a plant on them</param>
 		/// <returns>A list of all the tiles that fall within the rectangular section. There will be no null values in this list</returns>
-		public List<Tile> GetTilesInSection (int x, int y, int width, int height)
+		public List<Tile> GetTilesInSection (int x, int y, int width, int height, bool onlyEmptyTiles = false)
 		{
 			List<Tile> tilesInSection = new List<Tile>( );
 			width = Mathf.Max(1, width);
@@ -238,10 +260,17 @@ namespace Perennial.Garden
 				{
 					tile = GetTileAtPosition(x + i, y + j);
 
-					if (tile != null)
+					if (tile == null)
 					{
-						tilesInSection.Add(tile);
+						continue;
 					}
+
+					if (onlyEmptyTiles && tile.HasPlant)
+					{
+						continue;
+					}
+
+					tilesInSection.Add(tile);
 				}
 			}
 
@@ -269,14 +298,91 @@ namespace Perennial.Garden
 				{
 					plant = GetPlantAtPosition(x + i, y + j);
 
-					if (plant != null)
+					if (plant == null)
 					{
-						plantsInSection.Add(plant);
+						continue;
 					}
+
+					plantsInSection.Add(plant);
 				}
 			}
 
 			return plantsInSection;
+		}
+
+		/// <summary>
+		/// Get all of the plants that are on an inputted list of tiles
+		/// </summary>
+		/// <param name="tiles">The list of tiles to check</param>
+		/// <returns>A list of all the plants that are on the tiles in the inputted list. There will be no null values in this list</returns>
+		public List<Plant> GetPlantsOnTiles (List<Tile> tiles)
+		{
+			return tiles.Select(tile => tile.Plant).NotNull( ).ToList( );
+		}
+
+		/// <summary>
+		/// Get a list of all the tiles within a list of tiles that do not currently have a plant on them
+		/// </summary>
+		/// <param name="tiles">The list of tiles to check</param>
+		/// <returns>A list of tiles that contains all of the empty tiles from the inputted tile list</returns>
+		public List<Tile> GetEmptyTiles (List<Tile> tiles)
+		{
+			return tiles.Where(tile => !tile.HasPlant).ToList( );
+		}
+
+		/// <summary>
+		/// Check for and update all mutations for plants within the garden (Not Fully Implemented)
+		/// </summary>
+		public void UpdatePlantMutations ( )
+		{
+			for (int x = 0; x < GardenWidth - 1; x++)
+			{
+				for (int y = 0; y < GardenHeight - 1; y++)
+				{
+					UpdatePlantMutationCombinations(GetTilesInSection(x, y, 2, 2));
+				}
+			}
+		}
+
+		/// <summary>
+		/// Update and perform mutations between the plants on a specific section of the garden
+		/// </summary>
+		/// <param name="tiles">The section of tiles to perform the mutation on</param>
+		private void UpdatePlantMutationCombinations (List<Tile> tiles)
+		{
+			List<Tile> emptyTiles = GetEmptyTiles(tiles);
+			List<Plant> plants = GetPlantsOnTiles(tiles);
+
+			// Loop through every combination of plant in the section
+			for (int i = 0; i < plants.Count; i++)
+			{
+				for (int j = 0; j < plants.Count; j++)
+				{
+					// If there are no more empty tiles within the checked section, then return as no more mutations can occur
+					if (emptyTiles.Count == 0)
+					{
+						return;
+					}
+
+					// Do not try to mutate the same plant against itself
+					if (i == j)
+					{
+						continue;
+					}
+
+					// Roll for a random chance to mutate
+					if (Random.Range(0f, 1f) > PlantMutationPercentage)
+					{
+						continue;
+					}
+
+					// Mutation was successful, add plant to an empty tile
+					// Plant mutationPlant = mutationDictionary[plants[i].Type, plants[j].Type];
+					// int emptyTileIndex = Random.Range(0, emptyTiles.Count);
+					// AddPlantToTile(mutationPlant, emptyTiles[emptyTileIndex]);
+					// emptyTiles.RemoveAt(emptyTileIndex);
+				}
+			}
 		}
 
 		/// <summary>

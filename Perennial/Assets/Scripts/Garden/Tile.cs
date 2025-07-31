@@ -25,7 +25,7 @@ namespace Perennial.Garden
 		private Plant _plant;
 
 		/// <summary>
-		/// The current plant object on this tile
+		/// The current plant object on this tile. This should not be updated outside the garden's add/remove plant methods to ensure everything is updated properly
 		/// </summary>
 		public Plant Plant
 		{
