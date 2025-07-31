@@ -6,9 +6,12 @@ namespace Perennial
 {
 	public class Garden : MonoBehaviour
 	{
+		[SerializeField] private GameObject tilePrefab;
+		[Space]
 		[SerializeField, Range(1, 20)] private int _gardenWidth = 1;
 		[SerializeField, Range(1, 20)] private int _gardenHeight = 1;
 
+		// [0, 0] corresponds to the bottom-left corner of the garden
 		private Tile[ , ] tiles;
 
 		/// <summary>
@@ -20,6 +23,17 @@ namespace Perennial
 		/// The height of the garden in tiles
 		/// </summary>
 		public int GardenHeight => _gardenHeight;
+
+		private void Awake ( )
+		{
+			tiles = new Tile[GardenWidth, GardenHeight];
+		}
+
+		private void Start ( )
+		{
+			// This can be changed later to load in static tiles that were placed in the scene manually, but having them generate might be good for playtesting a good size for the garden
+			GenerateTiles( );
+		}
 
 		/// <summary>
 		/// Check to see if a given position is inside the bounds of the garden
@@ -71,11 +85,12 @@ namespace Perennial
 		/// </summary>
 		/// <param name="x">The x position to get the surrounding tiles of</param>
 		/// <param name="y">The y position to get the surrounding tiles of</param>
-		/// <param name="radius">The radius around the specified to get the surrounding tiles of</param>
+		/// <param name="radius">The radius around the specified to get the surrounding tiles of. The minimum value this can be is 1</param>
 		/// <returns>A list of surrounding tiles to the specified position, excluding the tile at the specified position. There will be no null values in this list</returns>
 		public List<Tile> GetSurroundingTiles (int x, int y, int radius = 1)
 		{
 			List<Tile> surroundingTiles = new List<Tile>( );
+			radius = Mathf.Max(1, radius);
 
 			Tile tile;
 			for (int i = -radius; i >= radius; i++)
@@ -104,11 +119,12 @@ namespace Perennial
 		/// </summary>
 		/// <param name="x">The x position to get the surrounding plants of</param>
 		/// <param name="y">The y position to get the surrounding plants of</param>
-		/// <param name="radius">The radius around the specified to get the surrounding plants of</param>
+		/// <param name="radius">The radius around the specified to get the surrounding plants of. The minimum value this can be is 1</param>
 		/// <returns>A list of surrounding plants to the specified position, excluding the plant on the tile at the specified position. There will be no null values in this list</returns>
 		public List<Plant> GetSurroundingPlants (int x, int y, int radius = 1)
 		{
 			List<Plant> surroundingPlants = new List<Plant>( );
+			radius = Mathf.Max(1, radius);
 			List<Tile> surroundingTiles = GetSurroundingTiles(x, y, radius: radius);
 
 			Plant plant;
@@ -124,7 +140,24 @@ namespace Perennial
 
 			return surroundingPlants;
 		}
-	
-		
+
+		/// <summary>
+		/// Generate a 2D grid of all the tiles in the garden
+		/// </summary>
+		private void GenerateTiles ( )
+		{
+			float offsetX = transform.position.x - (GardenWidth / 2f);
+			float offsetY = transform.position.y - (GardenHeight / 2f);
+
+			for (int i = 0; i < GardenWidth; i++)
+			{
+				for (int j = 0; j < GardenHeight; j++)
+				{
+					// Tiles will parented to the garden object
+					// The position of the garden object will be the center of the tile grid
+					tiles[i, j] = Instantiate(tilePrefab, new Vector3(offsetX + i, offsetY + j), Quaternion.identity, transform).GetComponent<Tile>( );
+				}
+			}
+		}
 	}
 }

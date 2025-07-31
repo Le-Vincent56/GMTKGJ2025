@@ -9,7 +9,7 @@ namespace Perennial
 	/// </summary>
 	public enum SoilState
 	{
-		GRASS, SOIL
+		GRASS, TILLED
 	}
 
 	public class Tile : MonoBehaviour
@@ -50,6 +50,17 @@ namespace Perennial
 				_soilState = value;
 				UpdateSoilSprite( );
 			}
+		}
+
+		private void OnValidate ( )
+		{
+			UpdatePlantSprite( );
+			UpdateSoilSprite( );
+		}
+
+		private void Awake ( )
+		{
+			OnValidate( );
 		}
 
 		/// <summary>
