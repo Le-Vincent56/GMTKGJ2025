@@ -1,16 +1,31 @@
-using UnityEngine;
+using System.Collections.Generic;
+using System.Linq;
+using Perennial.Plants.Abilities;
+using Perennial.Plants.Behaviors;
 
 namespace Perennial.Plants
 {
-    public abstract class Plant : IPlant
+    public class Plant : PlantBase
     {
-        private PlantData _data;
-
-        public string Name => _data.Name;
-        public int CurrentLifetime { get; private set; }
-        public int TotalLifetime => _data.Lifetime;
         
-        public abstract void Tick();
-        public abstract void Harvest();
+        
+        
+        
+
+        public Plant(PlantDefinition definition, Tile tile, Garden garden)
+            : base(definition, tile, garden)
+        {
+            // Behaviors are initialized by the factory
+        }
+
+        public override void Harvest()
+        {
+            
+
+            // Call the parent Harvest()
+            base.Harvest();
+        }
+
+        
     }
 }
