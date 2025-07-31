@@ -8,8 +8,10 @@ namespace Perennial.TurnController.States
     /// </summary>
     public class BaseState : IState
     {
-        public BaseState()
+        protected readonly TurnController turnController;
+        public BaseState(TurnController turnController)
         {
+            this.turnController = turnController;
         }
 
         public virtual void OnEnter()

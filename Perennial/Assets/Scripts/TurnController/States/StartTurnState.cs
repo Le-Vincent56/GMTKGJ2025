@@ -5,6 +5,10 @@ namespace Perennial.TurnController.States
 {
     public class StartTurnState : BaseState
     {
+        
+        public StartTurnState (TurnController turnController) : base(turnController)
+        {
+        }
         public override void OnEnter()
         {
             // Notify that a turn has started

@@ -1,16 +1,15 @@
-using Perennial.Actions.Commands;
 using UnityEngine;
 
 namespace Perennial.Actions.Commands
 {
-    public class PlantCommand : BaseCommand
+    public class TillCommand : BaseCommand
     {
         /// <summary>
-        /// Executes the Plant action
+        /// Executes the Till action
         /// </summary>
         public override void Execute()
         {
-            Debug.Log("Planting a plant");
+            Debug.Log("Tilling ground");
         }
     }
 }

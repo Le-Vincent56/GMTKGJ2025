@@ -7,15 +7,18 @@ namespace Perennial.TurnController
 {
     public class TurnController : MonoBehaviour
     {
-        private StateMachine _stateMachine;
 
         [Header("Fields")]
         [SerializeField] private string currentState;
         [SerializeField] private bool endTurn;
         
+        
+        private StateMachine _stateMachine;
+        private int _stateNum;
+        
         #region Properties
         public bool EndingTurn { get => endTurn; set => endTurn = value; }
-
+        public int StateNum { set => _stateNum = value;}
 
         #endregion
 
@@ -35,12 +38,13 @@ namespace Perennial.TurnController
         {
             _stateMachine = new StateMachine();
 
-            StartTurnState startTurnState = new StartTurnState();
-            ActionState actionState = new ActionState();
-            EndTurnState endTurnState = new EndTurnState();
-
-            //always go from start to actions automatically
-           _stateMachine.At(startTurnState, actionState, new FuncPredicate(() => true));
+            StartTurnState startTurnState = new StartTurnState(this);
+            ActionState actionState = new ActionState(this);
+            EndTurnState endTurnState = new EndTurnState(this);
+            
+           _stateMachine.At(startTurnState, actionState, new FuncPredicate(() => _stateNum == 1));
+           _stateMachine.At(actionState, endTurnState, new FuncPredicate(() => true)); //TODO Add action checks
+           _stateMachine.At(endTurnState, startTurnState, new FuncPredicate(() => _stateNum == 2));
             
 
         }
