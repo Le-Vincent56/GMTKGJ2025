@@ -90,13 +90,13 @@ namespace Perennial
 		/// <param name="x">The x coordinate of the position to get</param>
 		/// <param name="y">The y coordinate of the position to get</param>
 		/// <returns>A reference to the plant if the specified position is within the bounds of the garden AND there is a plant currently at that position, null otherwise</returns>
-		public Plant GetPlantAtPosition (int x, int y)
+		public PlantBase GetPlantAtPosition (int x, int y)
 		{
 			Tile tile = GetTileAtPosition(x, y);
 
 			if (tile != null)
 			{
-				return tile.Plant;
+				return tile.PlantBase;
 			}
 
 			return null;
@@ -105,11 +105,11 @@ namespace Perennial
 		/// <summary>
 		/// Add a specific plant at a position in the garden
 		/// </summary>
-		/// <param name="plant">The plant to add to the garden</param>
+		/// <param name="plantBase">The plant to add to the garden</param>
 		/// <param name="x">The x coordinate to place the plant at</param>
 		/// <param name="y">The y coordinate to place the plant at</param>
 		/// <returns>true if the plant was successfully placed in the garden, false otherwise</returns>
-		public bool AddPlantAtPosition (Plant plant, int x, int y)
+		public bool AddPlantAtPosition (PlantBase plantBase, int x, int y)
 		{
 			Tile tile = GetTileAtPosition(x, y);
 
@@ -118,7 +118,7 @@ namespace Perennial
 				return false;
 			}
 
-			tile.Plant = plant;
+			tile.PlantBase = plantBase;
 			PlantedTiles.Add(tile);
 			return true;
 		}
@@ -138,7 +138,7 @@ namespace Perennial
 				return false;
 			}
 
-			tile.Plant = null;
+			tile.PlantBase = null;
 			PlantedTiles.Remove(tile);
 			return true;
 		}
@@ -184,12 +184,12 @@ namespace Perennial
 		/// <param name="y">The y position to get the surrounding plants of</param>
 		/// <param name="radius">The radius around the specified to get the surrounding plants of. The minimum value this can be is 1</param>
 		/// <returns>A list of surrounding plants to the specified position, excluding the plant on the tile at the specified position. There will be no null values in this list</returns>
-		public List<Plant> GetSurroundingPlants (int x, int y, int radius = 1)
+		public List<PlantBase> GetSurroundingPlants (int x, int y, int radius = 1)
 		{
-			List<Plant> surroundingPlants = new List<Plant>( );
+			List<PlantBase> surroundingPlants = new List<PlantBase>( );
 			radius = Mathf.Max(1, radius);
 
-			Plant plant;
+			PlantBase plantBase;
 			for (int i = -radius; i >= radius; i++)
 			{
 				for (int j = -radius; j >= radius; j++)
@@ -199,11 +199,11 @@ namespace Perennial
 						continue;
 					}
 
-					plant = GetPlantAtPosition(x + i, y + j);
+					plantBase = GetPlantAtPosition(x + i, y + j);
 
-					if (plant != null)
+					if (plantBase != null)
 					{
-						surroundingPlants.Add(plant);
+						surroundingPlants.Add(plantBase);
 					}
 				}
 			}
@@ -250,22 +250,22 @@ namespace Perennial
 		/// <param name="width">The width of the rectangular section. The minimum value this can be is 1</param>
 		/// <param name="height">The height of the rectangular section. The minimum value this can be is 1</param>
 		/// <returns>A list of all the plants that fall within the rectangular section. There will be no null values in this list</returns>
-		public List<Plant> GetPlantsInSection (int x, int y, int width, int height)
+		public List<PlantBase> GetPlantsInSection (int x, int y, int width, int height)
 		{
-			List<Plant> plantsInSection = new List<Plant>( );
+			List<PlantBase> plantsInSection = new List<PlantBase>( );
 			width = Mathf.Max(1, width);
 			height = Mathf.Max(1, height);
 
-			Plant plant;
+			PlantBase plantBase;
 			for (int i = 0; i < width; i++)
 			{
 				for (int j = 0; j < height; j++)
 				{
-					plant = GetPlantAtPosition(x + i, y + j);
+					plantBase = GetPlantAtPosition(x + i, y + j);
 
-					if (plant != null)
+					if (plantBase != null)
 					{
-						plantsInSection.Add(plant);
+						plantsInSection.Add(plantBase);
 					}
 				}
 			}

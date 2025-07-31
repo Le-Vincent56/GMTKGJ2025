@@ -22,22 +22,22 @@ namespace Perennial
 		[Space]
 		[SerializeField] private SoilState _soilState;
 		[SerializeField] private Vector2Int _gardenPosition;
-		private Plant _plant;
+		private PlantBase _plantBase;
 
 		/// <summary>
 		/// The current plant object on this tile
 		/// </summary>
-		public Plant Plant
+		public PlantBase PlantBase
 		{
-			get => _plant;
+			get => _plantBase;
 			set
 			{
-				if (_plant != null)
+				if (_plantBase != null)
 				{
 					return;
 				}
 
-				_plant = value;
+				_plantBase = value;
 				UpdatePlantSprite( );
 			}
 		}
@@ -45,7 +45,7 @@ namespace Perennial
 		/// <summary>
 		/// Whether or not this tile currently has a plant on it
 		/// </summary>
-		public bool HasPlant => (Plant != null);
+		public bool HasPlant => (PlantBase != null);
 
 		/// <summary>
 		/// The current state of this tile's soil

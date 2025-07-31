@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6782d897d19d1044db0e7d84a3c6734f, type: 3}
+  m_Name: Accelerator
+  m_EditorClassIdentifier: 
+  id:
+    Part1: 318848640
+    Part2: 1152427551
+    Part3: 1246160296
+    Part4: 3462660339
+  plantName: Accelerator
+  description: Accelerates the growth of nearby plants
+  lifetime: 5
+  sprite: {fileID: 0}
+  abilities:
+  - {fileID: 11400000, guid: 05574a6c65e5c154fa0f56d996a5c2e5, type: 2}
+  behaviors:
+  - {fileID: 11400000, guid: eb423a30c41a72f46b1fd0526f3a5852, type: 2}
+  - {fileID: 11400000, guid: 13b266c3677ad3e46ac9494889752455, type: 2}
