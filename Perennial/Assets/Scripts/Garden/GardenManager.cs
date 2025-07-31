@@ -1,9 +1,13 @@
+using System;
 using Perennial.Core.Architecture.Singletons;
 using Perennial.Plants;
 using System.Collections.Generic;
 using System.Linq;
+using Perennial.Core.Architecture.Event_Bus;
+using Perennial.Core.Architecture.Event_Bus.Events;
 using Unity.VisualScripting;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace Perennial.Garden
 {
@@ -21,6 +25,8 @@ namespace Perennial.Garden
 		private Tile[ , ] garden;
 		private List<PlantBase> _plants;
 		private List<Tile> _tiles;
+
+		private EventBinding<TurnEnded> _turnEndedEventBinding;
 
 		/// <summary>
 		/// The width of the garden in tiles
@@ -71,6 +77,22 @@ namespace Perennial.Garden
 			// NOTE: This can be changed later to load in static tiles that were placed in the scene manually
 			// Having them generate might be good for playtesting a get a good size for the garden
 			GenerateTiles( );
+		}
+
+		private void OnEnable()
+		{
+			_turnEndedEventBinding = new EventBinding<TurnEnded>(() =>
+			{
+				UpdatePlantMutations();
+				UpdateGrassSpread();
+			});
+			
+			EventBus<TurnEnded>.Register(_turnEndedEventBinding);
+		}
+
+		private void OnDisable()
+		{
+			EventBus<TurnEnded>.Deregister(_turnEndedEventBinding);
 		}
 
 		// For testing grass spread
