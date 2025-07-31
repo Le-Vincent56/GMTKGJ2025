@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using UnityEngine;
 
 namespace Perennial.Actions.Commands
@@ -7,7 +8,7 @@ namespace Perennial.Actions.Commands
         /// <summary>
         /// Executes the Till action
         /// </summary>
-        public override void Execute()
+        public override async Task Execute()
         {
             Debug.Log("Tilling ground");
         }

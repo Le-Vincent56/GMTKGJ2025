@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using UnityEngine;
 
 namespace Perennial.Actions
@@ -7,6 +8,6 @@ namespace Perennial.Actions
         /// <summary>
         /// Executes a given command
         /// </summary>
-        void Execute();
+        Task Execute();
     }
 }

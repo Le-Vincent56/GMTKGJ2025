@@ -84,6 +84,12 @@ namespace Perennial.TurnController
            _stateMachine.At(startTurnState, actionState, new FuncPredicate(() => _stateFinished == State.Start));
            _stateMachine.At(actionState, endTurnState, new FuncPredicate(() => _actionsTaken >= allowedActions || _endTurn)); 
            _stateMachine.At(endTurnState, startTurnState, new FuncPredicate(() => _stateFinished == State.End));
+           
+           //start at start
+           _stateMachine.SetState(startTurnState);
+           
+           //enum to end so it doesn't auto transition(start state sets it to start)
+           _stateFinished = State.End;
         }
 
         /// <summary>

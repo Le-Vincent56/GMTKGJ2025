@@ -1,4 +1,4 @@
-using Perennial.Actions.Commands;
+using System.Threading.Tasks;
 using UnityEngine;
 
 namespace Perennial.Actions.Commands
@@ -8,7 +8,7 @@ namespace Perennial.Actions.Commands
         /// <summary>
         /// Executes the Plant action
         /// </summary>
-        public override void Execute()
+        public override  async Task Execute()
         {
             Debug.Log("Planting a plant");
         }

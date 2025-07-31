@@ -1,3 +1,5 @@
+using System.Threading.Tasks;
+
 namespace Perennial.Actions.Commands
 {
     public abstract class BaseCommand : ICommand
@@ -10,7 +12,7 @@ namespace Perennial.Actions.Commands
         /// <summary>
         /// Execute the Command
         /// </summary>
-        public abstract void Execute();
+        public abstract Task Execute();
 
         /// <summary>
         /// Static factory method to create a command
