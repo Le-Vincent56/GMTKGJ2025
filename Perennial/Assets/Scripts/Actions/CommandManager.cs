@@ -52,10 +52,10 @@ namespace Perennial.Actions
         /// Enqueue a command and startup execution command if not running
         /// </summary>
         /// <param name="command">Command to add to the Queue</param>
-        private void EnqueueNewCommand(ICommand command)
+        private async void EnqueueNewCommand(ICommand command)
         {
             _commandsQueue.Enqueue(command);
-            if (!_isRunning) ExecuteCommands(); // no need to await
+            if (!_isRunning) await ExecuteCommands(); // no need to await
         }
         
     }
