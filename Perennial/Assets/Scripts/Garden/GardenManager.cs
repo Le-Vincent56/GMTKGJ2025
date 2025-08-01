@@ -26,7 +26,8 @@ namespace Perennial.Garden
 		private List<Plant> _plants;
 		private List<Tile> _tiles;
 
-		private EventBinding<TurnEnded> _turnEndedEventBinding;
+		private EventBinding<TurnStarted> _onTurnedStarted;
+		private EventBinding<TurnEnded> _onTurnedEnded;
 
 		/// <summary>
 		/// The width of the garden in tiles
@@ -79,18 +80,26 @@ namespace Perennial.Garden
 
 		private void OnEnable ( )
 		{
-			_turnEndedEventBinding = new EventBinding<TurnEnded>(( ) =>
-			{
-				UpdatePlantMutations( );
-				UpdateWeedSpread( );
-			});
+			_onTurnedStarted = new EventBinding<TurnStarted>(StartTurn);
+			_onTurnedEnded = new EventBinding<TurnEnded>(EndTurn);
 
-			EventBus<TurnEnded>.Register(_turnEndedEventBinding);
+			EventBus<TurnEnded>.Register(_onTurnedEnded);
 		}
 
 		private void OnDisable ( )
 		{
-			EventBus<TurnEnded>.Deregister(_turnEndedEventBinding);
+			EventBus<TurnEnded>.Deregister(_onTurnedEnded);
+		}
+
+		private void StartTurn(TurnStarted eventData)
+		{
+			
+		}
+
+		private void EndTurn(TurnEnded eventData)
+		{
+			UpdatePlantMutations();
+			UpdateWeedSpread();
 		}
 
 		// For testing grass spread
@@ -177,6 +186,10 @@ namespace Perennial.Garden
 
 			Plants.Add(plant);
 			tile.Plant = plant;
+			
+			// Activate plant placement logic
+			plant.Place();
+			
 			return true;
 		}
 

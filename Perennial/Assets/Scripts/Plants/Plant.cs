@@ -1,11 +1,12 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Perennial.Core.Extensions;
 using Perennial.Garden;
 using Perennial.Plants.Abilities;
 using Perennial.Plants.Behaviors;
-using Perennial.Plants.Data;
 using Perennial.Plants.Stats;
+using Perennial.Seasons;
 
 namespace Perennial.Plants
 {
@@ -17,13 +18,14 @@ namespace Perennial.Plants
 
         public SerializableGuid ID { get; private set; }
         public string Name => _definition.Name;
-        public Lifetime CurrentLifetime { get; private set; }
-        public Lifetime TotalLifetime { get; private set; }
+        
         public bool SkipGrowth { get; set; }
         public bool SkipPassive { get; set; }
         public Tile Tile { get; }
         public List<PlantBehaviorInstance> Behaviors { get; } = new List<PlantBehaviorInstance>();
         public PlantStats Stats { get; }
+        public PlantLifetime Lifetime { get; }
+        public PlantRewards Rewards { get; }
         public bool MarkedForRemoval { get; private set; }
 
         public Plant(PlantDefinition definition, Tile currentTile, GardenManager gardenManager)
@@ -34,8 +36,8 @@ namespace Perennial.Plants
             _abilities = definition.Abilities;
             Tile = currentTile;
             Stats = new PlantStats(definition.BaseStats);
-            CurrentLifetime = (Lifetime)0;
-            TotalLifetime = (Lifetime)definition.Lifetime;
+            Lifetime =  new PlantLifetime(definition.GrowTime, definition.HarvestTime);
+            Rewards = new PlantRewards(this, definition.FoodMultiplier, definition.FoodConstant);
             MarkedForRemoval = false;
         }
 
@@ -44,8 +46,8 @@ namespace Perennial.Plants
         /// </summary>
         public void Place()
         {
+            // Trigger placement abilities
             PlantAbilityContext context = CreateAbilityContext();
-            
             TriggerPlaceAbilities(context);
         }
 
@@ -62,7 +64,10 @@ namespace Perennial.Plants
             ProcessPassiveBehaviors(context);
 
             // If not skipping growth, grow the plant
-            if (!SkipGrowth) CurrentLifetime += Stats.GrowthRate;
+            if (SkipGrowth) return;
+            
+            // Increase the lifetime
+            Lifetime.Grow(Stats.GrowthRate);
         }
 
         /// <summary>
@@ -76,15 +81,45 @@ namespace Perennial.Plants
             CancelPassiveAbilities(context);
 
             // TODO: Remove the plant from the garden
+            // TODO: Send rewards to the player
         }
 
         /// <summary>
-        /// Check if plants should be disposed
+        /// Have teh season affect the plant
         /// </summary>
-        public void Dispose()
+        public void ApplySeasonalEffects(Season currentSeason)
+        {
+            void CheckSeason(Action notEqual, Action equal)
+            {
+                // Iterate through each incompatible season
+                foreach (Season season in _definition.IncompatibleSeasons)
+                {
+                    // Skip if the season is not the current season
+                    if (season != currentSeason) notEqual();
+                    else equal();
+                }
+            }
+            
+            // Check for incompatible seasons
+            CheckSeason(
+                () => { }, 
+                () => MarkedForRemoval = true
+            );
+            
+            // Check for bonus seasons
+            CheckSeason(
+                () => Rewards.BonusActive = false, 
+                () => Rewards.BonusActive = true
+            );
+        }
+
+        /// <summary>
+        /// Check if plants should be disposed due to lifetime
+        /// </summary>
+        public void CheckExpiration()
         {
             // Exit if the lifetime hasn't expired yet
-            if (CurrentLifetime < TotalLifetime) return;
+            if(Lifetime.IsAlive()) return;
 
             // Mark the plant for removal
             MarkedForRemoval = true;
@@ -108,6 +143,9 @@ namespace Perennial.Plants
         /// </summary>
         private void TriggerPlaceAbilities(PlantAbilityContext context)
         {
+            // Exit if the plant is not fully grown
+            if (!Lifetime.FullyGrown) return;
+            
             // Iterate through each ability
             foreach (PlantAbility ability in _abilities)
             {
