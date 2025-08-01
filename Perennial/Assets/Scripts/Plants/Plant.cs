@@ -13,8 +13,6 @@ namespace Perennial.Plants
     {
         private readonly PlantDefinition _definition;
         private readonly PlantAbility[] _abilities;
-        private readonly List<PlantBehaviorInstance> _behaviors = new List<PlantBehaviorInstance>();
-        private readonly Tile _currentTile;
         private readonly GardenManager _gardenManager;
 
         public SerializableGuid ID { get; private set; }
@@ -23,22 +21,28 @@ namespace Perennial.Plants
         public Lifetime TotalLifetime { get; private set; }
         public bool SkipGrowth { get; set; }
         public bool SkipPassive { get; set; }
-        public List<PlantBehaviorInstance> Behaviors => _behaviors;
+        public Tile Tile { get; }
+        public List<PlantBehaviorInstance> Behaviors { get; } = new List<PlantBehaviorInstance>();
         public PlantStats Stats { get; }
+        public bool MarkedForRemoval { get; private set; }
 
         public Plant(PlantDefinition definition, Tile currentTile, GardenManager gardenManager)
         {
             ID = SerializableGuid.NewGuid();
             _definition = definition;
-            _currentTile = currentTile;
             _gardenManager = gardenManager;
             _abilities = definition.Abilities;
+            Tile = currentTile;
             Stats = new PlantStats(definition.BaseStats);
             CurrentLifetime = (Lifetime)0;
             TotalLifetime = (Lifetime)definition.Lifetime;
+            MarkedForRemoval = false;
         }
 
-        public void Tick()
+        /// <summary>
+        /// Run plant logic for the turn
+        /// </summary>
+        public void Upkeep()
         {
             // Reset Skip Growth (should be overridden by behaviors)
             SkipGrowth = false;
@@ -48,38 +52,25 @@ namespace Perennial.Plants
             PlantAbilityContext context = CreateAbilityContext();
             
             // Let behaviors process
-            foreach (PlantBehaviorInstance behavior in _behaviors)
+            foreach (PlantBehaviorInstance behavior in Behaviors)
             {
                 behavior.OnTick(context);
             }
 
             // If not skipping growth, grow the plant
             if (!SkipGrowth) CurrentLifetime += Stats.GrowthRate;
-            
-            // Exit early if skipping the passive ability
-            if (SkipPassive) return;
-
-            // Iterate through each ability
-            foreach (PlantAbility ability in _abilities)
-            {
-                // Skip if ot a passive ability
-                if (ability is not PassivePlantAbility passiveAbility) continue;
-                
-                // Skip if the passive ability cannot execute
-                if (!passiveAbility.CanExecute(context)) continue;
-                
-                // Tick the passive ability
-                passiveAbility.OnTick(context);
-            }
         }
 
+        /// <summary>
+        /// Run plant logic for harvesting the plant
+        /// </summary>
         public void Harvest()
         {
             // Get the context for the plant ability
             PlantAbilityContext context = CreateAbilityContext();
 
             // Let behaviors process
-            foreach (PlantBehaviorInstance behavior in _behaviors)
+            foreach (PlantBehaviorInstance behavior in Behaviors)
             {
                 behavior.OnHarvest(context);
             }
@@ -110,12 +101,49 @@ namespace Perennial.Plants
             // TODO: Remove the plant from the garden
         }
 
-        private PlantAbilityContext CreateAbilityContext()
+        /// <summary>
+        /// Check if plants should be disposed
+        /// </summary>
+        public void Dispose()
         {
-            // TODO: Get the current turn from somewhere
-            int currentTurn = 0;
-            return new PlantAbilityContext(this, _currentTile, _gardenManager, currentTurn);
+            // Exit if the lifetime hasn't expired yet
+            if (CurrentLifetime < TotalLifetime) return;
+
+            // Mark the plant for removal
+            MarkedForRemoval = true;
         }
+
+        /// <summary>
+        /// Run end of turn plant logic
+        /// </summary>
+        public void EndStep()
+        {
+            // Exit early if skipping the passive ability
+            if (SkipPassive) return;
+
+            TriggerPassiveTicks();
+        }
+
+        private void TriggerPassiveTicks()
+        {
+            // Get the context for the plant ability
+            PlantAbilityContext context = CreateAbilityContext();
+
+            // Iterate through each ability
+            foreach (PlantAbility ability in _abilities)
+            {
+                // Skip if ot a passive ability
+                if (ability is not PassivePlantAbility passiveAbility) continue;
+                
+                // Skip if the passive ability cannot execute
+                if (!passiveAbility.CanExecute(context)) continue;
+                
+                // Tick the passive ability
+                passiveAbility.OnTick(context);
+            }
+        }
+
+        private PlantAbilityContext CreateAbilityContext() => new PlantAbilityContext(this, Tile, _gardenManager);
         
         /// <summary>
         /// Send a signal to this plant's behaviors
@@ -124,7 +152,7 @@ namespace Perennial.Plants
         {
             bool handled = false;
 
-            foreach (PlantBehaviorInstance behavior in _behaviors)
+            foreach (PlantBehaviorInstance behavior in Behaviors)
             {
                 if (behavior.HandleSignal(signalType, data)) handled = true;
             }
@@ -135,11 +163,11 @@ namespace Perennial.Plants
         /// <summary>
         /// Check if this plant has a specific behavior type
         /// </summary>
-        public bool HasBehavior<T>() where T : PlantBehaviorInstance => _behaviors.Any(b => b is T);
+        public bool HasBehavior<T>() where T : PlantBehaviorInstance => Behaviors.Any(b => b is T);
 
         /// <summary>
         /// Get a specific behavior instance
         /// </summary>
-        public T GetBehavior<T>() where T : PlantBehaviorInstance => _behaviors.FirstOrDefault(b => b is T) as T;
+        public T GetBehavior<T>() where T : PlantBehaviorInstance => Behaviors.FirstOrDefault(b => b is T) as T;
     }
 }

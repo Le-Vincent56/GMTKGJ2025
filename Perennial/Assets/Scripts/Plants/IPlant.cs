@@ -2,7 +2,7 @@ namespace Perennial.Plants
 {
     public interface IPlant
     {
-        void Tick();
+        void Upkeep();
         void Harvest();
     }
 }
