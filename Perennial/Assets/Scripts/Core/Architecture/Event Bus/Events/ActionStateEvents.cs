@@ -2,16 +2,16 @@ using UnityEngine;
 
 namespace Perennial.Core.Architecture.Event_Bus.Events
 {
-    public enum StateType
+    public enum ActionStateType
     {
         Harvest,
         Plant,
         Till,
         Nothing
     }
-    public struct ExitActionState : IEvent
+    public struct ChangeActionState : IEvent
     {
-        public StateType StateType;
+        public ActionStateType StateType;
     }
 
     public struct StartHarvestState : IEvent
