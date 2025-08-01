@@ -21,9 +21,9 @@ namespace Perennial.Actions.Commands
         /// </summary>
         /// <typeparam name="T">Type of command</typeparam>
         /// <returns>Instance of ICommand of type T</returns>
-        public static T Create<T>() where T : BaseCommand
+        public static T Create<T>(GardenManager gardenManager) where T : BaseCommand
         {
-            return (T) System.Activator.CreateInstance(typeof(T));
+            return (T) System.Activator.CreateInstance(typeof(T), gardenManager);
         }
     }
 }
