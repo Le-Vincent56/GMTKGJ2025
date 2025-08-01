@@ -4,9 +4,10 @@ namespace Perennial.Actions.Commands
 {
     public abstract class BaseCommand : ICommand
     {
+        //TODO Put needed references here to pass to children. Like GardenManager
         protected BaseCommand()
         {
-            
+            //TODO Put needed references here to pass to children. Like GardenManager
         }
 
         /// <summary>
