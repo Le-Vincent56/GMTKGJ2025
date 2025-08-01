@@ -1,14 +1,16 @@
 using System.Threading.Tasks;
 using Perennial.Garden;
+using Perennial.Plants;
 using UnityEngine;
 
 namespace Perennial.Actions.Commands
 {
     public class PlantCommand : BaseCommand
     {
-        protected PlantCommand(GardenManager gardenManager) : base(gardenManager)
+        private readonly Plant _plant;
+        protected PlantCommand(GardenManager gardenManager, Plant plant) : base(gardenManager)
         {
-
+            _plant = plant;
         }
         
         /// <summary>
