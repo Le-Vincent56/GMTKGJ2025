@@ -1,11 +1,10 @@
 using System.Collections.Generic;
+using System.Linq;
 using Perennial.Core.Debugging;
 using Perennial.Core.Extensions;
+using UnityEngine;
 using UnityEditor;
 using LogType = Perennial.Core.Debugging.LogType;
-#if UNITY_EDITOR
-using UnityEngine;
-#endif
 
 
 namespace Perennial.Plants
@@ -35,6 +34,16 @@ namespace Perennial.Plants
                 Debugger.Log($"Duplicate Plant ID found: {plant.Name}", LogType.Warning);
             }
         }
+        
+        /// <summary>
+        /// Get all the IDs of the lookup table
+        /// </summary>
+        public List<SerializableGuid> GetIDs() => _lookup.Keys.ToList();
+        
+        /// <summary>
+        /// Try to get a value from the lookup table
+        /// </summary>
+        public bool TryGetValue(SerializableGuid id, out PlantDefinition plant) => _lookup.TryGetValue(id, out plant);
         
         #if UNITY_EDITOR
         /// <summary>

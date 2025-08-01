@@ -1,5 +1,3 @@
-using UnityEngine;
-
 namespace Perennial.Plants.Data
 {
     public readonly record struct LifetimeSegment(int Value)
