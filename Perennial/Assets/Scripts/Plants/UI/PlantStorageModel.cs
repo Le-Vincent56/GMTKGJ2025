@@ -9,7 +9,7 @@ namespace Perennial.Plants.UI
     public class PlantStorageModel
     {
         private readonly PlantDatabase _database;
-        private Dictionary<SerializableGuid, StorageAmount> _availablePlants;
+        private readonly Dictionary<SerializableGuid, StorageAmount> _availablePlants;
 
         public event Action<PlantDefinition, StorageAmount> OnPlantAdded = delegate { };
         public event Action<PlantDefinition, StorageAmount> OnPlantRemoved = delegate { };
@@ -67,6 +67,22 @@ namespace Perennial.Plants.UI
             
             // Invoke the removed event
             OnPlantRemoved?.Invoke(removedPlant, _availablePlants[plantID]);
+        }
+
+        /// <summary>
+        /// Get the plant definitions from the Database
+        /// </summary>
+        /// <returns></returns>
+        public List<PlantDefinition> GetPlantDefinitions() => _database.GetKeys();
+
+        /// <summary>
+        /// Get a plant definition from the model
+        /// </summary>
+        public PlantDefinition GetPlantDefinition(SerializableGuid plantID)
+        {
+            return !ValidateDatabaseID(plantID, out PlantDefinition definition) 
+                ? null 
+                : definition;
         }
 
         /// <summary>

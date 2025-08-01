@@ -40,6 +40,8 @@ namespace Perennial.Plants
         /// </summary>
         public List<SerializableGuid> GetIDs() => _lookup.Keys.ToList();
         
+        public List<PlantDefinition> GetKeys() => _lookup.Values.ToList();
+        
         /// <summary>
         /// Try to get a value from the lookup table
         /// </summary>
