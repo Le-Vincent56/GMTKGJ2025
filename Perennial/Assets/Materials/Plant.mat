@@ -46,7 +46,7 @@ Material:
     m_Ints: []
     m_Floats:
     - _EnableExternalAlpha: 0
-    - _WindNoiseThreshold: 0.059
+    - _WindNoiseThreshold: 0.271
     - _WindPower: 1.34
     - _WindSampleRange: 0.2
     - _WindSpeed: 3.1
