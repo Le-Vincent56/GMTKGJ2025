@@ -3,11 +3,11 @@ using Perennial.Core.Architecture.Event_Bus.Events;
 
 namespace Perennial.TurnController.States.ActionStates
 {
-    public class HarvestActionState : BaseActionState
+    public class NothingActionState : BaseActionState
     {
         public override void OnEnter()
         {
-            EventBus<StartHarvestState>.Raise(new StartHarvestState());
+            EventBus<StartNothingState>.Raise(new StartNothingState());
         }
     }
 }
