@@ -795,6 +795,7 @@ GameObject:
   - component: {fileID: 1957220728}
   - component: {fileID: 1957220727}
   - component: {fileID: 1957220729}
+  - component: {fileID: 1957220730}
   m_Layer: 0
   m_Name: TurnController
   m_TagString: Untagged
@@ -1025,6 +1026,18 @@ MonoBehaviour:
   startingMonth: 0
   _currentMonth: 0
   _currentSeason: 0
+--- !u!114 &1957220730
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1957220725}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5ee8ae9c077b77446929ad4e4af5d652, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
