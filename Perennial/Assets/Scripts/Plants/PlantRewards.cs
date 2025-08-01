@@ -24,7 +24,7 @@ namespace Perennial.Plants
         /// </summary>
         public Food CalculateFood()
         {
-            Food baseAmount = (_foodMultiplier * _owner.Lifetime.RoundsAlive) + _foodConstant;
+            Food baseAmount = (_foodMultiplier * _owner.Lifetime.CurrentLifetime) + _foodConstant;
 
             return BonusActive
                 ? baseAmount * BONUS_MODIFIER

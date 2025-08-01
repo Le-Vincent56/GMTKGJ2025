@@ -35,10 +35,20 @@ namespace Perennial.Plants
             _gardenManager = gardenManager;
             _abilities = definition.Abilities;
             Tile = currentTile;
+            
             Stats = new PlantStats(definition.BaseStats);
-            Lifetime =  new PlantLifetime(definition.GrowTime, definition.HarvestTime);
+            Lifetime =  new PlantLifetime(
+                this, 
+                definition.GrowTime, 
+                definition.HarvestTime,
+                definition.PlantSprite
+            );
             Rewards = new PlantRewards(this, definition.FoodMultiplier, definition.FoodConstant);
+            
             MarkedForRemoval = false;
+            
+            // Set the tile sprite
+            currentTile.UpdatePlantSprite(definition.SeedSprite);
         }
 
         /// <summary>

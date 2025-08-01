@@ -16,7 +16,8 @@ namespace Perennial.Plants
         [SerializeField] private string plantName;
         [SerializeField] [TextArea(3,5)] private string description;
         [SerializeField] private PlantBaseStats baseStats;
-        [SerializeField] private Sprite sprite;
+        [SerializeField] private Sprite seedSprite;
+        [SerializeField] private Sprite plantSprite;
         
         [Header("Lifetime")]
         [SerializeField] private int growthTime;
@@ -41,7 +42,8 @@ namespace Perennial.Plants
         public int HarvestTime => harvestTime;
         public List<Season> IncompatibleSeasons => incompatibleSeasons;
         public List<Season> BonusSeasons => bonusSeasons;
-        public Sprite Sprite => sprite;
+        public Sprite SeedSprite => seedSprite;
+        public Sprite PlantSprite => plantSprite;
         public PlantAbility[] Abilities => abilities;
         public List<PlantBehavior> Behaviors => behaviors;
         public PlantBaseStats BaseStats => baseStats;
