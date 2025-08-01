@@ -40,13 +40,7 @@ namespace Perennial.TurnController.States
             {
                 _actionStateType = ActionStateType.Nothing; 
             });
-            
-               
-            _turnEndedEventBinding = new EventBinding<TurnEnded>(() =>
-            {
-              //  _actionStateType = ActionStateType.Nothing; 
-            });
-            
+
             StartUpStateMachine();
         }
 
