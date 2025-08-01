@@ -11,19 +11,19 @@ using Random = UnityEngine.Random;
 
 namespace Perennial.Garden
 {
-	public class GardenManager : PersistentSingleton<GardenManager>
+	public class GardenManager : MonoBehaviour
 	{
 		[SerializeField] private GameObject tilePrefab;
 		[Space]
-		[SerializeField, Range(1, 20)] private int _gardenWidth = 1;
-		[SerializeField, Range(1, 20)] private int _gardenHeight = 1;
+		[SerializeField, Range(1, 20)] private int gardenWidth = 1;
+		[SerializeField, Range(1, 20)] private int gardenHeight = 1;
 		[SerializeField, Range(0f, 1f)] private float startTilledPercentage = 0.5f;
-		[SerializeField, Range(0f, 1f)] private float _plantMutationPercentage = 0.1f;
-		[SerializeField, Range(0f, 1f)] private float _grassSpreadPercentage = 0.1f;
+		[SerializeField, Range(0f, 1f)] private float plantMutationPercentage = 0.1f;
+		[SerializeField, Range(0f, 1f)] private float weedSpreadPercentage = 0.1f;
 
 		// [0, 0] corresponds to the bottom-left corner of the garden
-		private Tile[ , ] garden;
-		private List<PlantBase> _plants;
+		private Tile[ , ] _garden;
+		private List<Plant> _plants;
 		private List<Tile> _tiles;
 
 		private EventBinding<TurnEnded> _turnEndedEventBinding;
@@ -31,12 +31,12 @@ namespace Perennial.Garden
 		/// <summary>
 		/// The width of the garden in tiles
 		/// </summary>
-		public int GardenWidth => _gardenWidth;
+		public int GardenWidth => gardenWidth;
 
 		/// <summary>
 		/// The height of the garden in tiles
 		/// </summary>
-		public int GardenHeight => _gardenHeight;
+		public int GardenHeight => gardenHeight;
 
 		/// <summary>
 		/// The total area of the garden, or the total number of tiles within the garden
@@ -46,7 +46,7 @@ namespace Perennial.Garden
 		/// <summary>
 		/// A list of all the tiles that currently have plants on them
 		/// </summary>
-		public List<PlantBase> Plants { get => _plants; private set => _plants = value; }
+		public List<Plant> Plants { get => _plants; private set => _plants = value; }
 
 		/// <summary>
 		/// A list of all the tiles that make up the garden
@@ -56,19 +56,17 @@ namespace Perennial.Garden
 		/// <summary>
 		/// The chance for plants to mutate on any given check
 		/// </summary>
-		public float PlantMutationPercentage => _plantMutationPercentage;
+		public float PlantMutationPercentage => plantMutationPercentage;
 
 		/// <summary>
-		/// The chance for grass to spread on any given check
+		/// The chance for weed to spread on any given check
 		/// </summary>
-		public float GrassSpreadPercentage => _grassSpreadPercentage;
+		public float WeedSpreadPercentage => weedSpreadPercentage;
 
-		protected override void Awake ( )
+		private void Awake ( )
 		{
-			base.Awake( );
-
-			garden = new Tile[GardenWidth, GardenHeight];
-			Plants = new List<PlantBase>( );
+			_garden = new Tile[GardenWidth, GardenHeight];
+			Plants = new List<Plant>( );
 			Tiles = new List<Tile>( );
 		}
 
@@ -79,18 +77,18 @@ namespace Perennial.Garden
 			GenerateTiles( );
 		}
 
-		private void OnEnable()
+		private void OnEnable ( )
 		{
-			_turnEndedEventBinding = new EventBinding<TurnEnded>(() =>
+			_turnEndedEventBinding = new EventBinding<TurnEnded>(( ) =>
 			{
-				UpdatePlantMutations();
-				UpdateGrassSpread();
+				UpdatePlantMutations( );
+				UpdateWeedSpread( );
 			});
-			
+
 			EventBus<TurnEnded>.Register(_turnEndedEventBinding);
 		}
 
-		private void OnDisable()
+		private void OnDisable ( )
 		{
 			EventBus<TurnEnded>.Deregister(_turnEndedEventBinding);
 		}
@@ -140,7 +138,7 @@ namespace Perennial.Garden
 		{
 			if (IsPositionInBounds(x, y))
 			{
-				return garden[x, y];
+				return _garden[x, y];
 			}
 
 			return null;
@@ -152,13 +150,13 @@ namespace Perennial.Garden
 		/// <param name="x">The x coordinate of the position to get</param>
 		/// <param name="y">The y coordinate of the position to get</param>
 		/// <returns>A reference to the plant if the specified position is within the bounds of the garden AND there is a plant currently at that position, null otherwise</returns>
-		public PlantBase GetPlantAtPosition (int x, int y)
+		public Plant GetPlantAtPosition (int x, int y)
 		{
 			Tile tile = GetTileAtPosition(x, y);
 
 			if (tile != null)
 			{
-				return tile.PlantBase;
+				return tile.Plant;
 			}
 
 			return null;
@@ -178,7 +176,7 @@ namespace Perennial.Garden
 			}
 
 			Plants.Add(plant);
-			tile.PlantBase = plant;
+			tile.Plant = plant;
 			return true;
 		}
 
@@ -206,8 +204,8 @@ namespace Perennial.Garden
 				return false;
 			}
 
-			Plants.Remove(tile.PlantBase);
-			tile.PlantBase = null;
+			Plants.Remove(tile.Plant);
+			tile.Plant = null;
 			return true;
 		}
 
@@ -283,12 +281,12 @@ namespace Perennial.Garden
 		/// <param name="y">The y position to get the surrounding plants of</param>
 		/// <param name="radius">The radius around the specified to get the surrounding plants of. The minimum value this can be is 1</param>
 		/// <returns>A list of surrounding plants to the specified position, excluding the plant on the tile at the specified position. There will be no null values in this list</returns>
-		public List<PlantBase> GetSurroundingPlants (int x, int y, int radius = 1)
+		public List<Plant> GetSurroundingPlants (int x, int y, int radius = 1)
 		{
-			List<PlantBase> surroundingPlants = new List<PlantBase>( );
+			List<Plant> surroundingPlants = new List<Plant>( );
 			radius = Mathf.Max(1, radius);
 
-			PlantBase plant;
+			Plant plant;
 			for (int i = -radius; i <= radius; i++)
 			{
 				for (int j = -radius; j <= radius; j++)
@@ -357,13 +355,13 @@ namespace Perennial.Garden
 		/// <param name="width">The width of the rectangular section. The minimum value this can be is 1</param>
 		/// <param name="height">The height of the rectangular section. The minimum value this can be is 1</param>
 		/// <returns>A list of all the plants that fall within the rectangular section. There will be no null values in this list</returns>
-		public List<PlantBase> GetPlantsInSection (int x, int y, int width, int height)
+		public List<Plant> GetPlantsInSection (int x, int y, int width, int height)
 		{
-			List<PlantBase> plantsInSection = new List<PlantBase>( );
+			List<Plant> plantsInSection = new List<Plant>( );
 			width = Mathf.Max(1, width);
 			height = Mathf.Max(1, height);
 
-			PlantBase plant;
+			Plant plant;
 			for (int i = 0; i < width; i++)
 			{
 				for (int j = 0; j < height; j++)
@@ -387,9 +385,9 @@ namespace Perennial.Garden
 		/// </summary>
 		/// <param name="tiles">The list of tiles to check</param>
 		/// <returns>A list of all the plants that are on the tiles in the inputted list. There will be no null values in this list</returns>
-		public List<PlantBase> GetPlantsOnTiles (List<Tile> tiles)
+		public List<Plant> GetPlantsOnTiles (List<Tile> tiles)
 		{
-			return tiles.Select(tile => tile.PlantBase).NotNull( ).ToList( );
+			return tiles.Select(tile => tile.Plant).NotNull( ).ToList( );
 		}
 
 		/// <summary>
@@ -436,42 +434,41 @@ namespace Perennial.Garden
 		}
 
 		/// <summary>
-		/// Update the spread of grass throughout the garden
+		/// Update the spread of weeds throughout the garden
 		/// </summary>
-		public void UpdateGrassSpread ( )
+		public void UpdateWeedSpread ( )
 		{
-			List<Tile> spreadableTiles = GetGrassSpreadableTiles( );
+			List<Tile> spreadableTiles = GetWeedSpreadableTiles( );
 			for (int i = 0; i < spreadableTiles.Count; i++)
 			{
-				// Roll for a random chance to spread grass
-				if (Random.Range(0f, 1f) > GrassSpreadPercentage)
+				// Roll for a random chance to spread weeds
+				if (Random.Range(0f, 1f) > WeedSpreadPercentage)
 				{
 					continue;
 				}
 
-				// The grass spread was successful
-				spreadableTiles[i].SoilState = SoilState.GRASS;
+				// The weed spread was successful
+				spreadableTiles[i].SoilState = SoilState.WEEDS;
 			}
 		}
 
 		/// <summary>
-		/// Get a list of all the tiles that grass can currently spread to
+		/// Get a list of all the tiles that weeds can currently spread to
 		/// </summary>
-		/// <returns>A list of all the tiles that grass can currently spread to</returns>
-		private List<Tile> GetGrassSpreadableTiles ( )
+		/// <returns>A list of all the tiles that weeds can currently spread to</returns>
+		private List<Tile> GetWeedSpreadableTiles ( )
 		{
-			// Spreadable tiles are all tiles that are on the edge of the garden or are directly surrounding a current grass tile
-			// Spreadable tiles are also empty and have no plant on them, as grass does not get rid of plants
+			// Spreadable tiles are all tiles that are on the edge of the garden or are directly surrounding a current weed tile
 			List<Tile> possibleTiles = new List<Tile>( );
 
 			// Add all edge tiles
 			possibleTiles.AddRange(Tiles.Where(tile => tile.IsAtGardenEdge));
 
-			// Add all tiles that surround grass tiles
-			GetTilesOfSoilState(Tiles, SoilState.GRASS).ForEach(grassTile => possibleTiles.AddRange(GetSurroundingTiles(grassTile)));
+			// Add all tiles that surround weed tiles
+			GetTilesOfSoilState(Tiles, SoilState.WEEDS).ForEach(grassTile => possibleTiles.AddRange(GetSurroundingTiles(grassTile)));
 
-			// Filter out all grass tiles and non-empty tiles
-			return GetEmptyTilesNotOfSoilState(possibleTiles, SoilState.GRASS).Distinct( ).ToList( );
+			// Filter out all current weed tiles and non-empty tiles
+			return GetEmptyTilesNotOfSoilState(possibleTiles, SoilState.WEEDS).Distinct( ).ToList( );
 		}
 
 		/// <summary>
@@ -495,7 +492,7 @@ namespace Perennial.Garden
 		private void UpdatePlantMutationCombinations (List<Tile> tiles)
 		{
 			List<Tile> emptyTiles = GetEmptyTiles(tiles);
-			List<PlantBase> plants = GetPlantsOnTiles(tiles);
+			List<Plant> plants = GetPlantsOnTiles(tiles);
 
 			// Loop through every combination of plant in the section
 			for (int i = 0; i < plants.Count; i++)
@@ -530,6 +527,17 @@ namespace Perennial.Garden
 		}
 
 		/// <summary>
+		/// Tick all plants currently on the garden
+		/// </summary>
+		public void TickAllPlants ( )
+		{
+			foreach (Plant plant in Plants)
+			{
+				plant.Tick( );
+			}
+		}
+
+		/// <summary>
 		/// Generate a 2D grid of all the tiles in the garden
 		/// </summary>
 		private void GenerateTiles ( )
@@ -546,9 +554,10 @@ namespace Perennial.Garden
 					// The position of the garden object will be the center of the tile grid
 					Tile tile = Instantiate(tilePrefab, transform).GetComponent<Tile>( );
 					tile.GardenPosition = new Vector2Int(i, j);
+					tile.GardenManager = this;
 					tile.transform.localPosition = new Vector3(offsetX + i, offsetY + j);
 
-					garden[i, j] = tile;
+					_garden[i, j] = tile;
 					Tiles.Add(tile);
 				}
 			}
@@ -558,7 +567,7 @@ namespace Perennial.Garden
 			int tilledSoilCount = Mathf.CeilToInt(GardenArea * startTilledPercentage);
 			for (int i = 0; i < Tiles.Count; i++)
 			{
-				shuffledTileList[i].SoilState = (i < tilledSoilCount ? SoilState.TILLED : SoilState.GRASS);
+				shuffledTileList[i].SoilState = (i < tilledSoilCount ? SoilState.TILLED : SoilState.WEEDS);
 			}
 		}
 	}

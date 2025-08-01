@@ -10,7 +10,7 @@ namespace Perennial.Garden
 	/// </summary>
 	public enum SoilState
 	{
-		GRASS, TILLED
+		WEEDS, TILLED
 	}
 
 	public class Tile : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerClickHandler
@@ -20,25 +20,27 @@ namespace Perennial.Garden
 		[SerializeField] private Canvas tooltipCanvas;
 		[SerializeField] private SerializedDictionary<SoilState, Sprite> soilStateSprites;
 		[Space]
-		[SerializeField] private SoilState _soilState;
-		[SerializeField] private Vector2Int _gardenPosition;
-		[SerializeField] private bool _isAtGardenEdge;
-		private PlantBase _plantBase;
+		[SerializeField] private SoilState soilState;
+		[SerializeField] private Vector2Int gardenPosition;
+		[SerializeField] private bool isAtGardenEdge;
+
+		private Plant _plant;
+		private GardenManager _gardenManager;
 
 		/// <summary>
 		/// The current plant object on this tile. This should not be updated outside the garden's add/remove plant methods to ensure everything is updated properly
 		/// </summary>
-		public PlantBase PlantBase
+		public Plant Plant
 		{
-			get => _plantBase;
+			get => _plant;
 			set
 			{
-				if (_plantBase != null)
+				if (_plant != null)
 				{
 					return;
 				}
 
-				_plantBase = value;
+				_plant = value;
 				UpdatePlantSprite( );
 			}
 		}
@@ -46,17 +48,17 @@ namespace Perennial.Garden
 		/// <summary>
 		/// Whether or not this tile currently has a plant on it
 		/// </summary>
-		public bool HasPlant => (PlantBase != null);
+		public bool HasPlant => (Plant != null);
 
 		/// <summary>
 		/// The current state of this tile's soil
 		/// </summary>
 		public SoilState SoilState
 		{
-			get => _soilState;
+			get => soilState;
 			set
 			{
-				_soilState = value;
+				soilState = value;
 				UpdateSoilSprite( );
 			}
 		}
@@ -65,18 +67,18 @@ namespace Perennial.Garden
 		/// The position of this tile within the garden
 		/// </summary>
 		public Vector2Int GardenPosition {
-			get => _gardenPosition;
+			get => gardenPosition;
 			set
 			{
-				_gardenPosition = value;
-				IsAtGardenEdge = GardenManager.Instance.IsPositionAtGardenEdge(_gardenPosition.x, _gardenPosition.y);
+				gardenPosition = value;
+				IsAtGardenEdge = GardenManager.IsPositionAtGardenEdge(gardenPosition.x, gardenPosition.y);
 			}
 		}
 
 		/// <summary>
 		/// Whether or not this tile is at the edge of the garden
 		/// </summary>
-		public bool IsAtGardenEdge { get => _isAtGardenEdge; private set => _isAtGardenEdge = value; }
+		public bool IsAtGardenEdge { get => isAtGardenEdge; private set => isAtGardenEdge = value; }
 
 		/// <summary>
 		/// Whether or not the tooltip for this tile is currently active and visible
@@ -86,6 +88,11 @@ namespace Perennial.Garden
 			get => tooltipCanvas.gameObject.activeSelf;
 			set => tooltipCanvas.gameObject.SetActive(value);
 		}
+
+		/// <summary>
+		/// A reference to the garden manager object
+		/// </summary>
+		public GardenManager GardenManager { get; set; }
 
 		private void OnValidate ( )
 		{
