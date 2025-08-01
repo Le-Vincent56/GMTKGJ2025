@@ -33,7 +33,7 @@ namespace Perennial.Seasons
         Winter,
     }
     
-    public class YearManager : SerializedMonoBehaviour
+    public class SeasonManager : SerializedMonoBehaviour
     {
         [Header("Settings")]
         [SerializeField] private Month startingMonth;
@@ -57,9 +57,11 @@ namespace Perennial.Seasons
 
         private void Start()
         {
+            //make sure dictionary is valid
+            ValidateMonthSeasonMap();
+            
             _currentMonth = startingMonth;
             _currentSeason = monthSeasonMap[_currentMonth];
-            ValidateMonthSeasonMap();
         }
 
         private void OnEnable()
