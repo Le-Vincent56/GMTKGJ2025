@@ -1,10 +1,8 @@
-using Perennial.Core.Architecture.Event_Bus;
-using Perennial.Core.Architecture.Event_Bus.Events;
 using UnityEngine;
 
 namespace Perennial.Test
 {
-    public class UI_PassTurn : MonoBehaviour
+    public class UI_TestAction : MonoBehaviour
     {
         private UnityEngine.UI.Button _buttonPassTurn;
 
