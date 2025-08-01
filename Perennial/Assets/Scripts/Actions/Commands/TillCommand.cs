@@ -1,10 +1,17 @@
 using System.Threading.Tasks;
+using Perennial.Garden;
 using UnityEngine;
 
 namespace Perennial.Actions.Commands
 {
     public class TillCommand : BaseCommand
     {
+        
+        protected TillCommand(GardenManager gardenManager) : base(gardenManager)
+        {
+
+        }
+        
         /// <summary>
         /// Executes the Till action
         /// </summary>

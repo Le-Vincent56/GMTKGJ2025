@@ -1,10 +1,16 @@
 using System.Threading.Tasks;
+using Perennial.Garden;
 using UnityEngine;
 
 namespace Perennial.Actions.Commands
 {
     public class HarvestCommand : BaseCommand
     {
+        protected HarvestCommand(GardenManager gardenManager) : base(gardenManager)
+        {
+
+        }
+        
         /// <summary>
         /// Executes the Harvest  action
         /// </summary>

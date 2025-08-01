@@ -1,13 +1,14 @@
 using System.Threading.Tasks;
+using Perennial.Garden;
 
 namespace Perennial.Actions.Commands
 {
     public abstract class BaseCommand : ICommand
     {
-        //TODO Put needed references here to pass to children. Like GardenManager
-        protected BaseCommand()
+        private readonly GardenManager _gardenManager;
+        protected BaseCommand(GardenManager gardenManager)
         {
-            //TODO Put needed references here to pass to children. Like GardenManager
+            _gardenManager = gardenManager;
         }
 
         /// <summary>
@@ -20,9 +21,9 @@ namespace Perennial.Actions.Commands
         /// </summary>
         /// <typeparam name="T">Type of command</typeparam>
         /// <returns>Instance of ICommand of type T</returns>
-        public static T Create<T>() where T : BaseCommand
+        public static T Create<T>(GardenManager gardenManager) where T : BaseCommand
         {
-            return (T) System.Activator.CreateInstance(typeof(T));
+            return (T) System.Activator.CreateInstance(typeof(T), gardenManager);
         }
     }
 }

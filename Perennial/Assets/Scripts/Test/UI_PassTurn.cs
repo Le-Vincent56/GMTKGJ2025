@@ -16,7 +16,5 @@ namespace Perennial.Test
                 EventBus<EndTurn>.Raise(new EndTurn());
             }); 
         }
-
-        
     }
 }

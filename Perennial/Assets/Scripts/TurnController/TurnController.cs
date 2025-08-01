@@ -15,7 +15,6 @@ namespace Perennial.TurnController
     }
     public class TurnController : MonoBehaviour
     {
-
         [Header("Fields")]
         [SerializeField] private string currentState;
         [SerializeField] private int allowedActions;
@@ -30,7 +29,7 @@ namespace Perennial.TurnController
         #region Properties
         public State StateFinished { get => _stateFinished; set => _stateFinished = value;}
         public bool EndTurn { set => _endTurn = value; }
-        
+
         #endregion
 
         private void Start()
@@ -48,8 +47,8 @@ namespace Perennial.TurnController
             {
                 _endTurn = true;
             });
-
             EventBus<EndTurn>.Register(_endTurnEventBinding);
+            
         }
 
         private void OnDisable()

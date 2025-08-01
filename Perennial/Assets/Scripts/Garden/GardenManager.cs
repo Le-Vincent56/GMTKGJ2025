@@ -566,8 +566,8 @@ namespace Perennial.Garden
 					// Tiles will parented to the garden object
 					// The position of the garden object will be the center of the tile grid
 					Tile tile = Instantiate(tilePrefab, transform).GetComponent<Tile>( );
-					tile.GardenPosition = new Vector2Int(i, j);
 					tile.GardenManager = this;
+					tile.GardenPosition = new Vector2Int(i, j);
 					tile.transform.localPosition = new Vector3(offsetX + i, offsetY + j);
 
 					_garden[i, j] = tile;
