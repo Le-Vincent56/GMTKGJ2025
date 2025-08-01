@@ -40,6 +40,16 @@ namespace Perennial.Plants
         }
 
         /// <summary>
+        /// Run plant logic for placement
+        /// </summary>
+        public void Place()
+        {
+            PlantAbilityContext context = CreateAbilityContext();
+            
+            TriggerPlaceAbilities(context);
+        }
+
+        /// <summary>
         /// Run plant logic for the turn
         /// </summary>
         public void Upkeep()
@@ -48,14 +58,8 @@ namespace Perennial.Plants
             SkipGrowth = false;
             SkipPassive = false;
 
-            // Get the context for the ability
             PlantAbilityContext context = CreateAbilityContext();
-            
-            // Let behaviors process
-            foreach (PlantBehaviorInstance behavior in Behaviors)
-            {
-                behavior.OnTick(context);
-            }
+            ProcessPassiveBehaviors(context);
 
             // If not skipping growth, grow the plant
             if (!SkipGrowth) CurrentLifetime += Stats.GrowthRate;
@@ -66,38 +70,11 @@ namespace Perennial.Plants
         /// </summary>
         public void Harvest()
         {
-            // Get the context for the plant ability
             PlantAbilityContext context = CreateAbilityContext();
+            ProcessHarvestBehaviors(context);
+            TriggerHarvestAbilities(context);
+            CancelPassiveAbilities(context);
 
-            // Let behaviors process
-            foreach (PlantBehaviorInstance behavior in Behaviors)
-            {
-                behavior.OnHarvest(context);
-            }
-            
-            // Trigger harvest abilities
-            foreach (PlantAbility ability in _abilities)
-            {
-                // Skip if not a harvest ability
-                if (ability is not HarvestPlantAbility harvestAbility) continue;
-                
-                // Skip if the harvest ability cannot execute
-                if (!harvestAbility.CanExecute(context)) continue;
-                
-                // Tick the harvest ability
-                harvestAbility.OnHarvest(context);
-            }
-
-            // Cancel passive abilities
-            foreach (PlantAbility ability in _abilities)
-            {
-                // Skip if not a passive plant ability
-                if(ability is not PassivePlantAbility passiveAbility) continue;
-
-                // Cancel the passive ability
-                passiveAbility.Cancel(context);
-            }
-            
             // TODO: Remove the plant from the garden
         }
 
@@ -121,14 +98,93 @@ namespace Perennial.Plants
             // Exit early if skipping the passive ability
             if (SkipPassive) return;
 
-            TriggerPassiveTicks();
-        }
-
-        private void TriggerPassiveTicks()
-        {
             // Get the context for the plant ability
             PlantAbilityContext context = CreateAbilityContext();
+            TriggerPassiveAbilities(context);
+        }
 
+        /// <summary>
+        /// Trigger all Place abilities
+        /// </summary>
+        private void TriggerPlaceAbilities(PlantAbilityContext context)
+        {
+            // Iterate through each ability
+            foreach (PlantAbility ability in _abilities)
+            {
+                // Skip if not a passive plant ability
+                if(ability is not PlacePlantAbility placeAbility) continue;
+
+                // Activate the place ability
+                placeAbility.OnPlace(context);
+            }
+        }
+
+        /// <summary>
+        /// Process Passive behaviors
+        /// </summary>
+        private void ProcessPassiveBehaviors(PlantAbilityContext context)
+        {
+            // Iterate through each behavior
+            foreach (PlantBehaviorInstance behavior in Behaviors)
+            {
+                // Trigger its passive logic
+                behavior.OnTick(context);
+            }
+        }
+
+        /// <summary>
+        /// Process Harvest behaviors
+        /// </summary>
+        private void ProcessHarvestBehaviors(PlantAbilityContext context)
+        {
+            // Iterate through each behavior
+            foreach (PlantBehaviorInstance behavior in Behaviors)
+            {
+                // Trigger its harvest logic
+                behavior.OnHarvest(context);
+            }
+        }
+
+        /// <summary>
+        /// Trigger all Harvest abilities
+        /// </summary>
+        private void TriggerHarvestAbilities(PlantAbilityContext context)
+        {
+            // Iterate through each ability
+            foreach (PlantAbility ability in _abilities)
+            {
+                // Skip if not a harvest ability
+                if (ability is not HarvestPlantAbility harvestAbility) continue;
+                
+                // Skip if the harvest ability cannot execute
+                if (!harvestAbility.CanExecute(context)) continue;
+                
+                // Tick the harvest ability
+                harvestAbility.OnHarvest(context);
+            }
+        }
+        
+        /// <summary>
+        /// Cancel all Passive abilities
+        /// </summary>
+        private void CancelPassiveAbilities(PlantAbilityContext context)
+        {
+            // Iterate through each ability
+            foreach (PlantAbility ability in _abilities)
+            {
+                // Skip if not a passive plant ability
+                if(ability is not PassivePlantAbility passiveAbility) continue;
+
+                // Cancel the passive ability
+                passiveAbility.Cancel(context);
+            }
+        }
+
+        /// <summary>
+        /// Trigger all Passive abilities
+        /// </summary>
+        private void TriggerPassiveAbilities(PlantAbilityContext context)
+        {
             // Iterate through each ability
             foreach (PlantAbility ability in _abilities)
             {
@@ -143,6 +199,9 @@ namespace Perennial.Plants
             }
         }
 
+        /// <summary>
+        /// Allocate the context necessary for Plant abilities
+        /// </summary>
         private PlantAbilityContext CreateAbilityContext() => new PlantAbilityContext(this, Tile, _gardenManager);
         
         /// <summary>
