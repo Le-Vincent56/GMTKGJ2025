@@ -7,14 +7,12 @@ namespace Perennial.Plants.Abilities
         public Plant Plant { get; }
         public Tile OriginTile { get; }
         public GardenManager GardenManager { get; }
-        public int CurrentTurn { get; }
 
-        public PlantAbilityContext(Plant plant, Tile originTile, GardenManager gardenManager, int currentTurn)
+        public PlantAbilityContext(Plant plant, Tile originTile, GardenManager gardenManager)
         {
             Plant = plant;
             OriginTile = originTile;
             GardenManager = gardenManager;
-            CurrentTurn = currentTurn;
         }
     }
 }

@@ -2,6 +2,12 @@
 
 namespace Perennial.Plants.Behaviors
 {
+    public enum PlantSignal
+    {
+        Freeze,
+        Grow
+    }
+    
     public abstract class PlantBehaviorInstance
     {
         protected readonly Plant owner;
@@ -30,11 +36,5 @@ namespace Perennial.Plants.Behaviors
         /// Handle any signal sent to this plant
         /// </summary>
         public abstract bool HandleSignal(PlantSignal signalType, object data);
-    }
-
-    public enum PlantSignal
-    {
-        Freeze,
-        Grow
     }
 }

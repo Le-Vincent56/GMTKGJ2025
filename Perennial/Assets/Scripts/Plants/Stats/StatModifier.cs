@@ -1,6 +1,5 @@
 ﻿using System;
 using Perennial.Core.Extensions;
-using Perennial.Plants.Data;
 using Perennial.Plants.Stats.Operations;
 
 namespace Perennial.Plants.Stats

@@ -11,11 +11,6 @@ namespace Perennial.Plants.Abilities
         public string Name => abilityName;
         public string Description => description;
         public int Radius => effectRadius;
-
-        /// <summary>
-        /// Execute the ability's effect
-        /// </summary>
-        public abstract void Execute(PlantAbilityContext context);
         
         /// <summary>
         /// Check if the ability can be executed within the current context

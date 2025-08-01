@@ -10,6 +10,10 @@ namespace Perennial.Plants.Data
         
         public static Lifetime operator -(Lifetime left, float right) => new Lifetime(left.Value - right);
         public static Lifetime operator +(Lifetime left, float right) => new Lifetime(left.Value + right);
+        public static bool operator <(Lifetime left, Lifetime right) => left.Value < right.Value;
+        public static bool operator <=(Lifetime left, Lifetime right) => left.Value <= right.Value;
+        public static bool operator >(Lifetime left, Lifetime right) => left.Value > right.Value;
+        public static bool operator >=(Lifetime left, Lifetime right) => left.Value >= right.Value;
         
         public static Lifetime operator ++(Lifetime lifetime)
         {
