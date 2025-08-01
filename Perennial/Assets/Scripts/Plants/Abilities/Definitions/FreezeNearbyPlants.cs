@@ -13,13 +13,13 @@ namespace Perennial.Plants.Abilities.Definitions
 
         public override void OnHarvest(PlantAbilityContext context)
         {
-            List<PlantBase> affectedPlants = context.GardenManager.GetSurroundingPlants(
+            List<Plant> affectedPlants = context.GardenManager.GetSurroundingPlants(
                 context.OriginTile.GardenPosition.x,
                 context.OriginTile.GardenPosition.y,
                 effectRadius
             );
 
-            foreach (PlantBase plant in affectedPlants)
+            foreach (Plant plant in affectedPlants)
             {
                 if (!plant.HasBehavior<FreezableBehaviorInstance>()) continue;
                 

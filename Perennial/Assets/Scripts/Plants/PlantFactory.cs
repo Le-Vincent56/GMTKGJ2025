@@ -5,7 +5,7 @@ namespace Perennial.Plants
 {
     public static class PlantFactory
     {
-        public static PlantBase CreatePlant(PlantDefinition definition, Tile tile = null, GardenManager gardenManager = null)
+        public static Plant CreatePlant(PlantDefinition definition, Tile tile = null, GardenManager gardenManager = null)
         {
             // Create a new plant
             Plant plant = new Plant(definition, tile, gardenManager);

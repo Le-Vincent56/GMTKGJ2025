@@ -23,7 +23,7 @@ namespace Perennial.Garden
 
 		// [0, 0] corresponds to the bottom-left corner of the garden
 		private Tile[ , ] garden;
-		private List<PlantBase> _plants;
+		private List<Plant> _plants;
 		private List<Tile> _tiles;
 
 		private EventBinding<TurnEnded> _turnEndedEventBinding;
@@ -46,7 +46,7 @@ namespace Perennial.Garden
 		/// <summary>
 		/// A list of all the tiles that currently have plants on them
 		/// </summary>
-		public List<PlantBase> Plants { get => _plants; private set => _plants = value; }
+		public List<Plant> Plants { get => _plants; private set => _plants = value; }
 
 		/// <summary>
 		/// A list of all the tiles that make up the garden
@@ -68,7 +68,7 @@ namespace Perennial.Garden
 			base.Awake( );
 
 			garden = new Tile[GardenWidth, GardenHeight];
-			Plants = new List<PlantBase>( );
+			Plants = new List<Plant>( );
 			Tiles = new List<Tile>( );
 		}
 
@@ -152,13 +152,13 @@ namespace Perennial.Garden
 		/// <param name="x">The x coordinate of the position to get</param>
 		/// <param name="y">The y coordinate of the position to get</param>
 		/// <returns>A reference to the plant if the specified position is within the bounds of the garden AND there is a plant currently at that position, null otherwise</returns>
-		public PlantBase GetPlantAtPosition (int x, int y)
+		public Plant GetPlantAtPosition (int x, int y)
 		{
 			Tile tile = GetTileAtPosition(x, y);
 
 			if (tile != null)
 			{
-				return tile.PlantBase;
+				return tile.Plant;
 			}
 
 			return null;
@@ -178,7 +178,7 @@ namespace Perennial.Garden
 			}
 
 			Plants.Add(plant);
-			tile.PlantBase = plant;
+			tile.Plant = plant;
 			return true;
 		}
 
@@ -206,8 +206,8 @@ namespace Perennial.Garden
 				return false;
 			}
 
-			Plants.Remove(tile.PlantBase);
-			tile.PlantBase = null;
+			Plants.Remove(tile.Plant);
+			tile.Plant = null;
 			return true;
 		}
 
@@ -283,12 +283,12 @@ namespace Perennial.Garden
 		/// <param name="y">The y position to get the surrounding plants of</param>
 		/// <param name="radius">The radius around the specified to get the surrounding plants of. The minimum value this can be is 1</param>
 		/// <returns>A list of surrounding plants to the specified position, excluding the plant on the tile at the specified position. There will be no null values in this list</returns>
-		public List<PlantBase> GetSurroundingPlants (int x, int y, int radius = 1)
+		public List<Plant> GetSurroundingPlants (int x, int y, int radius = 1)
 		{
-			List<PlantBase> surroundingPlants = new List<PlantBase>( );
+			List<Plant> surroundingPlants = new List<Plant>( );
 			radius = Mathf.Max(1, radius);
 
-			PlantBase plant;
+			Plant plant;
 			for (int i = -radius; i <= radius; i++)
 			{
 				for (int j = -radius; j <= radius; j++)
@@ -357,13 +357,13 @@ namespace Perennial.Garden
 		/// <param name="width">The width of the rectangular section. The minimum value this can be is 1</param>
 		/// <param name="height">The height of the rectangular section. The minimum value this can be is 1</param>
 		/// <returns>A list of all the plants that fall within the rectangular section. There will be no null values in this list</returns>
-		public List<PlantBase> GetPlantsInSection (int x, int y, int width, int height)
+		public List<Plant> GetPlantsInSection (int x, int y, int width, int height)
 		{
-			List<PlantBase> plantsInSection = new List<PlantBase>( );
+			List<Plant> plantsInSection = new List<Plant>( );
 			width = Mathf.Max(1, width);
 			height = Mathf.Max(1, height);
 
-			PlantBase plant;
+			Plant plant;
 			for (int i = 0; i < width; i++)
 			{
 				for (int j = 0; j < height; j++)
@@ -387,9 +387,9 @@ namespace Perennial.Garden
 		/// </summary>
 		/// <param name="tiles">The list of tiles to check</param>
 		/// <returns>A list of all the plants that are on the tiles in the inputted list. There will be no null values in this list</returns>
-		public List<PlantBase> GetPlantsOnTiles (List<Tile> tiles)
+		public List<Plant> GetPlantsOnTiles (List<Tile> tiles)
 		{
-			return tiles.Select(tile => tile.PlantBase).NotNull( ).ToList( );
+			return tiles.Select(tile => tile.Plant).NotNull( ).ToList( );
 		}
 
 		/// <summary>
@@ -495,7 +495,7 @@ namespace Perennial.Garden
 		private void UpdatePlantMutationCombinations (List<Tile> tiles)
 		{
 			List<Tile> emptyTiles = GetEmptyTiles(tiles);
-			List<PlantBase> plants = GetPlantsOnTiles(tiles);
+			List<Plant> plants = GetPlantsOnTiles(tiles);
 
 			// Loop through every combination of plant in the section
 			for (int i = 0; i < plants.Count; i++)
