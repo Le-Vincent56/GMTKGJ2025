@@ -1,5 +1,6 @@
 using Perennial.Core.Architecture.Event_Bus;
 using Perennial.Core.Architecture.Event_Bus.Events;
+using UnityEngine;
 
 namespace Perennial.TurnController.States.ActionStates
 {
@@ -7,6 +8,7 @@ namespace Perennial.TurnController.States.ActionStates
     {
         public override void OnEnter()
         {
+            Debug.Log("Plant State Started");
             EventBus<StartPlantState>.Raise(new StartPlantState());
         }
     }
