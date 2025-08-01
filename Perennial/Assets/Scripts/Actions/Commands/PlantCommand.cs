@@ -1,10 +1,16 @@
 using System.Threading.Tasks;
+using Perennial.Garden;
 using UnityEngine;
 
 namespace Perennial.Actions.Commands
 {
     public class PlantCommand : BaseCommand
     {
+        protected PlantCommand(GardenManager gardenManager) : base(gardenManager)
+        {
+
+        }
+        
         /// <summary>
         /// Executes the Plant action
         /// </summary>
