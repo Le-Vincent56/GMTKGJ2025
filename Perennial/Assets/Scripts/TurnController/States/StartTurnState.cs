@@ -2,7 +2,7 @@ using Perennial.Core.Architecture.Event_Bus;
 using Perennial.Core.Architecture.Event_Bus.Events;
 using UnityEngine;
 
-namespace Perennial.TurnController.States
+namespace Perennial.TurnManagement.States
 {
     public class StartTurnState : BaseState
     {

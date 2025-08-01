@@ -6,10 +6,13 @@ namespace Perennial.Actions.Commands
     public abstract class BaseCommand : ICommand
     {
         private readonly GardenManager _gardenManager;
-        protected BaseCommand(GardenManager gardenManager)
+        private readonly Tile _tile;
+
+        protected BaseCommand(GardenManager gardenManager, Tile tile)
         {
             _gardenManager = gardenManager;
-        }
+            _tile = tile;
+		}
 
         /// <summary>
         /// Execute the Command
@@ -21,9 +24,9 @@ namespace Perennial.Actions.Commands
         /// </summary>
         /// <typeparam name="T">Type of command</typeparam>
         /// <returns>Instance of ICommand of type T</returns>
-        public static T Create<T>(GardenManager gardenManager) where T : BaseCommand
+        public static T Create<T>(GardenManager gardenManager, Tile tile) where T : BaseCommand
         {
-            return (T) System.Activator.CreateInstance(typeof(T), gardenManager);
+            return (T) System.Activator.CreateInstance(typeof(T), gardenManager, tile);
         }
     }
 }

@@ -1,15 +1,15 @@
 using Perennial.Core.Architecture.Event_Bus;
 using Perennial.Core.Architecture.Event_Bus.Events;
 using Perennial.Core.Architecture.State_Machine;
-using Perennial.TurnController.States.ActionStates;
+using Perennial.TurnManagement.States.ActionStates;
 using UnityEngine;
 using StateMachine = Perennial.Core.Architecture.State_Machine.StateMachine;
 
-namespace Perennial.TurnController.States
+namespace Perennial.TurnManagement.States
 {
     public class ActionState : BaseState
     {
-        private StateMachine _actionStateMachine;
+        public StateMachine ActionStateMachine { get; protected set; }
 
         //for the sub action state machine controls
         private ActionStateType _actionStateType;
@@ -53,7 +53,7 @@ namespace Perennial.TurnController.States
         
         public override void Update()
         {
-            _actionStateMachine.Update();
+            ActionStateMachine.Update();
         }
 
         public override void OnExit()
@@ -66,21 +66,21 @@ namespace Perennial.TurnController.States
         private void StartUpStateMachine()
         {
             //setup sub state machine
-            _actionStateMachine = new StateMachine();
+            ActionStateMachine = new StateMachine();
 
             HarvestActionState harvestActionState = new HarvestActionState();
             PlantActionState plantActionState = new PlantActionState();
             TillActionState tillActionState = new TillActionState();
             NothingActionState nothingActionState = new NothingActionState();
             
-            _actionStateMachine.Any(harvestActionState, new FuncPredicate(() => _actionStateType == ActionStateType.Harvest));
-            _actionStateMachine.Any(plantActionState, new FuncPredicate(() => _actionStateType == ActionStateType.Plant));
-            _actionStateMachine.Any(tillActionState, new FuncPredicate(() => _actionStateType == ActionStateType.Till));
-            _actionStateMachine.Any(nothingActionState, new FuncPredicate(() => _actionStateType == ActionStateType.Nothing));
+            ActionStateMachine.Any(harvestActionState, new FuncPredicate(() => _actionStateType == ActionStateType.Harvest));
+            ActionStateMachine.Any(plantActionState, new FuncPredicate(() => _actionStateType == ActionStateType.Plant));
+            ActionStateMachine.Any(tillActionState, new FuncPredicate(() => _actionStateType == ActionStateType.Till));
+            ActionStateMachine.Any(nothingActionState, new FuncPredicate(() => _actionStateType == ActionStateType.Nothing));
         
             //start at nothing
             _actionStateType = ActionStateType.Nothing;
-            _actionStateMachine.SetState(nothingActionState);
+            ActionStateMachine.SetState(nothingActionState);
         }
     }
 }

@@ -1,7 +1,14 @@
+using Perennial.Actions.Commands;
+using Perennial.Core.Architecture.Event_Bus.Events;
+using Perennial.Core.Architecture.Event_Bus;
 using Perennial.Plants;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.Rendering;
+using Perennial.TurnManagement;
+using Perennial.TurnManagement.States.ActionStates;
+using Perennial.Core.Architecture.State_Machine;
+using Perennial.TurnManagement.States;
 
 namespace Perennial.Garden
 {
@@ -25,7 +32,6 @@ namespace Perennial.Garden
 		[SerializeField] private bool isAtGardenEdge;
 
 		private Plant _plant;
-		private GardenManager _gardenManager;
 
 		/// <summary>
 		/// The current plant object on this tile. This should not be updated outside the garden's add/remove plant methods to ensure everything is updated properly
@@ -65,7 +71,8 @@ namespace Perennial.Garden
 		/// <summary>
 		/// The position of this tile within the garden
 		/// </summary>
-		public Vector2Int GardenPosition {
+		public Vector2Int GardenPosition
+		{
 			get => gardenPosition;
 			set
 			{
@@ -91,7 +98,12 @@ namespace Perennial.Garden
 		/// <summary>
 		/// A reference to the garden manager object
 		/// </summary>
-		public GardenManager GardenManager { get; set; }
+		public GardenManager GardenManager { get; private set; }
+
+		/// <summary>
+		/// A reference to the turn controller object
+		/// </summary>
+		public TurnController TurnController { get; private set; }
 
 		private void OnValidate ( )
 		{
@@ -101,6 +113,9 @@ namespace Perennial.Garden
 		private void Awake ( )
 		{
 			OnValidate( );
+
+			GardenManager = FindFirstObjectByType<GardenManager>( );
+			TurnController = FindFirstObjectByType<TurnController>( );
 
 			tooltipCanvas.worldCamera = Camera.main;
 			IsTooltipEnabled = false;
@@ -135,7 +150,52 @@ namespace Perennial.Garden
 
 		public void OnPointerClick (PointerEventData eventData)
 		{
-			Debug.Log("Tile Clicked");
+			ActionState currentState = TurnController.StateMachine.GetState( ) as ActionState;
+
+			if (currentState == null)
+			{
+				return;
+			}
+
+			IState currentActionState = currentState.ActionStateMachine.GetState( );
+
+			if (currentActionState is HarvestActionState)
+			{
+				if (Plant == null || !Plant.Lifetime.FullyGrown)
+				{
+					return;
+				}
+
+				EventBus<PerformCommand>.Raise(new PerformCommand( )
+				{
+					Command = BaseCommand.Create<HarvestCommand>(GardenManager, this)
+				});
+			}
+			else if (currentActionState is PlantActionState)
+			{
+				if (Plant != null || SoilState != SoilState.TILLED)
+				{
+					return;
+				}
+
+				// Need a way to pass in the new plant into this command call
+				//EventBus<PerformCommand>.Raise(new PerformCommand( )
+				//{
+				//	Command = BaseCommand.Create<PlantCommand>(GardenManager, PLANT, this)
+				//});
+			}
+			else if (currentActionState is TillActionState)
+			{
+				if (SoilState != SoilState.TILLED || (SoilState == SoilState.TILLED && Plant == null))
+				{
+					return;
+				}
+
+				EventBus<PerformCommand>.Raise(new PerformCommand( )
+				{
+					Command = BaseCommand.Create<TillCommand>(GardenManager, this)
+				});
+			}
 		}
 	}
 }

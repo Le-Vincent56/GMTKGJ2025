@@ -2,11 +2,11 @@ using Perennial.Core.Architecture.Event_Bus;
 using Perennial.Core.Architecture.Event_Bus.Events;
 using UnityEngine;
 using Perennial.Core.Architecture.State_Machine;
-using Perennial.TurnController.States;
+using Perennial.TurnManagement.States;
 using StateMachine = Perennial.Core.Architecture.State_Machine.StateMachine;
 
 
-namespace Perennial.TurnController
+namespace Perennial.TurnManagement
 {
     public enum State
     {
@@ -29,7 +29,7 @@ namespace Perennial.TurnController
         #region Properties
         public State StateFinished { get => _stateFinished; set => _stateFinished = value;}
         public bool EndTurn { set => _endTurn = value; }
-
+        public StateMachine StateMachine { get => _stateMachine; private set => _stateMachine = value; }
         #endregion
 
         private void Start()

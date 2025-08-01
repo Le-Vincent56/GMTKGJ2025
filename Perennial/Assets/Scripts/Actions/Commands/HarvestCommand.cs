@@ -6,9 +6,9 @@ namespace Perennial.Actions.Commands
 {
     public class HarvestCommand : BaseCommand
     {
-        protected HarvestCommand(GardenManager gardenManager) : base(gardenManager)
+        protected HarvestCommand(GardenManager gardenManager, Tile tile) : base(gardenManager, tile)
         {
-
+            
         }
         
         /// <summary>

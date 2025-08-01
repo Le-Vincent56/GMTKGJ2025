@@ -1,7 +1,7 @@
 using Perennial.Core.Architecture.State_Machine;
 using UnityEngine;
 
-namespace Perennial.TurnController.States
+namespace Perennial.TurnManagement.States
 {
     /// <summary>
     /// Base state for other states to inherit from

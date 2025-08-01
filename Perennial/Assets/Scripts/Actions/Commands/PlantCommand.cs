@@ -8,7 +8,7 @@ namespace Perennial.Actions.Commands
     public class PlantCommand : BaseCommand
     {
         private readonly Plant _plant;
-        protected PlantCommand(GardenManager gardenManager, Plant plant) : base(gardenManager)
+        protected PlantCommand(GardenManager gardenManager, Plant plant, Tile tile) : base(gardenManager, tile)
         {
             _plant = plant;
         }

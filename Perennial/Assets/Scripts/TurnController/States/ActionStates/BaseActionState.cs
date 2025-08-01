@@ -1,6 +1,6 @@
 using Perennial.Core.Architecture.State_Machine;
 
-namespace Perennial.TurnController.States.ActionStates
+namespace Perennial.TurnManagement.States.ActionStates
 {
     /// <summary>
     /// Base state for other states to inherit from
