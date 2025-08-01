@@ -3,6 +3,7 @@ using Perennial.Core.Extensions;
 using Perennial.Plants.Abilities;
 using Perennial.Plants.Behaviors;
 using Perennial.Plants.Stats;
+using Perennial.Seasons;
 using UnityEngine;
 
 namespace Perennial.Plants
@@ -11,27 +12,41 @@ namespace Perennial.Plants
     public class PlantDefinition : ScriptableObject
     {
         [Header("Details")]
-        [SerializeField] protected SerializableGuid id;
-        [SerializeField] protected string plantName;
-        [SerializeField] [TextArea(3,5)] protected string description;
+        [SerializeField] private SerializableGuid id;
+        [SerializeField] private string plantName;
+        [SerializeField] [TextArea(3,5)] private string description;
         [SerializeField] private PlantBaseStats baseStats;
-        [SerializeField] protected int lifetime;
-        [SerializeField] protected Sprite sprite;
+        [SerializeField] private Sprite sprite;
+        
+        [Header("Lifetime")]
+        [SerializeField] private int growthTime;
+        [SerializeField] private int harvestTime;
+        [SerializeField] private List<Season> incompatibleSeasons;
+        [SerializeField] private List<Season> bonusSeasons;
 
         [Header("Abilities")] 
-        [SerializeField] protected PlantAbility[] abilities;
+        [SerializeField] private PlantAbility[] abilities;
 
         [Header("Behaviors")] 
         [SerializeField] private List<PlantBehavior> behaviors;
+        
+        [Header("Resources")]
+        [SerializeField] private int foodMultiplier;
+        [SerializeField] private int foodConstant;
 
         public SerializableGuid ID => id;
         public string Name => plantName;
         public string Description => description;
-        public int Lifetime => lifetime;
+        public int GrowTime => growthTime;
+        public int HarvestTime => harvestTime;
+        public List<Season> IncompatibleSeasons => incompatibleSeasons;
+        public List<Season> BonusSeasons => bonusSeasons;
         public Sprite Sprite => sprite;
         public PlantAbility[] Abilities => abilities;
         public List<PlantBehavior> Behaviors => behaviors;
         public PlantBaseStats BaseStats => baseStats;
+        public int FoodMultiplier => foodMultiplier;
+        public int FoodConstant => foodConstant;
 
         /// <summary>
         /// Create an instance of a Plant using this definition

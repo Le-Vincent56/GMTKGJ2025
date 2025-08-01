@@ -41,7 +41,6 @@ namespace Perennial.Garden
 				}
 
 				_plant = value;
-				UpdatePlantSprite( );
 			}
 		}
 
@@ -96,7 +95,6 @@ namespace Perennial.Garden
 
 		private void OnValidate ( )
 		{
-			UpdatePlantSprite( );
 			UpdateSoilSprite( );
 		}
 
@@ -111,10 +109,9 @@ namespace Perennial.Garden
 		/// <summary>
 		/// Update the plant sprite for this tile
 		/// </summary>
-		public void UpdatePlantSprite ( )
+		public void UpdatePlantSprite (Sprite plantSprite)
 		{
-			// Something like this eventually
-			// plantSpriteRenderer.sprite = Plant.GetSprite( );
+			plantSpriteRenderer.sprite = plantSprite;
 		}
 
 		/// <summary>

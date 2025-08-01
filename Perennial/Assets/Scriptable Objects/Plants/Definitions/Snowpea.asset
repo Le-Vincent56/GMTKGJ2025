@@ -13,14 +13,18 @@ MonoBehaviour:
   m_Name: Snowpea
   m_EditorClassIdentifier: 
   id:
-    Part1: 3203014433
-    Part2: 1182182491
-    Part3: 887689904
-    Part4: 2625028554
+    Part1: 1375407781
+    Part2: 1313975726
+    Part3: 4029554610
+    Part4: 3944098092
   plantName: Snowpea
   description: Freezes other plants on harvest
-  lifetime: 3
+  baseStats: {fileID: 0}
   sprite: {fileID: 0}
+  growthTime: 3
+  harvestTime: 5
+  incompatibleSeasons: 01000000
+  bonusSeasons: 03000000
   abilities:
   - {fileID: 11400000, guid: c767463c6a94b3b44b79077ec0c811b8, type: 2}
   behaviors:
