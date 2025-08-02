@@ -150,6 +150,7 @@ namespace Perennial.Garden
 
 		public void OnPointerClick (PointerEventData eventData)
 		{
+			Debug.Log("CLICKED");
 			ActionState currentState = TurnController.StateMachine.GetState( ) as ActionState;
 
 			if (currentState == null)
@@ -171,18 +172,18 @@ namespace Perennial.Garden
 					Command = BaseCommand.Create<HarvestCommand>(GardenManager, this)
 				});
 			}
-			else if (currentActionState is PlantActionState)
+			else if (currentActionState is PlantActionState plantActionState)
 			{
 				if (Plant != null || SoilState != SoilState.TILLED)
 				{
 					return;
 				}
 
-				// Need a way to pass in the new plant into this command call
-				//EventBus<PerformCommand>.Raise(new PerformCommand( )
-				//{
-				//	Command = BaseCommand.Create<PlantCommand>(GardenManager, PLANT, this)
-				//});
+
+				EventBus<PerformCommand>.Raise(new PerformCommand( )
+				{
+					Command = BaseCommand.Create<PlantCommand>(GardenManager, this, currentState.StoredPlantDefinition)
+				});
 			}
 			else if (currentActionState is TillActionState)
 			{

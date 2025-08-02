@@ -7,10 +7,11 @@ namespace Perennial.Actions.Commands
 {
     public class PlantCommand : BaseCommand
     {
-        private readonly Plant _plant;
-        protected PlantCommand(GardenManager gardenManager, Plant plant, Tile tile) : base(gardenManager, tile)
+        private readonly PlantDefinition _plant;
+        protected PlantCommand(GardenManager gardenManager, Tile tile, PlantDefinition plant) : base(gardenManager, tile)
         {
             _plant = plant;
+            Debug.Log(_plant.Name);
         }
         
         /// <summary>

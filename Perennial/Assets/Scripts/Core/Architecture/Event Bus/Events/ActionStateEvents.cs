@@ -1,3 +1,6 @@
+using JetBrains.Annotations;
+using Perennial.Plants;
+
 namespace Perennial.Core.Architecture.Event_Bus.Events
 {
     public enum ActionStateType
@@ -10,6 +13,7 @@ namespace Perennial.Core.Architecture.Event_Bus.Events
     public struct ChangeActionState : IEvent
     {
         public ActionStateType StateType;
+        [CanBeNull] public PlantDefinition SelectedPlantDefinition; 
     }
 
     public struct StartHarvestState : IEvent

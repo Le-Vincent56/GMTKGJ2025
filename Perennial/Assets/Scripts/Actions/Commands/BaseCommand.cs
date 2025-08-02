@@ -1,5 +1,6 @@
 using System.Threading.Tasks;
 using Perennial.Garden;
+using Perennial.Plants;
 
 namespace Perennial.Actions.Commands
 {
@@ -27,6 +28,11 @@ namespace Perennial.Actions.Commands
         public static T Create<T>(GardenManager gardenManager, Tile tile) where T : BaseCommand
         {
             return (T) System.Activator.CreateInstance(typeof(T), gardenManager, tile);
+        }
+        
+        public static T Create<T>(GardenManager gardenManager, Tile tile, PlantDefinition plantDefinition) where T : BaseCommand
+        {
+            return (T) System.Activator.CreateInstance(typeof(T), gardenManager, tile, plantDefinition);
         }
     }
 }

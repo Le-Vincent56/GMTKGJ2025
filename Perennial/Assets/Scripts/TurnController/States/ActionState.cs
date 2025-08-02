@@ -1,6 +1,7 @@
 using Perennial.Core.Architecture.Event_Bus;
 using Perennial.Core.Architecture.Event_Bus.Events;
 using Perennial.Core.Architecture.State_Machine;
+using Perennial.Plants;
 using Perennial.TurnManagement.States.ActionStates;
 using UnityEngine;
 using StateMachine = Perennial.Core.Architecture.State_Machine.StateMachine;
@@ -13,6 +14,8 @@ namespace Perennial.TurnManagement.States
 
         //for the sub action state machine controls
         private ActionStateType _actionStateType;
+        
+        public PlantDefinition StoredPlantDefinition { get; protected set; }
         
         /// <summary>
         /// I wasn't sure if I wanted to include this in the turn controller
@@ -34,11 +37,14 @@ namespace Perennial.TurnManagement.States
                 */
                 
                 _actionStateType = e.StateType;
+                
+                StoredPlantDefinition = e.SelectedPlantDefinition; //can be null, which is ok
+                Debug.Log(StoredPlantDefinition);
             });
             
             _performCommandEventBinding = new EventBinding<PerformCommand>(() =>
             {
-                _actionStateType = ActionStateType.Nothing; 
+                _actionStateType = ActionStateType.Nothing;
             });
 
             StartUpStateMachine();
