@@ -6,9 +6,12 @@ namespace Perennial.Actions.Commands
 {
     public class HarvestCommand : BaseCommand
     {
+        //hold reference to the plant as PlantStorageController needs reference to calculate seeds
+        //could be a better queue way or another event to do this but this was easiest
+        public Plant HarvestedPlant { get; }
         public HarvestCommand(HarvestArgs input) : base(input)
         {
-            
+            HarvestedPlant = input.Plant;
         }
         
         /// <summary>
@@ -16,11 +19,10 @@ namespace Perennial.Actions.Commands
         /// </summary>
         public override async Task Execute()
         {
-            Tile.Plant.Harvest();
+            HarvestedPlant.Harvest();
             gardenManager.RemovePlantFromTile(Tile);
+            
             //seed increase is taken care of in PlantStorageController
-            
-            
         }
     }
 }

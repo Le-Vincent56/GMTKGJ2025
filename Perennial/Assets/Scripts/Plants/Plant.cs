@@ -16,6 +16,7 @@ namespace Perennial.Plants
         private readonly PlantAbility[] _abilities;
         private readonly GardenManager _gardenManager;
 
+        public PlantDefinition Definition => _definition;
         public SerializableGuid ID { get; private set; }
         public string Name => _definition.Name;
         

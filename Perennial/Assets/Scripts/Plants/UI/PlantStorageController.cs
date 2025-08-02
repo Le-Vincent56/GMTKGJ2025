@@ -43,7 +43,7 @@ namespace Perennial.Plants.UI
                 }
                 else if (performCommand.Command is HarvestCommand harvestCommand)
                 {
-                    _model.AddPlants(harvestCommand.Tile.Plant.ID, new StorageAmount(UnityEngine.Random.Range(0, 3)));
+                    _model.AddPlants(harvestCommand.HarvestedPlant.Definition.ID, new StorageAmount(UnityEngine.Random.Range(0, 3)));
                 }
             });
             EventBus<PerformCommand>.Register(_performCommandEventBinding);

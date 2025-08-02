@@ -218,9 +218,10 @@ namespace Perennial.Garden
 			{
 				return false;
 			}
-
+			
 			Plants.Remove(tile.Plant);
-			tile.Plant = null;
+			tile.RemovePlantFromTile();
+			tile.UpdatePlantSprite(null);
 			return true;
 		}
 

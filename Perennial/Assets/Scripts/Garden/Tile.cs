@@ -138,6 +138,14 @@ namespace Perennial.Garden
 			soilSpriteRenderer.sprite = soilStateSprites[SoilState];
 		}
 
+		/// <summary>
+		/// Temporary? fix to the property not allowing plant to be null
+		/// </summary>
+		public void RemovePlantFromTile()
+		{
+			_plant = null;
+		}
+
 		public void OnPointerEnter (PointerEventData eventData)
 		{
 			IsTooltipEnabled = true;
@@ -168,7 +176,7 @@ namespace Perennial.Garden
 
 				EventBus<PerformCommand>.Raise(new PerformCommand( )
 				{
-					Command = BaseCommand.Create<HarvestCommand>(new HarvestArgs{ GardenManager = GardenManager, Tile = this })
+					Command = BaseCommand.Create<HarvestCommand>(new HarvestArgs{ GardenManager = GardenManager, Tile = this, Plant = Plant})
 				});
 			}
 			else if (currentActionState is PlantActionState)
