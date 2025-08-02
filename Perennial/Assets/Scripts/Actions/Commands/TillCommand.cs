@@ -16,7 +16,7 @@ namespace Perennial.Actions.Commands
         /// </summary>
         public override async Task Execute()
         {
-            tile.SoilState = SoilState.TILLED;
+            Tile.SoilState = SoilState.TILLED;
         }
     }
 }

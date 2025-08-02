@@ -1,6 +1,6 @@
 using System.Threading.Tasks;
-using Perennial.Garden;
-using UnityEngine;
+using Perennial.Plants;
+
 
 namespace Perennial.Actions.Commands
 {
@@ -16,9 +16,11 @@ namespace Perennial.Actions.Commands
         /// </summary>
         public override async Task Execute()
         {
-            Debug.Log("Harvesting a plant");
-            await Awaitable.WaitForSecondsAsync(3f); //TODO ADD LOGIC
-            Debug.Log("Finished harvesting");
+            Tile.Plant.Harvest();
+            gardenManager.RemovePlantFromTile(Tile);
+            //seed increase is taken care of in PlantStorageController
+            
+            
         }
     }
 }

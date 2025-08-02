@@ -84,16 +84,18 @@ namespace Perennial.Garden
 			_onTurnedEnded = new EventBinding<TurnEnded>(EndTurn);
 
 			EventBus<TurnEnded>.Register(_onTurnedEnded);
+			EventBus<TurnStarted>.Register(_onTurnedStarted);
 		}
 
 		private void OnDisable ( )
 		{
 			EventBus<TurnEnded>.Deregister(_onTurnedEnded);
+			EventBus<TurnStarted>.Deregister(_onTurnedStarted);
 		}
 
 		private void StartTurn(TurnStarted eventData)
 		{
-			
+			TickAllPlants();
 		}
 
 		private void EndTurn(TurnEnded eventData)
