@@ -85,7 +85,6 @@ namespace Perennial.Plants.UI
 
         private void SelectPlant(SerializableGuid id)
         {
-            Debug.Log("Plant Selected");
             // TODO: Set the select plant
             // When a tile is selected with the plant, use the parameter 'id'
             // to lookup in the _model (GetPlantDefinition()) and then
