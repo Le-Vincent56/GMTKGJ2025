@@ -8,10 +8,10 @@ namespace Perennial.Actions.Commands
     public class PlantCommand : BaseCommand
     {
         private readonly PlantDefinition _plant;
-        protected PlantCommand(GardenManager gardenManager, Tile tile, PlantDefinition plant) : base(gardenManager, tile)
+        public PlantCommand(PlantArgs input) : base(input)
         {
-            _plant = plant;
-            Debug.Log(_plant.Name);
+            
+            _plant = input.PlantDefinition;
         }
         
         /// <summary>

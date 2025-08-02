@@ -150,7 +150,6 @@ namespace Perennial.Garden
 
 		public void OnPointerClick (PointerEventData eventData)
 		{
-			Debug.Log("CLICKED");
 			ActionState currentState = TurnController.StateMachine.GetState( ) as ActionState;
 
 			if (currentState == null)
@@ -169,20 +168,19 @@ namespace Perennial.Garden
 
 				EventBus<PerformCommand>.Raise(new PerformCommand( )
 				{
-					Command = BaseCommand.Create<HarvestCommand>(GardenManager, this)
+					Command = BaseCommand.Create<HarvestCommand>(new HarvestArgs{ GardenManager = GardenManager, Tile = this })
 				});
 			}
-			else if (currentActionState is PlantActionState plantActionState)
+			else if (currentActionState is PlantActionState)
 			{
 				if (Plant != null || SoilState != SoilState.TILLED)
 				{
 					return;
 				}
-
-
+				
 				EventBus<PerformCommand>.Raise(new PerformCommand( )
 				{
-					Command = BaseCommand.Create<PlantCommand>(GardenManager, this, currentState.StoredPlantDefinition)
+					Command = BaseCommand.Create<PlantCommand>(new PlantArgs{ GardenManager = GardenManager, Tile = this, PlantDefinition = currentState.StoredPlantDefinition})
 				});
 			}
 			else if (currentActionState is TillActionState)
@@ -194,7 +192,7 @@ namespace Perennial.Garden
 
 				EventBus<PerformCommand>.Raise(new PerformCommand( )
 				{
-					Command = BaseCommand.Create<TillCommand>(GardenManager, this)
+					Command = BaseCommand.Create<TillCommand>(new TillArgs{ GardenManager = GardenManager, Tile = this })
 				});
 			}
 		}

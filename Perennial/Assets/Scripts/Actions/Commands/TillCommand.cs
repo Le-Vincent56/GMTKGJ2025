@@ -6,8 +6,7 @@ namespace Perennial.Actions.Commands
 {
     public class TillCommand : BaseCommand
     {
-        
-        protected TillCommand(GardenManager gardenManager, Tile tile) : base(gardenManager, tile)
+        public TillCommand(TillArgs input) : base(input)
         {
 
         }
