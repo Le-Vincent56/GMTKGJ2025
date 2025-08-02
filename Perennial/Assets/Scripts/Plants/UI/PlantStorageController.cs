@@ -3,11 +3,13 @@ using System.Collections.Generic;
 using Perennial.Actions.Commands;
 using Perennial.Core.Architecture.Event_Bus;
 using Perennial.Core.Architecture.Event_Bus.Events;
+using Perennial.Core.Debugging;
 using Perennial.Core.Extensions;
 using Perennial.Garden;
 using Perennial.Plants.Data;
 using Unity.VisualScripting;
 using UnityEngine;
+using LogType = Perennial.Core.Debugging.LogType;
 
 namespace Perennial.Plants.UI
 {
