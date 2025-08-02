@@ -13,12 +13,13 @@ MonoBehaviour:
   m_Name: Chili Pepper
   m_EditorClassIdentifier: 
   id:
-    Part1: 4283670939
-    Part2: 1175534456
-    Part3: 1384651436
-    Part4: 372654840
+    Part1: 3748821731
+    Part2: 1276446336
+    Part3: 2831990160
+    Part4: 2795200805
   plantName: Chili Peppers
-  description: Kills adjacent plants when harvested
+  description: When planted, increases food output of nearby plants (other than Chili
+    Peppers), but Weeds nearby soil in half the time.
   baseStats: {fileID: 11400000, guid: 0dc70ca48b751ff4bafd37df3825e30c, type: 2}
   seedSprite: {fileID: 21300000, guid: f366878c6eaaeee41a20b1b5d268ed7d, type: 3}
   youngSprite: {fileID: 21300000, guid: 9f8152eaa32670246ac3cb474f06d3f4, type: 3}
@@ -28,8 +29,10 @@ MonoBehaviour:
   incompatibleSeasons: 03000000
   bonusSeasons: 01000000
   abilities:
-  - {fileID: 11400000, guid: 05574a6c65e5c154fa0f56d996a5c2e5, type: 2}
+  - {fileID: 11400000, guid: 69af2d5e8fe05b64989688a6cc0752c6, type: 2}
   behaviors:
-  - {fileID: 11400000, guid: eb423a30c41a72f46b1fd0526f3a5852, type: 2}
+  - {fileID: 11400000, guid: 0acff8fc0ed60124e863c563504ed5b5, type: 2}
+  - {fileID: 11400000, guid: f954d863154f7ad458644043fa28b77d, type: 2}
+  - {fileID: 11400000, guid: 88dfc9c5bf3ced844bab551dda902b75, type: 2}
   foodMultiplier: 10
   foodConstant: 10

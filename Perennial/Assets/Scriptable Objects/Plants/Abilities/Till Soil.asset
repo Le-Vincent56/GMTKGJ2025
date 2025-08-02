@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: Till Soil
   m_EditorClassIdentifier: 
   abilityName: Till Soil
-  description: Tills all the soil within a radius. Does not kill Plants.
+  description: When planted, Tills nearby soil and slows Weed decay by 1 turn.
   effectRadius: 1

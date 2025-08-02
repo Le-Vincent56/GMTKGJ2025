@@ -4,8 +4,8 @@ using UnityEngine;
 
 namespace Perennial.Plants.Abilities.Definitions
 {
-    [CreateAssetMenu(fileName = "Till Soil", menuName = "Plants/Abilities/Till Soil")]
-    public class TillSoil : PlacePlantAbility
+    [CreateAssetMenu(fileName = "Weed Soil", menuName = "Plants/Abilities/Weed Soil")]
+    public class WeedSoil : PlacePlantAbility
     {
         public override void OnPlace(PlantAbilityContext context)
         {
@@ -19,7 +19,7 @@ namespace Perennial.Plants.Abilities.Definitions
             foreach (Tile tile in affectedTiles)
             {
                 // Set the soil state to Tilled
-                tile.SoilState = SoilState.TILLED;
+                tile.SoilState = SoilState.WEEDS;
             }
         }
     }

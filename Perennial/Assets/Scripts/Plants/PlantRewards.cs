@@ -26,9 +26,13 @@ namespace Perennial.Plants
         {
             Food baseAmount = (_foodMultiplier * _owner.Lifetime.CurrentLifetime) + _foodConstant;
 
-            return BonusActive
-                ? baseAmount * BONUS_MODIFIER
-                : baseAmount;
+            if(BonusActive) baseAmount *= BONUS_MODIFIER;
+            
+            // Apply food modifier from stats
+            float foodModifier = _owner.Stats.FoodModifier;
+            baseAmount += (Food)foodModifier;
+
+            return baseAmount;
         }
     }
 }

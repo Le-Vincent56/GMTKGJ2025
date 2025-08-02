@@ -1,16 +1,12 @@
 using System.Collections.Generic;
 using Perennial.Plants.Behaviors;
-using Perennial.Plants.Data;
 using UnityEngine;
 
 namespace Perennial.Plants.Abilities.Definitions
 {
-    [CreateAssetMenu(fileName = "Freeze Nearby Plants", menuName = "Plants/Abilities/Freeze Nearby Plants")]
-    public class FreezeNearbyPlants : HarvestPlantAbility
+    [CreateAssetMenu(fileName = "Refresh Harvest Window", menuName = "Plants/Abilities/Refresh Harvest Window")]
+    public class RefreshHarvestWindow : HarvestPlantAbility
     {
-        [Header("Freeze Settings")] 
-        [SerializeField] private int freezeDuration = 3;
-
         public override void OnHarvest(PlantAbilityContext context)
         {
             List<Plant> affectedPlants = context.GardenManager.GetSurroundingPlants(
@@ -21,9 +17,7 @@ namespace Perennial.Plants.Abilities.Definitions
 
             foreach (Plant plant in affectedPlants)
             {
-                if (!plant.HasBehavior<FreezableBehaviorInstance>()) continue;
-                
-                plant.SendSignal(PlantSignal.Freeze, new EffectDuration(freezeDuration));
+                plant.SendSignal(PlantSignal.RefreshHarvest, null);
             }
         }
     }

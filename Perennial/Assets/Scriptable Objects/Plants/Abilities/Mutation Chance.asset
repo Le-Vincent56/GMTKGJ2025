@@ -9,9 +9,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e515d31def754e54e8546ad41fc4d138, type: 3}
-  m_Name: Plant Base Stats
+  m_Script: {fileID: 11500000, guid: 921954d3fb98804429cb473174a2a7b4, type: 3}
+  m_Name: Mutation Chance
   m_EditorClassIdentifier: 
-  FoodModifier: 1
-  MutationChance: 0.5
-  MutationDropRate: 1
+  abilityName: Mutation Chance
+  description: Increase the chance of mutations of nearby plants
+  effectRadius: 1
+  onGrow: 1
+  onHarvest: 0
+  mutationChanceBonus: 0.5
+  soilDecayDelay: 1
