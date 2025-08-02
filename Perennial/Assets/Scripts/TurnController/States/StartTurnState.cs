@@ -11,9 +11,7 @@ namespace Perennial.TurnManagement.States
         {
         }
         public override void OnEnter()
-        { 
-            Debug.Log($"{this} started");
-            
+        {
             //reset actions
             turnController.ResetActions();
             
