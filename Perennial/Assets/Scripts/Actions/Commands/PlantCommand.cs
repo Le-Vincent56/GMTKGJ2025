@@ -7,21 +7,20 @@ namespace Perennial.Actions.Commands
 {
     public class PlantCommand : BaseCommand
     {
-        private readonly PlantDefinition _plant;
+        private readonly PlantDefinition _plantDefinition;
+
+        public PlantDefinition PlantDefinition => _plantDefinition;
         public PlantCommand(PlantArgs input) : base(input)
         {
-            
-            _plant = input.PlantDefinition;
+            _plantDefinition = input.PlantDefinition;
         }
         
         /// <summary>
         /// Executes the Plant action
         /// </summary>
-        public override  async Task Execute()
+        public override async Task Execute()
         {
-            Debug.Log("Planting a plant");
-            await Awaitable.WaitForSecondsAsync(3f);  //TODO ADD LOGIC
-            Debug.Log("Finished planting");
+            PlantFactory.CreatePlant(_plantDefinition, tile, gardenManager);
         }
     }
 }

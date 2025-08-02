@@ -6,4 +6,9 @@ namespace Perennial.Core.Architecture.Event_Bus.Events
    {
       public ICommand Command;
    }
+   
+   public struct CommandFinished : IEvent
+   {
+
+   }
 }

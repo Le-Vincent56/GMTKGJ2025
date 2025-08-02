@@ -35,8 +35,8 @@ namespace Perennial.Actions.Commands
     
     public abstract class BaseCommand : ICommand
     {
-        private readonly GardenManager _gardenManager;
-        private readonly Tile _tile;
+        protected readonly GardenManager gardenManager;
+        protected readonly Tile tile;
         
         // storing this is kinda scuffed, but its quick and dirty,
         // I would rather have a way to get the data down to the class that needs it without this approach 
@@ -45,8 +45,8 @@ namespace Perennial.Actions.Commands
 
         protected BaseCommand(BaseArgs input)
         {
-            _gardenManager = input.GardenManager;
-            _tile = input.Tile;
+            gardenManager = input.GardenManager;
+            tile = input.Tile;
 		}
 
         /// <summary>

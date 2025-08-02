@@ -1,4 +1,6 @@
+using System;
 using System.Collections.Generic;
+using Perennial.Actions.Commands;
 using Perennial.Core.Architecture.Event_Bus;
 using Perennial.Core.Architecture.Event_Bus.Events;
 using Perennial.Core.Extensions;
@@ -16,7 +18,9 @@ namespace Perennial.Plants.UI
         
         private PlantStorageModel _model;
         private PlantStorageView _view;
-        
+
+        private EventBinding<PerformCommand> _performCommandEventBinding;
+
         private void Awake()
         {
             // Connect the MVC
@@ -25,6 +29,23 @@ namespace Perennial.Plants.UI
 
             ConnectModel();
             ConnectView();
+        }
+
+        private void OnEnable()
+        {
+            _performCommandEventBinding = new EventBinding<PerformCommand>((performCommand) =>
+            {
+                if (performCommand.Command is PlantCommand plantCommand)
+                {
+                    _model.RemovePlant(plantCommand.PlantDefinition.ID);
+                }
+            });
+            EventBus<PerformCommand>.Register(_performCommandEventBinding);
+        }
+
+        private void OnDisable()
+        {
+            EventBus<PerformCommand>.Deregister(_performCommandEventBinding);
         }
 
         private void ConnectModel()
@@ -87,9 +108,7 @@ namespace Perennial.Plants.UI
                     StateType = ActionStateType.Plant,
                     SelectedPlantDefinition = plantDefinition
             });
-
-            //can't remove it yet as don't know if it was actually planted may have to use another event
-            //_model.RemovePlant(id);
+            
         }
     }
 }

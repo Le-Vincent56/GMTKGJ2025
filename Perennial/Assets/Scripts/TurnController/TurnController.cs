@@ -19,7 +19,7 @@ namespace Perennial.TurnManagement
         [SerializeField] private string currentState;
         [SerializeField] private int allowedActions;
 
-        private EventBinding<PerformCommand> _performCommandEventBinding;
+        private EventBinding<CommandFinished> _performCommandEventBinding;
         private EventBinding<EndTurn> _endTurnEventBinding;
         private StateMachine _stateMachine;
         private State _stateFinished;
@@ -40,8 +40,8 @@ namespace Perennial.TurnManagement
 
         private void OnEnable()
         {
-            _performCommandEventBinding = new EventBinding<PerformCommand>(TakeAction);
-            EventBus<PerformCommand>.Register(_performCommandEventBinding);
+            _performCommandEventBinding = new EventBinding<CommandFinished>(TakeAction);
+            EventBus<CommandFinished>.Register(_performCommandEventBinding);
             
             _endTurnEventBinding = new EventBinding<EndTurn>(() =>
             {
@@ -53,7 +53,7 @@ namespace Perennial.TurnManagement
 
         private void OnDisable()
         {
-            EventBus<PerformCommand>.Deregister(_performCommandEventBinding);
+            EventBus<CommandFinished>.Deregister(_performCommandEventBinding);
             EventBus<EndTurn>.Deregister(_endTurnEventBinding);
         }
 
