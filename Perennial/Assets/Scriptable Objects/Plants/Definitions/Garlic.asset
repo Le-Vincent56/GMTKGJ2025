@@ -1,0 +1,37 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6782d897d19d1044db0e7d84a3c6734f, type: 3}
+  m_Name: Garlic
+  m_EditorClassIdentifier: 
+  id:
+    Part1: 3302406468
+    Part2: 1187909968
+    Part3: 2775886216
+    Part4: 2035608353
+  plantName: Garlic
+  description: "When planted, all soil adjacent to this plant is tilled. Does not
+    destroy plants.\r"
+  baseStats: {fileID: 11400000, guid: 0dc70ca48b751ff4bafd37df3825e30c, type: 2}
+  seedSprite: {fileID: 21300000, guid: 43411255522839f45ad4ccbed1facfaa, type: 3}
+  youngSprite: {fileID: 21300000, guid: 7b7e7bb101c5d3846b341351c883daba, type: 3}
+  oldSprite: {fileID: 21300000, guid: 9dff7870d9c39d042821b758dfe51429, type: 3}
+  growthTime: 2
+  harvestTime: 3
+  incompatibleSeasons: 
+  bonusSeasons: 0000000001000000
+  abilities:
+  - {fileID: 11400000, guid: 6a5add4680fae9a4db056585d3180bb8, type: 2}
+  behaviors:
+  - {fileID: 11400000, guid: eb423a30c41a72f46b1fd0526f3a5852, type: 2}
+  - {fileID: 11400000, guid: 13b266c3677ad3e46ac9494889752455, type: 2}
+  foodMultiplier: 2
+  foodConstant: 5

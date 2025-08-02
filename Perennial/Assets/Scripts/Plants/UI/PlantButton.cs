@@ -1,4 +1,5 @@
 using System;
+using Perennial.Core.Extensions;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
@@ -14,6 +15,14 @@ namespace Perennial.Plants.UI
         private Button _button;
         private PlantDefinition _plantDefinition;
         
+        public SerializableGuid ID => _plantDefinition.ID;
+
+        public string Amount
+        {
+            get => text.text;
+            set => text.text = value;
+        }
+        
         /// <summary>
         /// Initialize the Plant Button
         /// </summary>
@@ -21,17 +30,11 @@ namespace Perennial.Plants.UI
         public void Initialize(PlantDefinition associatedPlant)
         {
             // Set references
-            _button = GetComponent<Button>();
+            _button = GetComponentInChildren<Button>();
             _plantDefinition = associatedPlant;
             
             // Set the sprite
-            spriteImage.sprite = associatedPlant.PlantSprite;
-        }
-
-        public void UpdateData(string amountOfPlants)
-        {
-            // Set the text
-            text.text = amountOfPlants;
+            spriteImage.sprite = associatedPlant.SeedSprite;
         }
 
         public void RegisterListener(UnityAction action) => _button.onClick.AddListener(action);

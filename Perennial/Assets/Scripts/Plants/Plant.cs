@@ -41,14 +41,14 @@ namespace Perennial.Plants
                 this, 
                 definition.GrowTime, 
                 definition.HarvestTime,
-                definition.PlantSprite
+                definition.OldSprite
             );
             Rewards = new PlantRewards(this, definition.FoodMultiplier, definition.FoodConstant);
             
             MarkedForRemoval = false;
             
             // Set the tile sprite
-            currentTile.UpdatePlantSprite(definition.SeedSprite);
+            currentTile.UpdatePlantSprite(definition.YoungSprite);
         }
 
         /// <summary>

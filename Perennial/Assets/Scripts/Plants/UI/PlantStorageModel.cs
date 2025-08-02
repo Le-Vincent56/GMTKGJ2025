@@ -12,6 +12,8 @@ namespace Perennial.Plants.UI
         private readonly Dictionary<SerializableGuid, StorageAmount> _availablePlants;
 
         public event Action<Dictionary<SerializableGuid, StorageAmount>> OnModified = delegate { };
+        
+        public Dictionary<SerializableGuid, StorageAmount> AvailablePlants => _availablePlants;
 
         public PlantStorageModel(PlantDatabase database)
         {
@@ -23,7 +25,8 @@ namespace Perennial.Plants.UI
             // Track how many of each plant definition there are in the storage through its ID
             foreach (SerializableGuid id in databaseIDs)
             {
-                _availablePlants.Add(id, (StorageAmount)0);
+                StorageAmount startingAmount = (StorageAmount)UnityEngine.Random.Range(0, 3);
+                _availablePlants.Add(id, startingAmount);
             }
         }
 

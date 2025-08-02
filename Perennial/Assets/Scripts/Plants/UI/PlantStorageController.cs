@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using Perennial.Core.Extensions;
+using Perennial.Plants.Data;
 using UnityEngine;
 
 namespace Perennial.Plants.UI
@@ -33,23 +34,37 @@ namespace Perennial.Plants.UI
             _view.Initialize(this);
             
             List<PlantDefinition> definitions = _model.GetPlantDefinitions();
+            Dictionary<SerializableGuid, StorageAmount> availablePlants = _model.AvailablePlants;
 
             // Iterate through the definitions
-            for (int i = 0; i < definitions.Count; i++)
+            for (int i = 0; i < _view.PlantButtons.Count; i++)
             {
-                // Break out of the loop if we have reached more definitions
-                // than there are buttons
-                if (i >= _view.PlantButtons.Count) break;
+                if (i >= definitions.Count)
+                {
+                    _view.PlantButtons[i].gameObject.SetActive(false);
+                    continue;
+                }
+                
+                SerializableGuid definitionID = definitions[i].ID;
                 
                 // Initialize the plant button with a definition
                 _view.PlantButtons[i].Initialize(definitions[i]);
-                _view.PlantButtons[i].RegisterListener(() => SelectPlant(definitions[i].ID));
+                _view.PlantButtons[i].RegisterListener(() => SelectPlant(definitionID));
             }
+
+            // Update the buttons with their amounts
+            _view.UpdateButtons(availablePlants);
         }
 
         private void SelectPlant(SerializableGuid id)
         {
             // TODO: Set the select plant
+            // When a tile is selected with the plant, use the parameter 'id'
+            // to lookup in the _model (GetPlantDefinition()) and then
+            // use the static PlantFactory's CreatePlant() function while
+            // passing in the PlantDefinition, Tile, and Garden.
+            // Then, use the _model.RemovePlant() function, passing in the
+            // parameter 'id'
         }
     }
 }

@@ -15,4 +15,4 @@ MonoBehaviour:
   abilityName: Decelerate
   description: Decelerate nearby plant growth
   effectRadius: 1
-  growthMultiplier: 0.75
+  growthMultiplier: 0.5

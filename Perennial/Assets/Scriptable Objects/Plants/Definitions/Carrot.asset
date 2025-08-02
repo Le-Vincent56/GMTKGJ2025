@@ -1,0 +1,37 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6782d897d19d1044db0e7d84a3c6734f, type: 3}
+  m_Name: Carrot
+  m_EditorClassIdentifier: 
+  id:
+    Part1: 1742850489
+    Part2: 1260735471
+    Part3: 3342070161
+    Part4: 993295880
+  plantName: Carrot
+  description: When harvested, all soil adjacent to this plant is filled with weeds.
+    Does not destroy plants.
+  baseStats: {fileID: 11400000, guid: 0dc70ca48b751ff4bafd37df3825e30c, type: 2}
+  seedSprite: {fileID: 21300000, guid: 2bd263ef58c4c074c835846c4e4b135e, type: 3}
+  youngSprite: {fileID: 21300000, guid: aeac4920cec8a3b4ea027dded35b98a4, type: 3}
+  oldSprite: {fileID: 21300000, guid: 251af11ed2a7e5a44bee2fb10428eedf, type: 3}
+  growthTime: 4
+  harvestTime: 1
+  incompatibleSeasons: 02000000
+  bonusSeasons: 
+  abilities:
+  - {fileID: 11400000, guid: 6a5add4680fae9a4db056585d3180bb8, type: 2}
+  behaviors:
+  - {fileID: 11400000, guid: eb423a30c41a72f46b1fd0526f3a5852, type: 2}
+  - {fileID: 11400000, guid: 13b266c3677ad3e46ac9494889752455, type: 2}
+  foodMultiplier: 20
+  foodConstant: 25
