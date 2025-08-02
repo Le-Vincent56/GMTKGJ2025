@@ -9,9 +9,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2f0dfb1cc2344e18a2242b311ad3a633, type: 3}
-  m_Name: Growth Manipulable Behavior
+  m_Script: {fileID: 11500000, guid: 02e919a36ceaa0941b21c8c25187dfde, type: 3}
+  m_Name: Mutation Drop Rate Behavior
   m_EditorClassIdentifier: 
-  behaviorName: Growth Manipulable
-  description: This plant's growth speed can be manipulated
-  baseGrowthRate: 1
+  behaviorName: Mutation Drop Rate Manipulable
+  description: This plant can have its Mutation Drop rate manipulated.

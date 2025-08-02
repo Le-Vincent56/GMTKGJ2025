@@ -77,7 +77,7 @@ namespace Perennial.Plants
             if (SkipGrowth) return;
             
             // Increase the lifetime
-            Lifetime.Grow(Stats.GrowthRate);
+            Lifetime.Grow(1);
         }
 
         /// <summary>
@@ -153,9 +153,6 @@ namespace Perennial.Plants
         /// </summary>
         private void TriggerPlaceAbilities(PlantAbilityContext context)
         {
-            // Exit if the plant is not fully grown
-            if (!Lifetime.FullyGrown) return;
-            
             // Iterate through each ability
             foreach (PlantAbility ability in _abilities)
             {

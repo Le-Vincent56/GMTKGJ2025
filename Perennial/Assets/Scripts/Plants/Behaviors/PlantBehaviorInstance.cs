@@ -4,8 +4,11 @@ namespace Perennial.Plants.Behaviors
 {
     public enum PlantSignal
     {
-        Freeze,
-        Grow
+        RefreshHarvest,
+        Grow,
+        Scorch,
+        MutationChance,
+        MutationDropRate,
     }
     
     public abstract class PlantBehaviorInstance

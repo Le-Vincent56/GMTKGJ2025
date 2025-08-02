@@ -7,6 +7,7 @@ namespace Perennial.Plants.Data
         
         public static explicit operator int(LifetimeSegment segment) => StayAboveMinimum(segment.Value);
         public static explicit operator LifetimeSegment(int value) => new LifetimeSegment(StayAboveMinimum(value));
+        public static explicit operator Lifetime(LifetimeSegment segment) => new Lifetime(StayAboveMinimum(segment.Value));
 
         
         private static int StayAboveMinimum(int value)

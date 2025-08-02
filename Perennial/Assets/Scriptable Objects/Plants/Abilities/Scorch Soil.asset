@@ -9,10 +9,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fa5cb05676dd3f94a824a18966942a60, type: 3}
-  m_Name: Freeze Nearby Plants
+  m_Script: {fileID: 11500000, guid: 1221de3264b98284fbbda96734faabe7, type: 3}
+  m_Name: Scorch Soil
   m_EditorClassIdentifier: 
-  abilityName: Freeze
-  description: Freeze nearby plants, preventing their growth
+  abilityName: Scorch Soil
+  description: "When planted, increases food output of nearby plants, but Weeds nearby
+    soil in half the time\r"
   effectRadius: 1
-  freezeDuration: 3
+  foodBonus: 10
+  decayRateMultiplier: 0.5

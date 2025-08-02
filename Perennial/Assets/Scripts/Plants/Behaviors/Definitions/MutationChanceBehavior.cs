@@ -1,40 +1,35 @@
-﻿using Perennial.Plants.Abilities;
 using Perennial.Plants.Data;
 using Perennial.Plants.Stats;
 using Perennial.Plants.Stats.Operations;
 using UnityEngine;
 
-namespace Perennial.Plants.Behaviors
+namespace Perennial.Plants.Behaviors.Definitions
 {
-    [CreateAssetMenu(fileName = "Growth Manipulable Behavior", menuName="Plants/Behaviors/Growth Manipulable")]
-    public class GrowthManipulableBehavior : PlantBehavior
+    [CreateAssetMenu(fileName = "Mutation Chance Behavior", menuName = "Plants/Behaviors/Mutation Chance")]
+    public class MutationChanceBehavior : PlantBehavior
     {
         public override PlantBehaviorInstance CreateInstance(Plant plant)
         {
-            return new GrowthManipulableBehaviorInstance(plant, this);
+            return new MutationChanceBehaviorInstance(plant, this);
         }
     }
-    
-    public class GrowthManipulableBehaviorInstance : PlantBehaviorInstance
-    {
 
-        public GrowthManipulableBehaviorInstance(Plant owner, PlantBehavior definition)
+    public class MutationChanceBehaviorInstance : PlantBehaviorInstance
+    {
+        public MutationChanceBehaviorInstance(Plant owner, PlantBehavior definition)
             : base(owner, definition)
         { }
-
+        
         public override bool HandleSignal(PlantSignal signalType, object data)
         {
             // Exit if the correct signal is not sent
-            if (signalType is not PlantSignal.Grow) return false;
+            if (signalType != PlantSignal.MutationChance) return false;
             
             // Exit if the correct data is not sent
-            if(data is not Affector affector) return false;
+            if (data is not Affector affector) return false;
             
             // Exit if the correct stat type is not sent
-            if(affector.Type is not StatType.GrowthRate) return false;
-
-            // Exit if the mediator of the given ID already exists (prevents stacking the same modifier)
-            if (owner.Stats.Mediator.ContainsModifierID(affector.ID)) return false;
+            if(affector.Type is not StatType.MutationChance) return false;
             
             // Add the modifier to the Stats Mediator
             owner.Stats.Mediator.AddModifier(
