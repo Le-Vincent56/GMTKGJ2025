@@ -185,11 +185,11 @@ namespace Perennial.Garden
 			}
 			else if (currentActionState is TillActionState)
 			{
-				if (SoilState != SoilState.TILLED || (SoilState == SoilState.TILLED && Plant == null))
+				if ( (SoilState == SoilState.TILLED && Plant == null))
 				{
 					return;
 				}
-
+				
 				EventBus<PerformCommand>.Raise(new PerformCommand( )
 				{
 					Command = BaseCommand.Create<TillCommand>(new TillArgs{ GardenManager = GardenManager, Tile = this })
