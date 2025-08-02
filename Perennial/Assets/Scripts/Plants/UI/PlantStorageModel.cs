@@ -11,8 +11,9 @@ namespace Perennial.Plants.UI
         private readonly PlantDatabase _database;
         private readonly Dictionary<SerializableGuid, StorageAmount> _availablePlants;
 
-        public event Action<PlantDefinition, StorageAmount> OnPlantAdded = delegate { };
-        public event Action<PlantDefinition, StorageAmount> OnPlantRemoved = delegate { };
+        public event Action<Dictionary<SerializableGuid, StorageAmount>> OnModified = delegate { };
+        
+        public Dictionary<SerializableGuid, StorageAmount> AvailablePlants => _availablePlants;
 
         public PlantStorageModel(PlantDatabase database)
         {
@@ -24,7 +25,8 @@ namespace Perennial.Plants.UI
             // Track how many of each plant definition there are in the storage through its ID
             foreach (SerializableGuid id in databaseIDs)
             {
-                _availablePlants.Add(id, (StorageAmount)0);
+                StorageAmount startingAmount = (StorageAmount)UnityEngine.Random.Range(0, 3);
+                _availablePlants.Add(id, startingAmount);
             }
         }
 
@@ -40,12 +42,9 @@ namespace Perennial.Plants.UI
             
             // Add to the current amount of stored plants
             _availablePlants[plantID] = newAmount;
-
-            // Check if the ID cannot be retrieved from the database
-            if (!ValidateDatabaseID(plantID, out PlantDefinition addedPlant)) return;
             
-            // Invoke the added event
-            OnPlantAdded?.Invoke(addedPlant, newAmount);
+            // Notify that the model has been modified
+            OnModified?.Invoke(_availablePlants);
         }
 
         /// <summary>
@@ -62,11 +61,8 @@ namespace Perennial.Plants.UI
             // Subtract from the number of plants
             _availablePlants[plantID]--;
             
-            // Check if the ID cannot be retrieved from the database
-            if (!ValidateDatabaseID(plantID, out PlantDefinition removedPlant)) return;
-            
-            // Invoke the removed event
-            OnPlantRemoved?.Invoke(removedPlant, _availablePlants[plantID]);
+            // Notify that the model has been modified
+            OnModified?.Invoke(_availablePlants);
         }
 
         /// <summary>

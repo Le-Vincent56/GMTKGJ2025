@@ -1,32 +1,48 @@
 using System.Collections.Generic;
 using System.Linq;
+using Perennial.Core.Debugging;
+using Perennial.Core.Extensions;
+using Perennial.Plants.Data;
 using UnityEngine;
+using LogType = Perennial.Core.Debugging.LogType;
 
 namespace Perennial.Plants.UI
 {
     public class PlantStorageView : MonoBehaviour
     {
-        private PlantController _controller;
-        private List<PlantButton>  _plantButtons = new List<PlantButton>();
+        private PlantStorageController _storageController;
+
+        public List<PlantButton> PlantButtons { get; private set; } = new List<PlantButton>();
 
         /// <summary>
         /// Initialize the Plant Storage View
         /// </summary>
-        public void Initialize(PlantController controller, PlantStorageModel model)
+        public void Initialize(PlantStorageController storageController)
         {
-            _controller = controller;
-            _plantButtons = GetComponentsInChildren<PlantButton>().ToList();
-            List<PlantDefinition> definitions = model.GetPlantDefinitions();
+            _storageController = storageController;
+            PlantButtons = GetComponentsInChildren<PlantButton>().ToList();
+            Debugger.Log($"Number of Buttons: {PlantButtons.Count}", LogType.Info);
+        }
 
-            // Iterate through the definitions
-            for (int i = 0; i < definitions.Count; i++)
+        /// <summary>
+        /// Update the plant buttons
+        /// </summary>
+        public void UpdateButtons(Dictionary<SerializableGuid, StorageAmount> availablePlants)
+        {
+            foreach (KeyValuePair<SerializableGuid, StorageAmount> kvp in availablePlants)
             {
-                // Break out of the loop if we have reached more definitions
-                // than there are buttons
-                if (i >= _plantButtons.Count) break;
-                
-                // Initialize the plant button with a definition
-                _plantButtons[i].Initialize(definitions[i]);
+                foreach (PlantButton button in PlantButtons)
+                {
+                    // Skip if the IDs don't match
+                    if (button.ID != kvp.Key) continue;
+
+                    // Set the storage amount
+                    button.Amount = (string)kvp.Value;
+
+                    // Set the game object as active if there are any seeds available
+                    // otherwise, set to none
+                    button.gameObject.SetActive(kvp.Value > 0);
+                }
             }
         }
     }
