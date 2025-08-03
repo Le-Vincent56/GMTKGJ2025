@@ -235,10 +235,11 @@ namespace Perennial.Garden
 			{
 				return false;
 			}
+			Plants.Remove(tile.Plant);
 
 			VFXManager.Instance.RemovePlantVFX(tile);
 			tile.Plant.Death( );
-			Plants.Remove(tile.Plant);
+			//Plants.Remove(tile.Plant);
 			tile.RemovePlantFromTile( );
 			tile.UpdatePlantSprite(null);
 			return true;

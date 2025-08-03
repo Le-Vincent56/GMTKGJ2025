@@ -8,6 +8,11 @@ namespace Perennial.Core.Architecture.Event_Bus.Events
 
    }
 
+   public struct ActionsStart : IEvent
+   {
+      
+   }
+
    /// <summary>
    /// Event for the end of a turn.
    /// </summary>

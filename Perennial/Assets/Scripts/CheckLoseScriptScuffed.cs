@@ -12,7 +12,7 @@ namespace Perennial
         private GardenManager _gardenManager;
         private PlantStorageController _plantStorageController;
 
-        private EventBinding<TurnEnded> _turnEnded;
+        private EventBinding<ActionsStart> _turnEnded;
         void Start()
         {
             _gardenManager = FindFirstObjectByType<GardenManager>();
@@ -21,18 +21,23 @@ namespace Perennial
 
         private void OnEnable()
         {
-            _turnEnded = new EventBinding<TurnEnded>(CheckLost);
-            EventBus<TurnEnded>.Register(_turnEnded);
+            _turnEnded = new EventBinding<ActionsStart>(CheckLost);
+            EventBus<ActionsStart>.Register(_turnEnded);
         }
 
         private void OnDisable()
         {
-            EventBus<TurnEnded>.Deregister(_turnEnded);
+            EventBus<ActionsStart>.Deregister(_turnEnded);
         }
 
         private void CheckLost()
         {
-            if (_gardenManager.Plants.Count == 0 && _plantStorageController.Model.AvailablePlants.Count == 0)
+            bool check = true;
+            foreach (Tile tile in _gardenManager.Tiles)
+            {
+                if (tile.HasPlant) check = false;
+            }
+            if (_plantStorageController.Model.IsStorageEmpty() && check)
             {
                 EventBus<LoseGameEvent>.Raise(new LoseGameEvent());
             }

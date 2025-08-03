@@ -56,6 +56,7 @@ namespace Perennial.TurnManagement.States
         {
             EventBus<ChangeActionState>.Register(_changeActionStateEventBinding);
             EventBus<PerformCommand>.Register(_performCommandEventBinding);
+            EventBus<ActionsStart>.Raise(new ActionsStart());
         }
         
         public override void Update()
