@@ -14,7 +14,7 @@ namespace Perennial
         private EventBinding<WinGameEvent> winGameEvent;
         private void OnEnable()
         {
-            win
+           
         }
     }
 }
