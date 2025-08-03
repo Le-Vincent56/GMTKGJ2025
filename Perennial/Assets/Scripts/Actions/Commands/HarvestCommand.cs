@@ -6,12 +6,11 @@ namespace Perennial.Actions.Commands
 {
     public class HarvestCommand : BaseCommand
     {
-        //hold reference to the plant as PlantStorageController needs reference to calculate seeds
-        //could be a better queue way or another event to do this but this was easiest
+        //reference to the plant this exists as the way I set up PlantStorage to listen it happens to sometimes trigger after plant is cleared from tile
         public Plant HarvestedPlant { get; }
         public HarvestCommand(HarvestArgs input) : base(input)
         {
-            HarvestedPlant = input.Plant;
+            HarvestedPlant = input.Tile.Plant;
         }
         
         /// <summary>

@@ -26,7 +26,6 @@ namespace Perennial.Actions.Commands
     
     public class HarvestArgs : BaseArgs, ICommandArgs<HarvestCommand>
     {
-        public Plant Plant;
     }
     
     public class TillArgs : BaseArgs, ICommandArgs<TillCommand>

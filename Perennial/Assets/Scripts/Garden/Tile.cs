@@ -176,7 +176,7 @@ namespace Perennial.Garden
 
 				EventBus<PerformCommand>.Raise(new PerformCommand( )
 				{
-					Command = BaseCommand.Create<HarvestCommand>(new HarvestArgs{ GardenManager = GardenManager, Tile = this, Plant = Plant})
+					Command = BaseCommand.Create<HarvestCommand>(new HarvestArgs{ GardenManager = GardenManager, Tile = this})
 				});
 			}
 			else if (currentActionState is PlantActionState)
