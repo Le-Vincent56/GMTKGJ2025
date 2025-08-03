@@ -18,4 +18,6 @@ namespace Perennial.Core.Architecture.Event_Bus.Events
     {
         public Food Amount;
     }
+    
+    public struct StorageEmpty : IEvent { }
 }

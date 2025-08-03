@@ -4,6 +4,7 @@ using System.Text;
 using Perennial.Core.Debugging;
 using Perennial.Core.Extensions;
 using Perennial.Plants.Data;
+using Unity.VisualScripting;
 
 namespace Perennial.Plants.UI
 {
@@ -13,6 +14,7 @@ namespace Perennial.Plants.UI
         private readonly Dictionary<SerializableGuid, StorageAmount> _availablePlants;
 
         public event Action<Dictionary<SerializableGuid, StorageAmount>> OnModified = delegate { };
+        public event Action OnEmpty = delegate { };
         
         public Dictionary<SerializableGuid, StorageAmount> AvailablePlants => _availablePlants;
 
@@ -64,6 +66,32 @@ namespace Perennial.Plants.UI
             
             // Notify that the model has been modified
             OnModified?.Invoke(_availablePlants);
+
+            // Exit if the storage is not empty
+            if (!IsStorageEmpty()) return;
+            
+            // Notify that the model is empty
+            OnEmpty?.Invoke();
+        }
+
+        /// <summary>
+        /// Check if the storage is empty
+        /// </summary>
+        private bool IsStorageEmpty()
+        {
+            bool emptyStorage = true;
+
+            foreach (KeyValuePair<SerializableGuid, StorageAmount> kvp in _availablePlants)
+            {
+                // Skip if there are no available plants of a given type
+                if (kvp.Value <= 0) continue;
+                
+                // If there's at least one available plant, the storage is not empty
+                emptyStorage = false;
+                break;
+            }
+
+            return emptyStorage;
         }
 
         /// <summary>
