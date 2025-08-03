@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Text;
 using Perennial.Core.Debugging;
 using Perennial.Core.Extensions;
 using Perennial.Plants.Data;
@@ -40,7 +41,7 @@ namespace Perennial.Plants.UI
 
             StorageAmount newAmount = currentAmount + numberToAdd;
             
-            // Add to the current amount of stored plants
+            // Add to the current number of stored plants
             _availablePlants[plantID] = newAmount;
             
             // Notify that the model has been modified
@@ -69,7 +70,7 @@ namespace Perennial.Plants.UI
         /// Get the plant definitions from the Database
         /// </summary>
         /// <returns></returns>
-        public List<PlantDefinition> GetPlantDefinitions() => _database.GetKeys();
+        public List<PlantDefinition> GetPlantDefinitions() => _database.GetDefinitions();
 
         /// <summary>
         /// Get a plant definition from the model
@@ -118,6 +119,25 @@ namespace Perennial.Plants.UI
                          $"the database", LogType.Warning);
 
             return false;
+        }
+
+        private void DebugModel()
+        {
+            StringBuilder storageBuilder = new StringBuilder();
+            storageBuilder.Append("Available Plants Storage");
+            storageBuilder.Append(" (Count: ");
+            storageBuilder.Append(_availablePlants.Count);
+            storageBuilder.Append("): ");
+            foreach (KeyValuePair<SerializableGuid, StorageAmount> kvp in _availablePlants)
+            {
+                storageBuilder.AppendLine("Key: ");
+                storageBuilder.Append(kvp.Key);
+                storageBuilder.AppendLine("\tValue: ");
+                storageBuilder.Append(kvp.Value);
+            }
+            
+            Debugger.Log(storageBuilder.ToString(), LogType.Info);
+            Debugger.Log(_database.Debug(), LogType.Info);
         }
     }
 }

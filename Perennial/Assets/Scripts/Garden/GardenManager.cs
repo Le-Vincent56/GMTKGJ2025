@@ -5,6 +5,8 @@ using System.Collections.Generic;
 using System.Linq;
 using Perennial.Core.Architecture.Event_Bus;
 using Perennial.Core.Architecture.Event_Bus.Events;
+using Perennial.Seasons;
+using Perennial.TurnManagement;
 using Unity.VisualScripting;
 using UnityEngine;
 using Random = UnityEngine.Random;
@@ -25,6 +27,8 @@ namespace Perennial.Garden
 		private Tile[ , ] _garden;
 		private List<Plant> _plants;
 		private List<Tile> _tiles;
+
+		private SeasonManager _seasonManager;
 
 		private EventBinding<TurnStarted> _onTurnedStarted;
 		private EventBinding<TurnEnded> _onTurnedEnded;
@@ -69,6 +73,7 @@ namespace Perennial.Garden
 			_garden = new Tile[GardenWidth, GardenHeight];
 			Plants = new List<Plant>( );
 			Tiles = new List<Tile>( );
+			_seasonManager = FindFirstObjectByType<SeasonManager>( );
 		}
 
 		private void Start ( )
@@ -84,21 +89,26 @@ namespace Perennial.Garden
 			_onTurnedEnded = new EventBinding<TurnEnded>(EndTurn);
 
 			EventBus<TurnEnded>.Register(_onTurnedEnded);
+			EventBus<TurnStarted>.Register(_onTurnedStarted);
 		}
 
 		private void OnDisable ( )
 		{
 			EventBus<TurnEnded>.Deregister(_onTurnedEnded);
+			EventBus<TurnStarted>.Deregister(_onTurnedStarted);
 		}
 
 		private void StartTurn(TurnStarted eventData)
 		{
-			
+			CheckExpirationAllPlants();
+			CheckSeasonAllPlants();
+			RemoveFlaggedPlants();
+			UpkeepAllPlants();
 		}
 
 		private void EndTurn(TurnEnded eventData)
 		{
-			UpdatePlantMutations();
+			EndStepAllPlants();
 			UpdateWeedSpread();
 		}
 
@@ -216,9 +226,10 @@ namespace Perennial.Garden
 			{
 				return false;
 			}
-
+			
 			Plants.Remove(tile.Plant);
-			tile.Plant = null;
+			tile.RemovePlantFromTile();
+			tile.UpdatePlantSprite(null);
 			return true;
 		}
 
@@ -540,13 +551,59 @@ namespace Perennial.Garden
 		}
 
 		/// <summary>
-		/// Tick all plants currently on the garden
+		/// Upkeep Tick all plants currently on the garden
 		/// </summary>
-		public void TickAllPlants ( )
+		private void UpkeepAllPlants ( )
 		{
 			foreach (Plant plant in Plants)
 			{
 				plant.Upkeep( );
+			}
+		}
+		
+		/// <summary>
+		/// End step tick all plants in the garden
+		/// </summary>
+		private void EndStepAllPlants ( )
+		{
+			foreach (Plant plant in Plants)
+			{
+				plant.EndStep();
+			}
+		}
+		
+		/// <summary>
+		/// Check all plants to dispose if lifetime reached
+		/// </summary>
+		private void CheckExpirationAllPlants ()
+		{
+			foreach (Plant plant in Plants)
+			{
+				plant.CheckExpiration();
+			}
+		}
+
+		/// <summary>
+		/// Check all plants for seasonal effects. 
+		/// </summary>
+		private void CheckSeasonAllPlants()
+		{
+			foreach (Plant plant in Plants)
+			{
+				plant.ApplySeasonalEffects(_seasonManager.CurrentSeason);
+			}
+		}
+
+		/// <summary>
+		/// Removes all plants flagged for remocal
+		/// </summary>
+		private void RemoveFlaggedPlants()
+		{
+			for (int i = Plants.Count - 1; i >= 0; i--)
+			{
+				if (!Plants[i].MarkedForRemoval) continue;
+
+				RemovePlantFromTile(Plants[i].Tile);
 			}
 		}
 

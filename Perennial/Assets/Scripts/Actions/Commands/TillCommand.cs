@@ -6,8 +6,7 @@ namespace Perennial.Actions.Commands
 {
     public class TillCommand : BaseCommand
     {
-        
-        protected TillCommand(GardenManager gardenManager, Tile tile) : base(gardenManager, tile)
+        public TillCommand(TillArgs input) : base(input)
         {
 
         }
@@ -17,9 +16,7 @@ namespace Perennial.Actions.Commands
         /// </summary>
         public override async Task Execute()
         {
-            Debug.Log("Tilling ground");
-            await Awaitable.WaitForSecondsAsync(3f); //TODO ADD LOGIC
-            Debug.Log("Finished tilling");
+            Tile.SoilState = SoilState.TILLED;
         }
     }
 }

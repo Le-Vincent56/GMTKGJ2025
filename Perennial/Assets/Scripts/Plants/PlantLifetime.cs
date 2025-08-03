@@ -27,7 +27,7 @@ namespace Perennial.Plants
         /// <summary>
         /// Grow the plant by increasing its lifetime
         /// </summary>
-        public void Grow(float growthRate)
+        public void Grow(int growthRate)
         {
             // Check if not previously grown
             if (!FullyGrown) _wasPreviouslyGrown = false;
@@ -43,6 +43,21 @@ namespace Perennial.Plants
         /// Get the percentage of how far the plant has gone through it's lifetime
         /// </summary>
         public float GetPercentage() => CurrentLifetime / _totalLifetime;
+
+        /// <summary>
+        /// Reset the plant's lifetime to the start of harvest
+        /// </summary>
+        public void ResetToHarvestStart()
+        {
+            // Exit if not in the harvest state
+            if (!FullyGrown) return;
+            
+            // Exit if not alive
+            if (!IsAlive()) return;
+            
+            // Set the current lifetime to the start of the harvest time
+            CurrentLifetime = (Lifetime)_growthTime;
+        }
 
         /// <summary>
         /// Check if the plant is alive

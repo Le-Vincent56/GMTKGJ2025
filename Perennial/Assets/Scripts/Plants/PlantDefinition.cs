@@ -56,10 +56,16 @@ namespace Perennial.Plants
         /// Create an instance of a Plant using this definition
         /// </summary>
         public IPlant CreateInstance() => PlantFactory.CreatePlant(this);
-        
+
         /// <summary>
         /// Generate an unique ID on validation
         /// </summary>
-        private void OnValidate() => id = SerializableGuid.NewGuid();
+        private void OnValidate()
+        {
+            // Exit if the ID already exists
+            if (id != SerializableGuid.Empty) return;
+            
+            id = SerializableGuid.NewGuid();
+        }
     }
 }

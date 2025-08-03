@@ -39,7 +39,6 @@ namespace Perennial.TurnManagement.States
                 _actionStateType = e.StateType;
                 
                 StoredPlantDefinition = e.SelectedPlantDefinition; //can be null, which is ok
-                Debug.Log(StoredPlantDefinition);
             });
             
             _performCommandEventBinding = new EventBinding<PerformCommand>(() =>
@@ -52,7 +51,6 @@ namespace Perennial.TurnManagement.States
 
         public override void OnEnter()
         {
-            Debug.Log($"{this} started");
             EventBus<ChangeActionState>.Register(_changeActionStateEventBinding);
             EventBus<PerformCommand>.Register(_performCommandEventBinding);
         }

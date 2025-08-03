@@ -8,7 +8,6 @@ namespace Perennial.TurnManagement.States.ActionStates
    {
       public override void OnEnter()
       {
-         Debug.Log("Till State Started");
          EventBus<StartTillState>.Raise(new StartTillState());
       }
    }

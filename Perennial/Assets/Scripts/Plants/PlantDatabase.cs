@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using Perennial.Core.Debugging;
 using Perennial.Core.Extensions;
 using UnityEngine;
@@ -40,12 +41,30 @@ namespace Perennial.Plants
         /// </summary>
         public List<SerializableGuid> GetIDs() => _lookup.Keys.ToList();
         
-        public List<PlantDefinition> GetKeys() => _lookup.Values.ToList();
+        public List<PlantDefinition> GetDefinitions() => _lookup.Values.ToList();
         
         /// <summary>
         /// Try to get a value from the lookup table
         /// </summary>
         public bool TryGetValue(SerializableGuid id, out PlantDefinition plant) => _lookup.TryGetValue(id, out plant);
+
+        public string Debug()
+        {
+            StringBuilder lookupBuilder = new StringBuilder();
+            lookupBuilder.Append("Plant Database");
+            lookupBuilder.Append(" (Count: ");
+            lookupBuilder.Append(_lookup.Count);
+            lookupBuilder.Append("): ");
+            foreach (KeyValuePair<SerializableGuid, PlantDefinition> kvp in _lookup)
+            {
+                lookupBuilder.AppendLine("Key: ");
+                lookupBuilder.Append(kvp.Key);
+                lookupBuilder.AppendLine("\tValue: ");
+                lookupBuilder.Append(kvp.Value.Name);
+            }
+            
+            return lookupBuilder.ToString();
+        }
         
         #if UNITY_EDITOR
         /// <summary>
@@ -109,7 +128,7 @@ namespace Perennial.Plants
             }
             else
             {
-                Debug.Log($"Validation passed! All {plantDefinitions.Count} items have unique IDs.");
+                Debugger.Log($"Validation passed! All {plantDefinitions.Count} items have unique IDs.", LogType.Info);
             }
         }
         #endif

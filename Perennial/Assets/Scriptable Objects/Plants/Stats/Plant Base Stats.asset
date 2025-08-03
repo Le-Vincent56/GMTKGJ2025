@@ -12,4 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e515d31def754e54e8546ad41fc4d138, type: 3}
   m_Name: Plant Base Stats
   m_EditorClassIdentifier: 
-  GrowthRate: 1
+  FoodModifier: 1
+  MutationChance: 0.5
+  MutationDropRate: 1

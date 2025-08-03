@@ -8,7 +8,6 @@ namespace Perennial.TurnManagement.States.ActionStates
     {
         public override void OnEnter()
         {
-            Debug.Log("Plant State Started");
             EventBus<StartPlantState>.Raise(new StartPlantState());
         }
     }

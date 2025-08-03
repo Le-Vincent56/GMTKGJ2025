@@ -13,12 +13,13 @@ MonoBehaviour:
   m_Name: Snowpea
   m_EditorClassIdentifier: 
   id:
-    Part1: 3103215833
-    Part2: 1279544344
-    Part3: 2341615796
-    Part4: 1661881874
+    Part1: 1247873905
+    Part2: 1165300995
+    Part3: 4101215909
+    Part4: 3354831034
   plantName: Snowpea
-  description: Freezes other plants on harvest
+  description: When harvested, refreshes the harvest window of nearby harvestable
+    plants.
   baseStats: {fileID: 11400000, guid: 0dc70ca48b751ff4bafd37df3825e30c, type: 2}
   seedSprite: {fileID: 21300000, guid: 9a2699fbc0a38004384714fb4d2c43b8, type: 3}
   youngSprite: {fileID: 21300000, guid: 300e8f869b57c7a4c8727a76319e497d, type: 3}
@@ -30,6 +31,9 @@ MonoBehaviour:
   abilities:
   - {fileID: 11400000, guid: c767463c6a94b3b44b79077ec0c811b8, type: 2}
   behaviors:
-  - {fileID: 11400000, guid: eb423a30c41a72f46b1fd0526f3a5852, type: 2}
-  foodMultiplier: 5
-  foodConstant: 20
+  - {fileID: 11400000, guid: 0acff8fc0ed60124e863c563504ed5b5, type: 2}
+  - {fileID: 11400000, guid: f954d863154f7ad458644043fa28b77d, type: 2}
+  - {fileID: 11400000, guid: 662cd736e8dbd724ebc3441880b9d4e3, type: 2}
+  - {fileID: 11400000, guid: 88dfc9c5bf3ced844bab551dda902b75, type: 2}
+  foodMultiplier: 4
+  foodConstant: 15

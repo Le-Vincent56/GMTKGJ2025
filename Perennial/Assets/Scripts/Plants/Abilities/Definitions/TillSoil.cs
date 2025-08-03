@@ -1,7 +1,5 @@
 using System.Collections.Generic;
 using Perennial.Garden;
-using Perennial.Plants.Behaviors;
-using Perennial.Plants.Data;
 using UnityEngine;
 
 namespace Perennial.Plants.Abilities.Definitions

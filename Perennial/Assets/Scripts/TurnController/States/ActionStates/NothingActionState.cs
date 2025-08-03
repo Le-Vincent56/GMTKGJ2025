@@ -8,7 +8,6 @@ namespace Perennial.TurnManagement.States.ActionStates
     {
         public override void OnEnter()
         {
-            Debug.Log("Nothing State Started");
             EventBus<StartNothingState>.Raise(new StartNothingState());
         }
     }

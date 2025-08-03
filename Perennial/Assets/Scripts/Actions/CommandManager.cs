@@ -44,6 +44,7 @@ namespace Perennial.Actions
             {
                 ICommand command = _commandsQueue.Dequeue();
                 await command.Execute();
+                EventBus<CommandFinished>.Raise(new CommandFinished());
             }
             _isRunning = false;
         }

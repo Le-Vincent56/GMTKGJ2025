@@ -8,7 +8,6 @@ namespace Perennial.TurnManagement.States.ActionStates
     {
         public override void OnEnter()
         {
-            Debug.Log("Harvest State Started");
             EventBus<StartHarvestState>.Raise(new StartHarvestState());
         }
     }

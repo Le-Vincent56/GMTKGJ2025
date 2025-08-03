@@ -1,11 +1,15 @@
+using System;
 using System.Collections.Generic;
+using Perennial.Actions.Commands;
 using Perennial.Core.Architecture.Event_Bus;
 using Perennial.Core.Architecture.Event_Bus.Events;
+using Perennial.Core.Debugging;
 using Perennial.Core.Extensions;
 using Perennial.Garden;
 using Perennial.Plants.Data;
 using Unity.VisualScripting;
 using UnityEngine;
+using LogType = Perennial.Core.Debugging.LogType;
 
 namespace Perennial.Plants.UI
 {
@@ -16,7 +20,10 @@ namespace Perennial.Plants.UI
         
         private PlantStorageModel _model;
         private PlantStorageView _view;
-        
+
+        private EventBinding<TakePlant> _onTakePlant;
+        private EventBinding<StorePlant> _onStorePlant;
+
         private void Awake()
         {
             // Connect the MVC
@@ -25,6 +32,21 @@ namespace Perennial.Plants.UI
 
             ConnectModel();
             ConnectView();
+        }
+
+        private void OnEnable()
+        {
+            _onTakePlant = new EventBinding<TakePlant>(RemovePlant);
+            EventBus<TakePlant>.Register(_onTakePlant);
+            
+            _onStorePlant = new EventBinding<StorePlant>(AddPlant);
+            EventBus<StorePlant>.Register(_onStorePlant);
+        }
+
+        private void OnDisable()
+        {
+            EventBus<TakePlant>.Deregister(_onTakePlant);
+            EventBus<StorePlant>.Deregister(_onStorePlant);
         }
 
         private void ConnectModel()
@@ -62,7 +84,6 @@ namespace Perennial.Plants.UI
 
         private void SelectPlant(SerializableGuid id)
         {
-            Debug.Log("Plant Selected");
             // TODO: Set the select plant
             // When a tile is selected with the plant, use the parameter 'id'
             // to lookup in the _model (GetPlantDefinition()) and then
@@ -87,9 +108,16 @@ namespace Perennial.Plants.UI
                     StateType = ActionStateType.Plant,
                     SelectedPlantDefinition = plantDefinition
             });
-
-            //can't remove it yet as don't know if it was actually planted may have to use another event
-            //_model.RemovePlant(id);
         }
+
+        /// <summary>
+        /// Remove a plant from storage
+        /// </summary>
+        private void RemovePlant(TakePlant eventData) => _model.RemovePlant(eventData.ID);
+        
+        /// <summary>
+        /// Add a number of plants to storage
+        /// </summary>
+        private void AddPlant(StorePlant eventData) => _model.AddPlants(eventData.ID, eventData.Quantity);
     }
 }
