@@ -15,6 +15,7 @@ namespace Perennial
 		[SerializeField] private Button replayButton;
         [SerializeField] private Button quitButton;
         [SerializeField] private Canvas winCanvas;
+        [SerializeField] private Image loseImage;
 
 
         private EventBinding<WinGameEvent> winGameEvent;
@@ -25,7 +26,7 @@ namespace Perennial
             winCanvas = GetComponent<Canvas>();
             winCanvas.enabled = false;
             replayButton.onClick.AddListener(Replay);
-            quitButton.onClick.AddListener(LoadMainMenu);
+            //quitButton.onClick.AddListener(LoadMainMenu);
         }
 
         private void OnEnable()
@@ -53,7 +54,8 @@ namespace Perennial
         private void LoseGame()
         {
             winCanvas.enabled = true;
-			titleText.text = "you lose";
+            loseImage.enabled = true;
+            titleText.text = "you lose";
 			titleImage.color = new Color(202 / 255f, 73 / 255f, 72 / 255f);
 		}
 
@@ -64,7 +66,7 @@ namespace Perennial
 
         private void Replay()
         {
-            SceneManager.LoadScene(1);
+            SceneManager.LoadScene(0);
         }
     }
 }
