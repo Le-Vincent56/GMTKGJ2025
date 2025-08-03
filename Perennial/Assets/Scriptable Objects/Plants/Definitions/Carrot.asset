@@ -18,7 +18,7 @@ MonoBehaviour:
     Part3: 854516368
     Part4: 1756545931
   plantName: Evil Carrot
-  description: On harvest, Weeds adjacent soil.
+  description: On harvest, untills adjacent soil.
   baseStats: {fileID: 11400000, guid: 0dc70ca48b751ff4bafd37df3825e30c, type: 2}
   seedSprite: {fileID: 21300000, guid: 2bd263ef58c4c074c835846c4e4b135e, type: 3}
   youngSprite: {fileID: 21300000, guid: aeac4920cec8a3b4ea027dded35b98a4, type: 3}
