@@ -6,9 +6,9 @@ using UnityEngine;
 namespace Perennial.Plants.Abilities.Definitions
 {
     [CreateAssetMenu(fileName = "Weed Soil", menuName = "Plants/Abilities/Weed Soil")]
-    public class WeedSoil : PlacePlantAbility
+    public class WeedSoil : HarvestPlantAbility
     {
-        public override void OnPlace(PlantAbilityContext context)
+        public override void OnHarvest(PlantAbilityContext context)
         {
             // Get the surrounding tiles
             List<Tile> affectedTiles = context.GardenManager.GetSurroundingTiles(

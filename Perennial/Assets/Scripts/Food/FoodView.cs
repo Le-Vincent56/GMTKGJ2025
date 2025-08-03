@@ -1,4 +1,3 @@
-using System;
 using Perennial.Plants.Data;
 using TMPro;
 using UnityEngine;
@@ -8,20 +7,21 @@ namespace Perennial.FoodMVC
     public class FoodView : MonoBehaviour
     {
         [SerializeField] private TextMeshProUGUI displayText;
+        [SerializeField] private TextMeshProUGUI goalText;
 
-        private FoodController _foodController;
-
-        public void Initialize(FoodController foodController)
+        public void Initialize(float foodToWin)
         {
-            _foodController = foodController;
+            SetGoal(foodToWin);
         }
+
+        /// <summary>
+        /// Update the food goal
+        /// </summary>
+        public void SetGoal(float amount) => goalText.text = ((int)amount).ToString();
 
         /// <summary>
         /// Update the food text
         /// </summary>
-        public void UpdateUI(Food amount)
-        {
-            displayText.text = $"{amount.Value.ToString()}/{_foodController.FoodToWin.ToString()}";
-        }
+        public void UpdateCurrent(Food amount) => displayText.text = ((int)amount).ToString();
     }
 }

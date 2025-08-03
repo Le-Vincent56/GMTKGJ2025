@@ -1,9 +1,7 @@
 using System.Collections.Generic;
-using Perennial.VFX;
 using Sirenix.OdinInspector;
 using TMPro;
 using UnityEngine;
-using UnityEngine.UIElements;
 
 namespace Perennial.Seasons
 {
@@ -25,7 +23,7 @@ namespace Perennial.Seasons
         public void UpdateUI(Month month)
         {
             image.sprite = _imageDictionary[month];
-            monthText.text = month.ToString();
+            monthText.text = month.ToString().ToUpper();
         }
     }
 }

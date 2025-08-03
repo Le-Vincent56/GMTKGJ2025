@@ -77,7 +77,7 @@ namespace Perennial.Plants.UI
         /// <summary>
         /// Check if the storage is empty
         /// </summary>
-        private bool IsStorageEmpty()
+        public bool IsStorageEmpty()
         {
             bool emptyStorage = true;
 
