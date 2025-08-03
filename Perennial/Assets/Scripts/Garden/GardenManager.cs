@@ -11,12 +11,15 @@ using Perennial.VFX;
 using Unity.VisualScripting;
 using UnityEngine;
 using Random = UnityEngine.Random;
+using UnityEngine.Rendering;
 
 namespace Perennial.Garden
 {
 	public class GardenManager : MonoBehaviour
 	{
 		[SerializeField] private GameObject tilePrefab;
+		[SerializeField] private GameObject grassPrefab;
+		[SerializeField] private SerializedDictionary<Season, Sprite> grassSprites;
 		[Space]
 		[SerializeField, Range(1, 20)] private int gardenWidth = 1;
 		[SerializeField, Range(1, 20)] private int gardenHeight = 1;
@@ -28,6 +31,7 @@ namespace Perennial.Garden
 		private Tile[ , ] _garden;
 		private List<Plant> _plants;
 		private List<Tile> _tiles;
+		private List<SpriteRenderer> _grass;
 
 		private SeasonManager _seasonManager;
 
@@ -75,6 +79,7 @@ namespace Perennial.Garden
 			Plants = new List<Plant>( );
 			Tiles = new List<Tile>( );
 			_seasonManager = FindFirstObjectByType<SeasonManager>( );
+			_grass = new List<SpriteRenderer>( );
 		}
 
 		private void Start ( )
@@ -106,6 +111,7 @@ namespace Perennial.Garden
 			RemoveFlaggedPlants( );
 			UpkeepAllPlants( );
 			UpdateTooltips( );
+			UpdateSeasonSprites( );
 		}
 
 		private void EndTurn (TurnEnded eventData)
@@ -624,6 +630,19 @@ namespace Perennial.Garden
 			}
 		}
 
+		private void UpdateSeasonSprites ( )
+		{
+			for (int i = 0; i < _grass.Count; i++)
+			{
+				_grass[i].sprite = grassSprites[_seasonManager.CurrentSeason];
+			}
+
+			for (int i = 0; i < Tiles.Count; i++)
+			{
+				Tiles[i].UpdateSoilSprite( );
+			}
+		}
+
 		/// <summary>
 		/// Generate a 2D grid of all the tiles in the garden
 		/// </summary>
@@ -631,6 +650,20 @@ namespace Perennial.Garden
 		{
 			float offsetX = transform.position.x - (GardenWidth / 2f) + 0.5f;
 			float offsetY = transform.position.y - (GardenHeight / 2f) + 0.5f;
+			int cameraHalfHeight = Mathf.CeilToInt(Camera.main.orthographicSize);
+			int cameraHalfWidth = Mathf.CeilToInt(cameraHalfHeight * Camera.main.aspect);
+
+			// Add grass sprites
+			for (int i = -cameraHalfWidth; i <= cameraHalfWidth; i++)
+			{
+				for (int j = -cameraHalfHeight; j <= cameraHalfHeight; j++)
+				{
+					SpriteRenderer grass = Instantiate(grassPrefab, transform).GetComponent<SpriteRenderer>( );
+					grass.transform.localPosition = new Vector3(i, j);
+
+					_grass.Add(grass);
+				}
+			}
 
 			// Spawn in tile objects
 			for (int i = 0; i < GardenWidth; i++)
@@ -641,6 +674,7 @@ namespace Perennial.Garden
 					// The position of the garden object will be the center of the tile grid
 					Tile tile = Instantiate(tilePrefab, transform).GetComponent<Tile>( );
 					tile.GardenPosition = new Vector2Int(i, j);
+					tile.UpdateEdgeType( );
 					tile.transform.localPosition = new Vector3(offsetX + i, offsetY + j);
 
 					_garden[i, j] = tile;
