@@ -87,7 +87,7 @@ GameObject:
   - component: {fileID: 7069434134635404222}
   - component: {fileID: 5082647281444478384}
   m_Layer: 5
-  m_Name: Action View
+  m_Name: Season View
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
