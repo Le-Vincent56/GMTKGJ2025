@@ -161,9 +161,12 @@ namespace Perennial.Garden
 			if (Plant != null)
 			{
 				plantNameText.text = Plant.Name;
-				plantFoodText.text = $"<color=#3E2309>{Plant.Rewards.CalculateFood(lifetimeOffset: 1).Value} Food</color> <color=#9EC699>+ {Plant.Rewards.CalculateFood(lifetimeOffset: 1).Value}</color>";
+				float currentFood = Plant.Rewards.CalculateFood( ).Value;
+				plantFoodText.text = $"<color=#3E2309>{currentFood} Food</color> <color=#9EC699>+ {Plant.Rewards.CalculateFood(lifetimeOffset: 1).Value - currentFood}</color>";
 				plantLifetimeText.text = $"<color=#DDDDDD>Lifetime:</color> {Plant.Definition.HarvestTime + Plant.Definition.GrowTime} Months";
-				plantTurnsUntilText.text = (Plant.Lifetime.FullyGrown ? $"<color=#DDDDDD>Dies in:</color> {Plant.Definition.HarvestTime + Plant.Definition.GrowTime - Plant.Lifetime.CurrentLifetime.Value + 1} Months" : $"<color=#DDDDDD>Grows in:</color> {Plant.Definition.GrowTime - Plant.Lifetime.CurrentLifetime.Value + 1} Months");
+				float turnsUntilDeath = Plant.Definition.HarvestTime + Plant.Definition.GrowTime - Plant.Lifetime.CurrentLifetime.Value + 1;
+				float turnsUntilFullyGrown = Plant.Definition.GrowTime - Plant.Lifetime.CurrentLifetime.Value + 1;
+				plantTurnsUntilText.text = (Plant.Lifetime.FullyGrown ? $"<color=#DDDDDD>Dies in:</color> {turnsUntilDeath} Months" : $"<color=#DDDDDD>Grows in:</color> {turnsUntilFullyGrown} Months");
 				plantAbilityText.text = Plant.Definition.Description;
 				plantUngrowableText.text = $"<color=#DDDDDD>Ungrowable during:</color>\n<b>{GetSeasonString(Plant.Definition.IncompatibleSeasons)}</b>";
 				plantBonusText.text = $"<color=#DDDDDD>Bonus during:</color>\n<b>{GetSeasonString(Plant.Definition.BonusSeasons)}</b>";
@@ -262,7 +265,7 @@ namespace Perennial.Garden
 				else if (GardenPosition.y == GardenManager.GardenHeight - 1)
 				{
 					edgeType = EdgeType.TOP_LEFT;
-				}	
+				}
 				else
 				{
 					edgeType = EdgeType.MIDDLE_LEFT;

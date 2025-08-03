@@ -18,6 +18,8 @@ namespace Perennial.Plants.UI
         private EventBinding<TakePlant> _onTakePlant;
         private EventBinding<StorePlant> _onStorePlant;
 
+        public PlantStorageModel Model => _model;
+
         private void Awake()
         {
             // Connect the MVC
