@@ -227,22 +227,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 585725db1ff69c24684cdbeb86aa7de5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  serializationData:
-    SerializedFormat: 2
-    SerializedBytes: 
-    ReferencedUnityObjects: []
-    SerializedBytesString: 
-    Prefab: {fileID: 0}
-    PrefabModificationsReferencedUnityObjects: []
-    PrefabModifications: []
-    SerializationNodes: []
-  autoUnparentOnAwake: 1
   tilePrefab: {fileID: 7902424495938158857, guid: f9b2b4d3ebabf6f40ba832d964f65177, type: 3}
-  _gardenWidth: 9
-  _gardenHeight: 5
+  gardenWidth: 1
+  gardenHeight: 1
   startTilledPercentage: 0.5
-  _plantMutationPercentage: 0.15
-  _grassSpreadPercentage: 0.05
+  plantMutationPercentage: 0.1
+  weedSpreadPercentage: 0.1
+  _tiles: []
 --- !u!4 &639493306
 Transform:
   m_ObjectHideFlags: 0
