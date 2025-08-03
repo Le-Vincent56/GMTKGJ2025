@@ -351,7 +351,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   startingFood: 0
-  foodToWin: 10
+  foodToWin: 1000
 --- !u!1 &8707976193434994823
 GameObject:
   m_ObjectHideFlags: 0
