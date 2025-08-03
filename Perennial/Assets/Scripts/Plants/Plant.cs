@@ -5,6 +5,7 @@ using Perennial.Core.Extensions;
 using Perennial.Garden;
 using Perennial.Plants.Abilities;
 using Perennial.Plants.Behaviors;
+using Perennial.Plants.Data;
 using Perennial.Plants.Stats;
 using Perennial.Seasons;
 
@@ -14,7 +15,6 @@ namespace Perennial.Plants
     {
         private readonly PlantDefinition _definition;
         private readonly PlantAbility[] _abilities;
-        private readonly GardenManager _gardenManager;
 
         public PlantDefinition Definition => _definition;
         public SerializableGuid ID { get; private set; }
@@ -23,6 +23,8 @@ namespace Perennial.Plants
         public bool SkipGrowth { get; set; }
         public bool SkipPassive { get; set; }
         public Tile Tile { get; }
+        public GardenManager GardenManager { get; }
+
         public List<PlantBehaviorInstance> Behaviors { get; } = new List<PlantBehaviorInstance>();
         public PlantStats Stats { get; }
         public PlantLifetime Lifetime { get; }
@@ -33,7 +35,7 @@ namespace Perennial.Plants
         {
             ID = SerializableGuid.NewGuid();
             _definition = definition;
-            _gardenManager = gardenManager;
+            GardenManager = gardenManager;
             _abilities = definition.Abilities;
             Tile = currentTile;
             
@@ -84,15 +86,14 @@ namespace Perennial.Plants
         /// <summary>
         /// Run plant logic for harvesting the plant
         /// </summary>
-        public void Harvest()
+        public void Harvest(out (Food Food, Seeds BaseSeeds, Seeds? MutationSeeds) rewards)
         {
             PlantAbilityContext context = CreateAbilityContext();
             ProcessHarvestBehaviors(context);
             TriggerHarvestAbilities(context);
             CancelPassiveAbilities(context);
 
-            // TODO: Remove the plant from the garden
-            // TODO: Send rewards to the player
+            rewards = Rewards.GetRewards();
         }
 
         /// <summary>
@@ -248,7 +249,7 @@ namespace Perennial.Plants
         /// <summary>
         /// Allocate the context necessary for Plant abilities
         /// </summary>
-        private PlantAbilityContext CreateAbilityContext() => new PlantAbilityContext(this, Tile, _gardenManager);
+        private PlantAbilityContext CreateAbilityContext() => new PlantAbilityContext(this, Tile, GardenManager);
         
         /// <summary>
         /// Send a signal to this plant's behaviors

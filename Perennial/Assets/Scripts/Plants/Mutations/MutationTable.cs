@@ -8,7 +8,7 @@ using LogType = Perennial.Core.Debugging.LogType;
 
 namespace Perennial.Plants.Mutations
 {
-    [CreateAssetMenu(fileName = "Mutation Table", menuName = "Plants/Mutation Table")]
+    [CreateAssetMenu(fileName = "Mutation Table", menuName = "Plants/Mutations/Table")]
     public class MutationTable : ScriptableObject
     {
         [Header("Mutation Rules")]

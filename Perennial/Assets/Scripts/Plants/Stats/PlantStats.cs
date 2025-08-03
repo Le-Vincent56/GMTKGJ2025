@@ -5,6 +5,8 @@
         FoodModifier,
         MutationChance,
         MutationDropRate,
+        SeedsMinimum,
+        SeedsMaximum,
     }
     
     public class PlantStats
@@ -40,6 +42,26 @@
                 Query query = new Query(StatType.MutationDropRate, _baseStats.MutationDropRate);
                 Mediator.PerformQuery(this, query);
                 return query.Value;
+            }
+        }
+
+        public int SeedsMin
+        {
+            get
+            {
+                Query query = new Query(StatType.SeedsMinimum, _baseStats.SeedsMinimum);
+                Mediator.PerformQuery(this, query);
+                return (int)query.Value;
+            }
+        }
+        
+        public int SeedsMax
+        {
+            get
+            {
+                Query query = new Query(StatType.SeedsMaximum, _baseStats.SeedsMaximum);
+                Mediator.PerformQuery(this, query);
+                return (int)query.Value;
             }
         }
 

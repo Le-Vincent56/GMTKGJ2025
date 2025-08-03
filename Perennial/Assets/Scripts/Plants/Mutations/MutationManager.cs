@@ -9,6 +9,18 @@ namespace Perennial.Plants.Mutations
     {
         [Header("Configuration")] 
         [SerializeField] private MutationTable mutationTable;
+        [SerializeField] private MutationWeightSettings weightSettings;
+        
+        public MutationSelector Selector { get; private set; }
+
+        protected override void Awake()
+        {
+            // Initialize the singleton
+            base.Awake();
+
+            // Construct the Mutation Selector
+            Selector = new MutationSelector(weightSettings);
+        }
         
         /// <summary>
         /// Get the mutation result for two plants
