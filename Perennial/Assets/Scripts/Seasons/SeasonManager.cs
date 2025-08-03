@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Perennial.Core.Architecture.Event_Bus;
 using Perennial.Core.Architecture.Event_Bus.Events;
+using Perennial.VFX;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
@@ -61,6 +62,8 @@ namespace Perennial.Seasons
             
             _currentMonth = startingMonth;
             _currentSeason = monthSeasonMap[_currentMonth];
+            
+            VFXManager.Instance.SetWeatherParticles(_currentSeason);
         }
 
         private void OnEnable()
@@ -117,6 +120,8 @@ namespace Perennial.Seasons
             
             //check season 
             _currentSeason = monthSeasonMap[_currentMonth];
+            
+            VFXManager.Instance.SetWeatherParticles(_currentSeason);
         }
         
     }

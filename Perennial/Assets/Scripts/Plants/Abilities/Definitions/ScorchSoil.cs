@@ -3,6 +3,7 @@ using Perennial.Garden;
 using Perennial.Plants.Behaviors;
 using Perennial.Plants.Data;
 using Perennial.Plants.Stats;
+using Perennial.VFX;
 using UnityEngine;
 
 namespace Perennial.Plants.Abilities.Definitions
@@ -37,6 +38,9 @@ namespace Perennial.Plants.Abilities.Definitions
                 }
                 
                 // TODO: Add a scorch modifier to the tile
+                
+                // Apply VFX
+                VFXManager.Instance.AddVFX(tile, VFXType.Fire, context.Plant.ID, false);
             }
         }
     }

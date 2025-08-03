@@ -96,6 +96,12 @@ namespace Perennial.Plants
             rewards = Rewards.GetRewards();
         }
 
+        public void Death()
+        {
+            PlantAbilityContext context = CreateAbilityContext();
+            CancelPassiveAbilities(context);
+        }
+
         /// <summary>
         /// Have teh season affect the plant
         /// </summary>

@@ -16,14 +16,7 @@ namespace Perennial.VFX
         Pearl = 3,
         Garlic = 4, // Technically not used
         Carrot = 5, // Technically not used
-        Scorched = 6
-    }
-
-    public enum VFXBehavior
-    {
-        AttachedToTile,
-        AttachedToPlant,
-        Instantaneous
+        //Scorched = 6
     }
     
     public class VFXManager : MonoBehaviour
@@ -67,8 +60,11 @@ namespace Perennial.VFX
         /// </summary>
         /// <param name="tile"></param>
         /// <param name="vfx"></param>
-        public void AddVFX(Tile tile, VFXType vfx, SerializableGuid id)
+        public void AddVFX(Tile tile, VFXType vfx, SerializableGuid id, bool isAttachedToPlant = false)
         {
+            // Don't add if plant was marked for removal anyway.
+            if (isAttachedToPlant && tile.Plant.MarkedForRemoval) return;
+            
             // Check if the current tile exists in the dictionary,
             if (!tileVFXList.TryGetValue(tile, out TileVFX tileVfx))
             {
@@ -90,7 +86,9 @@ namespace Perennial.VFX
                 }
                 else
                 {
-                    var newVFX = vfxPlantList[vfx];
+                    ParticleSystem newVFX;
+                    if(!vfxPlantList.TryGetValue(vfx, out newVFX)) return;
+                    
                     if (newVFX != null)
                     {
                         vfxCount.vfx = Instantiate(newVFX, tile.transform.position + Vector3.back, Quaternion.Euler(-90, 0, 0));
@@ -102,11 +100,16 @@ namespace Perennial.VFX
             {
                 TileVFX.VfxCount newVfxCount = new TileVFX.VfxCount();
                 newVfxCount.ids.Add(id);
-                var newVFX = vfxPlantList[vfx];
+                
+                ParticleSystem newVFX;
+                if(!vfxPlantList.TryGetValue(vfx, out newVFX)) return;
+                
                 if (newVFX != null)
                 {
                     newVfxCount.vfx = Instantiate(newVFX, tile.transform.position + Vector3.back, Quaternion.Euler(-90, 0, 0));
                 }
+
+                newVfxCount.isAttachedToPlant = isAttachedToPlant;
                 tileVfx.vfxOnTile.Add(vfx, newVfxCount);
             }
         }
@@ -135,25 +138,58 @@ namespace Perennial.VFX
             }
         }
 
-        private static VFXBehavior getVFXBehavior(VFXType type)
+        public void RemovePlantVFX(Tile tile)
         {
-            switch (type)
+            // Check if the current tile exists in the dictionary,
+            if (!tileVFXList.TryGetValue(tile, out TileVFX tileVfx))
             {
-                case VFXType.Ivy:
-                case VFXType.Garlic:
-                case VFXType.Carrot:
-                case VFXType.Scorched:
-                    // Attached to tile.
-                    return VFXBehavior.AttachedToTile;
+                return;
+            }
+
+            LinkedList<VFXType> keys = new LinkedList<VFXType>();
+            
+            // Check to see if dictionary already has an entry for the vfx
+            foreach (var currVFX in tileVfx.vfxOnTile)
+            {
+                if (currVFX.Value.isAttachedToPlant)
+                {
+                    keys.AddLast(currVFX.Key);
+                }
+            }
+
+            foreach (var key in keys)
+            {
+                tileVfx.vfxOnTile.Remove(key);
+            }
+        }
+
+        public void SetWeatherParticles(Season season)
+        {
+            switch (season)
+            {
+                case Season.Spring:
+                    vfxWeatherList[Season.Spring].Play();
+                    vfxWeatherList[Season.Fall].Stop();
+                    vfxWeatherList[Season.Winter].Stop();
+                    break;
                 
-                case VFXType.Pearl:
-                    // Attached to plant.
-                    return VFXBehavior.AttachedToPlant;
+                case Season.Summer:
+                    vfxWeatherList[Season.Spring].Stop();
+                    vfxWeatherList[Season.Fall].Stop();
+                    vfxWeatherList[Season.Winter].Stop();
+                    break;
                 
-                case VFXType.Fire:
-                case VFXType.Snow:
-                    // Instantaneous.
-                    return VFXBehavior.Instantaneous;
+                case Season.Fall:
+                    vfxWeatherList[Season.Spring].Stop();
+                    vfxWeatherList[Season.Fall].Play();
+                    vfxWeatherList[Season.Winter].Stop();
+                    break;
+                
+                case Season.Winter:
+                    vfxWeatherList[Season.Spring].Stop();
+                    vfxWeatherList[Season.Fall].Stop();
+                    vfxWeatherList[Season.Winter].Play();
+                    break;
             }
         }
 
@@ -165,6 +201,7 @@ namespace Perennial.VFX
             {
                 public ParticleSystem vfx;
                 public HashSet<SerializableGuid> ids;
+                public bool isAttachedToPlant = false;
 
                 public VfxCount()
                 {

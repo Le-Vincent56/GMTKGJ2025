@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using Perennial.Garden;
+using Perennial.VFX;
 using UnityEngine;
 
 namespace Perennial.Plants.Abilities.Definitions
@@ -20,6 +21,9 @@ namespace Perennial.Plants.Abilities.Definitions
             {
                 // Set the soil state to Tilled
                 tile.SoilState = SoilState.TILLED;
+                
+                // Apply VFX
+                VFXManager.Instance.AddVFX(tile, VFXType.Garlic, context.Plant.ID, false);
             }
         }
     }
