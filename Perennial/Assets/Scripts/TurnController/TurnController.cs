@@ -17,7 +17,7 @@ namespace Perennial.TurnManagement
     {
         [Header("Fields")]
         [SerializeField] private string currentState;
-        [SerializeField] private int allowedActions;
+        [SerializeField] private int allowedActions = 3;
 
         private EventBinding<CommandFinished> _performCommandEventBinding;
         private EventBinding<EndTurn> _endTurnEventBinding;
