@@ -7,13 +7,13 @@ namespace Perennial.FoodMVC
 {
     public class FoodView : MonoBehaviour
     {
-        private FoodController _foodController;
         [SerializeField] private TextMeshProUGUI _displayText;
+        
+        private FoodController _foodController;
 
         public void Initialize(FoodController foodController)
         {
             _foodController = foodController;
-            _displayText = GetComponentInChildren<TextMeshProUGUI>();
         }
 
         /// <summary>
