@@ -1,3 +1,4 @@
+using Perennial.Actions.Commands;
 using Perennial.Core.Architecture.Event_Bus;
 using Perennial.Core.Architecture.Event_Bus.Events;
 using Perennial.Core.Architecture.State_Machine;
@@ -41,9 +42,11 @@ namespace Perennial.TurnManagement.States
                 StoredPlantDefinition = e.SelectedPlantDefinition; //can be null, which is ok
             });
             
-            _performCommandEventBinding = new EventBinding<PerformCommand>(() =>
+            _performCommandEventBinding = new EventBinding<PerformCommand>((e) =>
             {
-                _actionStateType = ActionStateType.Nothing;
+                //for now reset state at end of plant //TODO fix this maybe but it works
+                if(e.Command is PlantCommand)
+                    _actionStateType = ActionStateType.Nothing;
             });
 
             StartUpStateMachine();
