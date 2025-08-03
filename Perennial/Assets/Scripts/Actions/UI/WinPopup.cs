@@ -26,7 +26,7 @@ namespace Perennial
             winCanvas = GetComponent<Canvas>();
             winCanvas.enabled = false;
             replayButton.onClick.AddListener(Replay);
-            quitButton.onClick.AddListener(LoadMainMenu);
+            //quitButton.onClick.AddListener(LoadMainMenu);
         }
 
         private void OnEnable()
@@ -66,7 +66,7 @@ namespace Perennial
 
         private void Replay()
         {
-            SceneManager.LoadScene(1);
+            SceneManager.LoadScene(0);
         }
     }
 }
