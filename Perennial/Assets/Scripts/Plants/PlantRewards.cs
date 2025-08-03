@@ -34,9 +34,10 @@ namespace Perennial.Plants
         /// <summary>
         /// Calculate the amount of food to reward the player
         /// </summary>
-        public Food CalculateFood()
+        /// <param name="lifetimeOffset">A manual offset to the lifetime of the plant to check for past/future food worths</param>
+        public Food CalculateFood(int lifetimeOffset = 0)
         {
-            Food baseAmount = (_foodMultiplier * _owner.Lifetime.CurrentLifetime) + _foodConstant;
+            Food baseAmount = (_foodMultiplier * (_owner.Lifetime.CurrentLifetime + lifetimeOffset)) + _foodConstant;
 
             if(BonusActive) baseAmount *= BONUS_MODIFIER;
             

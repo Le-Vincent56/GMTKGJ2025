@@ -99,18 +99,20 @@ namespace Perennial.Garden
 			EventBus<TurnStarted>.Deregister(_onTurnedStarted);
 		}
 
-		private void StartTurn(TurnStarted eventData)
+		private void StartTurn (TurnStarted eventData)
 		{
-			CheckExpirationAllPlants();
-			CheckSeasonAllPlants();
-			RemoveFlaggedPlants();
-			UpkeepAllPlants();
+			CheckExpirationAllPlants( );
+			CheckSeasonAllPlants( );
+			RemoveFlaggedPlants( );
+			UpkeepAllPlants( );
+			UpdateTooltips( );
 		}
 
-		private void EndTurn(TurnEnded eventData)
+		private void EndTurn (TurnEnded eventData)
 		{
-			EndStepAllPlants();
-			UpdateWeedSpread();
+			EndStepAllPlants( );
+			UpdateWeedSpread( );
+			UpdateTooltips( );
 		}
 
 		// For testing grass spread
@@ -197,10 +199,10 @@ namespace Perennial.Garden
 
 			Plants.Add(plant);
 			tile.Plant = plant;
-			
+
 			// Activate plant placement logic
-			plant.Place();
-			
+			plant.Place( );
+
 			return true;
 		}
 
@@ -227,11 +229,11 @@ namespace Perennial.Garden
 			{
 				return false;
 			}
-			
+
 			VFXManager.Instance.RemovePlantVFX(tile);
-			tile.Plant.Death();
+			tile.Plant.Death( );
 			Plants.Remove(tile.Plant);
-			tile.RemovePlantFromTile();
+			tile.RemovePlantFromTile( );
 			tile.UpdatePlantSprite(null);
 			return true;
 		}
@@ -563,7 +565,7 @@ namespace Perennial.Garden
 				plant.Upkeep( );
 			}
 		}
-		
+
 		/// <summary>
 		/// End step tick all plants in the garden
 		/// </summary>
@@ -571,25 +573,25 @@ namespace Perennial.Garden
 		{
 			foreach (Plant plant in Plants)
 			{
-				plant.EndStep();
+				plant.EndStep( );
 			}
 		}
-		
+
 		/// <summary>
 		/// Check all plants to dispose if lifetime reached
 		/// </summary>
-		private void CheckExpirationAllPlants ()
+		private void CheckExpirationAllPlants ( )
 		{
 			foreach (Plant plant in Plants)
 			{
-				plant.CheckExpiration();
+				plant.CheckExpiration( );
 			}
 		}
 
 		/// <summary>
 		/// Check all plants for seasonal effects. 
 		/// </summary>
-		private void CheckSeasonAllPlants()
+		private void CheckSeasonAllPlants ( )
 		{
 			foreach (Plant plant in Plants)
 			{
@@ -598,13 +600,25 @@ namespace Perennial.Garden
 		}
 
 		/// <summary>
+		/// Update all of the tooltips for each tile in the garden
+		/// </summary>
+		private void UpdateTooltips ( )
+		{
+			foreach (Tile tile in Tiles)
+			{
+				tile.UpdateTooltip( );
+			}
+		}
+
+		/// <summary>
 		/// Removes all plants flagged for remocal
 		/// </summary>
-		private void RemoveFlaggedPlants()
+		private void RemoveFlaggedPlants ( )
 		{
 			for (int i = Plants.Count - 1; i >= 0; i--)
 			{
-				if (!Plants[i].MarkedForRemoval) continue;
+				if (!Plants[i].MarkedForRemoval)
+					continue;
 
 				RemovePlantFromTile(Plants[i].Tile);
 			}

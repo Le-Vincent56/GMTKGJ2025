@@ -19,7 +19,7 @@ MonoBehaviour:
     Part4: 2795200805
   plantName: Chili Peppers
   description: When planted, increases food output of nearby plants (other than Chili
-    Peppers), but Weeds nearby soil in half the time.
+    Peppers), but untills nearby soil in half the time.
   baseStats: {fileID: 11400000, guid: 0dc70ca48b751ff4bafd37df3825e30c, type: 2}
   seedSprite: {fileID: 21300000, guid: f366878c6eaaeee41a20b1b5d268ed7d, type: 3}
   youngSprite: {fileID: 21300000, guid: 9f8152eaa32670246ac3cb474f06d3f4, type: 3}
