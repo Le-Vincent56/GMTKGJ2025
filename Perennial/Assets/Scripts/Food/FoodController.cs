@@ -40,13 +40,13 @@ namespace Perennial.FoodMVC
 
         private void ConnectModel()
         {
-            _model.OnModified += _view.UpdateUI;
+            _model.OnModified += _view.UpdateCurrent;
             _model.OnModified += CheckWin;
         }
 
         private void ConnectView()
         {
-            _view.Initialize(this, startingFood);
+            _view.Initialize(startingFood);
             
             //update text with new amount
             _model.AddFood(new Food(startingFood));

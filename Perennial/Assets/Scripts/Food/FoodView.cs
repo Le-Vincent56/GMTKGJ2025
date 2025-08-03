@@ -10,12 +10,9 @@ namespace Perennial.FoodMVC
     {
         [SerializeField] private TextMeshProUGUI displayText;
         [SerializeField] private TextMeshProUGUI goalText;
-        
-        private FoodController _foodController;
 
-        public void Initialize(FoodController foodController, float startingFood)
+        public void Initialize(float startingFood)
         {
-            _foodController = foodController;
             SetGoal(startingFood);
         }
 
@@ -27,9 +24,6 @@ namespace Perennial.FoodMVC
         /// <summary>
         /// Update the food text
         /// </summary>
-        public void UpdateUI(Food amount)
-        {
-            displayText.text = $"{amount.Value.ToString()}/{_foodController.FoodToWin.ToString()}";
-        }
+        public void UpdateCurrent(Food amount) => displayText.text = ((int)amount).ToString();
     }
 }
