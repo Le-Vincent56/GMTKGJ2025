@@ -1,15 +1,9 @@
-using System;
 using System.Collections.Generic;
-using Perennial.Actions.Commands;
 using Perennial.Core.Architecture.Event_Bus;
 using Perennial.Core.Architecture.Event_Bus.Events;
-using Perennial.Core.Debugging;
 using Perennial.Core.Extensions;
-using Perennial.Garden;
 using Perennial.Plants.Data;
-using Unity.VisualScripting;
 using UnityEngine;
-using LogType = Perennial.Core.Debugging.LogType;
 
 namespace Perennial.Plants.UI
 {
@@ -30,12 +24,13 @@ namespace Perennial.Plants.UI
             _model = new PlantStorageModel(database);
             _view = GetComponent<PlantStorageView>();
 
-            ConnectModel();
             ConnectView();
         }
 
         private void OnEnable()
         {
+            ConnectModel();
+            
             _onTakePlant = new EventBinding<TakePlant>(RemovePlant);
             EventBus<TakePlant>.Register(_onTakePlant);
             
@@ -45,6 +40,9 @@ namespace Perennial.Plants.UI
 
         private void OnDisable()
         {
+            _model.OnModified -= _view.UpdateButtons;
+            _model.OnEmpty -= NotifyEmpty;
+            
             EventBus<TakePlant>.Deregister(_onTakePlant);
             EventBus<StorePlant>.Deregister(_onStorePlant);
         }
@@ -52,6 +50,7 @@ namespace Perennial.Plants.UI
         private void ConnectModel()
         {
             _model.OnModified += _view.UpdateButtons;
+            _model.OnEmpty += NotifyEmpty;
         }
 
         private void ConnectView()
@@ -119,5 +118,10 @@ namespace Perennial.Plants.UI
         /// Add a number of plants to storage
         /// </summary>
         private void AddPlant(StorePlant eventData) => _model.AddPlants(eventData.ID, eventData.Quantity);
+        
+        /// <summary>
+        /// Notify that the storage is empty
+        /// </summary>
+        private void NotifyEmpty() => EventBus<StorageEmpty>.Raise(new StorageEmpty());
     }
 }

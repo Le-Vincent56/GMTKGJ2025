@@ -12,7 +12,9 @@ namespace Perennial.Plants.Data
         
         public static StorageAmount operator +(StorageAmount left, StorageAmount right) => new StorageAmount(left.Value + right.Value);
         public static bool operator <(StorageAmount left, int right) => left.Value < right;
+        public static bool operator <=(StorageAmount left, int right) => left.Value <= right;
         public static bool operator >(StorageAmount left, int right) => left.Value > right;
+        public static bool operator >=(StorageAmount left, int right) => left.Value >= right;
         public static bool operator ==(StorageAmount left, int right) => left.Value == right;
         public static bool operator !=(StorageAmount left, int right) => left.Value != right;
         public static StorageAmount operator --(StorageAmount storageAmount)

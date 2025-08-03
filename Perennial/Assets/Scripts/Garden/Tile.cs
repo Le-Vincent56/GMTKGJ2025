@@ -190,6 +190,11 @@ namespace Perennial.Garden
 				{
 					Command = BaseCommand.Create<PlantCommand>(new PlantArgs{ GardenManager = GardenManager, Tile = this, PlantDefinition = currentState.StoredPlantDefinition})
 				});
+				
+				EventBus<TakePlant>.Raise(new TakePlant()
+				{
+					ID = _plant.Definition.ID
+				});
 			}
 			else if (currentActionState is TillActionState)
 			{
