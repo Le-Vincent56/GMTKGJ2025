@@ -1,3 +1,4 @@
+using System;
 using Perennial.Core.Architecture.Event_Bus;
 using Perennial.Core.Architecture.Event_Bus.Events;
 using Perennial.Plants.Data;
@@ -9,6 +10,9 @@ namespace Perennial.FoodMVC
     {
         [Header("Starting Data")]  //maybe use a so if there is ever more data
         [SerializeField] private float startingFood;
+        [SerializeField] private float foodToWin;
+
+        public float FoodToWin => foodToWin;
         
         private FoodModel _model;
         private FoodView _view;
@@ -38,6 +42,7 @@ namespace Perennial.FoodMVC
         private void ConnectModel()
         {
             _model.OnModified += _view.UpdateUI;
+            _model.OnModified += CheckWin;
         }
 
         private void ConnectView()
@@ -51,6 +56,17 @@ namespace Perennial.FoodMVC
         /// <summary>
         /// Add a number of plants to storage
         /// </summary>
-        private void AddFood(AddFood eventData) => _model.AddFood(eventData.Amount);
+        private void AddFood(AddFood eventData)
+        {
+            _model.AddFood(eventData.Amount);
+        }
+
+        private void CheckWin(Food foodAmount)
+        {
+            if (foodAmount.Value >= FoodToWin)
+            {
+                EventBus<WinGameEvent>.Raise(new WinGameEvent());
+            }
+        }
     }
 }

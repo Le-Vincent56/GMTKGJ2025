@@ -21,8 +21,7 @@ namespace Perennial.Actions.Commands
         public override async Task Execute()
         {
             Plant plant = PlantFactory.CreatePlant(_plantDefinition, Tile, gardenManager);
-            gardenManager.Plants.Add(plant);
-            Tile.Plant = plant;
+            gardenManager.AddPlantToTile(plant, Tile);
         }
     }
 }
