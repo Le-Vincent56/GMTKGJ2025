@@ -192,7 +192,7 @@ namespace Perennial.Garden
 		/// </summary>
 		/// <param name="seasons">The list of seasons to convert</param>
 		/// <returns>A formatted list of the seasons with rich text</returns>
-		private string GetSeasonString (List<Season> seasons)
+		public static string GetSeasonString (List<Season> seasons)
 		{
 			if (seasons.Count == 0)
 			{
