@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Perennial.Core.Extensions;
 using Perennial.Garden;
 using Perennial.Seasons;
 using UnityEngine;
@@ -14,8 +15,17 @@ namespace Perennial.VFX
         Ivy = 2,
         Pearl = 3,
         Garlic = 4, // Technically not used
-        Carrot = 5  // Technically not used
+        Carrot = 5, // Technically not used
+        Scorched = 6
     }
+
+    public enum VFXBehavior
+    {
+        AttachedToTile,
+        AttachedToPlant,
+        Instantaneous
+    }
+    
     public class VFXManager : MonoBehaviour
     {
         private static VFXManager _instance;
@@ -23,7 +33,7 @@ namespace Perennial.VFX
         {
             get
             {
-                if (_instance?.isActiveAndEnabled != null)
+                if (_instance)
                 {
                     return _instance;
                 }
@@ -37,7 +47,9 @@ namespace Perennial.VFX
                 }
 
                 Debug.LogError("Tried to call VFXManager while not VFXManager was in the scene!");
-                return null;
+                var go = new GameObject("Empty VFX Manager");
+                _instance = go.AddComponent<VFXManager>();
+                return _instance;
             }
         }
 
@@ -55,7 +67,7 @@ namespace Perennial.VFX
         /// </summary>
         /// <param name="tile"></param>
         /// <param name="vfx"></param>
-        public void AddVFX(Tile tile, VFXType vfx)
+        public void AddVFX(Tile tile, VFXType vfx, SerializableGuid id)
         {
             // Check if the current tile exists in the dictionary,
             if (!tileVFXList.TryGetValue(tile, out TileVFX tileVfx))
@@ -68,7 +80,7 @@ namespace Perennial.VFX
             // Check to see if dictionary already has an entry for the vfx
             if(tileVfx.vfxOnTile.TryGetValue(vfx, out TileVFX.VfxCount vfxCount))
             {
-                vfxCount.count++;
+                vfxCount.ids.Add(id);
                 if (vfxCount.vfx != null)
                 {
                     if (!vfxCount.vfx.isPlaying)
@@ -81,7 +93,7 @@ namespace Perennial.VFX
                     var newVFX = vfxPlantList[vfx];
                     if (newVFX != null)
                     {
-                        vfxCount.vfx = Instantiate(newVFX, tile.transform.position + Vector3.back, Quaternion.identity);
+                        vfxCount.vfx = Instantiate(newVFX, tile.transform.position + Vector3.back, Quaternion.Euler(-90, 0, 0));
                     }
                 }
             }
@@ -89,11 +101,11 @@ namespace Perennial.VFX
             else
             {
                 TileVFX.VfxCount newVfxCount = new TileVFX.VfxCount();
-                newVfxCount.count = 1;
+                newVfxCount.ids.Add(id);
                 var newVFX = vfxPlantList[vfx];
                 if (newVFX != null)
                 {
-                    newVfxCount.vfx = Instantiate(newVFX, tile.transform.position + Vector3.back, Quaternion.identity);
+                    newVfxCount.vfx = Instantiate(newVFX, tile.transform.position + Vector3.back, Quaternion.Euler(-90, 0, 0));
                 }
                 tileVfx.vfxOnTile.Add(vfx, newVfxCount);
             }
@@ -104,7 +116,7 @@ namespace Perennial.VFX
         /// </summary>
         /// <param name="tile"></param>
         /// <param name="vfx"></param>
-        public void RemoveVFX(Tile tile, VFXType vfx)
+        public void RemoveVFX(Tile tile, VFXType vfx, SerializableGuid id)
         {
             // Check if the current tile exists in the dictionary,
             if (!tileVFXList.TryGetValue(tile, out TileVFX tileVfx))
@@ -115,13 +127,33 @@ namespace Perennial.VFX
             // Check to see if dictionary already has an entry for the vfx
             if(tileVfx.vfxOnTile.TryGetValue(vfx, out TileVFX.VfxCount vfxCount))
             {
-                vfxCount.count--;
-                if (vfxCount.count <= 0)
+                if (vfxCount.ids.Remove(id) && vfxCount.ids.Count <= 0)
                 {
-                    vfxCount.count = 0;
                     vfxCount.vfx.Stop();
                     vfxCount.vfx = null;
                 }
+            }
+        }
+
+        private static VFXBehavior getVFXBehavior(VFXType type)
+        {
+            switch (type)
+            {
+                case VFXType.Ivy:
+                case VFXType.Garlic:
+                case VFXType.Carrot:
+                case VFXType.Scorched:
+                    // Attached to tile.
+                    return VFXBehavior.AttachedToTile;
+                
+                case VFXType.Pearl:
+                    // Attached to plant.
+                    return VFXBehavior.AttachedToPlant;
+                
+                case VFXType.Fire:
+                case VFXType.Snow:
+                    // Instantaneous.
+                    return VFXBehavior.Instantaneous;
             }
         }
 
@@ -132,7 +164,13 @@ namespace Perennial.VFX
             public struct VfxCount
             {
                 public ParticleSystem vfx;
-                public int count;
+                public HashSet<SerializableGuid> ids;
+
+                public VfxCount()
+                {
+                    ids = new HashSet<SerializableGuid>();
+                    vfx = null;
+                }
             }
 
             public TileVFX()

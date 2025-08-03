@@ -4,6 +4,7 @@ using Perennial.Plants.Behaviors;
 using Perennial.Plants.Behaviors.Definitions;
 using Perennial.Plants.Data;
 using Perennial.Plants.Stats;
+using Perennial.VFX;
 using UnityEngine;
 
 namespace Perennial.Plants.Abilities.Definitions
@@ -48,6 +49,9 @@ namespace Perennial.Plants.Abilities.Definitions
                         Type = StatType.MutationChance,
                         Value = 1 + mutationChanceBonus,
                     });
+                    
+                    // Apply VFX
+                    VFXManager.Instance.AddVFX(tile, VFXType.Ivy, context.Plant.ID);
                 }
                 
                 // TODO: Apply soil decay delay
@@ -72,6 +76,9 @@ namespace Perennial.Plants.Abilities.Definitions
                 
                 // Remove any modifiers relating to the context's Plant ID
                 plant.Stats.Mediator.RemoveModifier(context.Plant.ID);
+                
+                // Remove VFX
+                VFXManager.Instance.AddVFX(plant.Tile, VFXType.Ivy, context.Plant.ID);
             }
         }
     }
