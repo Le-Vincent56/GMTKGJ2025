@@ -1,19 +1,22 @@
+using Perennial.Core.Architecture.Event_Bus;
+using Perennial.Core.Architecture.Event_Bus.Events;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace Perennial
 {
     public class MainMenu : MonoBehaviour
     {
-        // Start is called once before the first execution of Update after the MonoBehaviour is created
-        void Start()
-        {
-        
-        }
+        [SerializeField] private UnityEngine.UI.Button playButton;
 
-        // Update is called once per frame
-        void Update()
+        private void Start()
         {
+            playButton.onClick.AddListener(Play);
+        }
         
+        private void Play()
+        {
+            SceneManager.LoadScene(0);
         }
     }
 }
