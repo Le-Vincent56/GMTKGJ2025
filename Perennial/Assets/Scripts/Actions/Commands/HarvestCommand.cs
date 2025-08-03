@@ -1,5 +1,7 @@
 using System.Threading.Tasks;
 using Perennial.Plants;
+using Perennial.Plants.Data;
+using UnityEngine;
 
 
 namespace Perennial.Actions.Commands
@@ -18,10 +20,11 @@ namespace Perennial.Actions.Commands
         /// </summary>
         public override async Task Execute()
         {
-            HarvestedPlant.Harvest();
+            HarvestedPlant.Harvest(out (Food Food, Seeds BaseSeeds, Seeds? MutationSeeds) rewards);
             gardenManager.RemovePlantFromTile(Tile);
             
             //seed increase is taken care of in PlantStorageController
+            
         }
     }
 }
