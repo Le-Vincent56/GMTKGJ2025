@@ -7,8 +7,8 @@ namespace Perennial.FoodMVC
 {
     public class FoodView : MonoBehaviour
     {
-        [SerializeField] private TextMeshProUGUI _displayText;
-        
+        [SerializeField] private TextMeshProUGUI displayText;
+
         private FoodController _foodController;
 
         public void Initialize(FoodController foodController)
@@ -21,8 +21,7 @@ namespace Perennial.FoodMVC
         /// </summary>
         public void UpdateUI(Food amount)
         {
-            _displayText.text = amount.Value.ToString();
-            //TODO actual UI
+            displayText.text = $"{amount.Value.ToString()}/{_foodController.FoodToWin.ToString()}";
         }
     }
 }
