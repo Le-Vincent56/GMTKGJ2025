@@ -1324,7 +1324,7 @@ Canvas:
   m_VertexColorAlwaysGammaSpace: 1
   m_AdditionalShaderChannelsFlag: 25
   m_UpdateRectTransformForStandalone: 0
-  m_SortingLayerID: 749767309
+  m_SortingLayerID: -847667197
   m_SortingOrder: 100
   m_TargetDisplay: 0
 --- !u!114 &3318627495057546541
@@ -1731,12 +1731,122 @@ MonoBehaviour:
   plantSpriteRenderer: {fileID: 1304532625168895187}
   soilSpriteRenderer: {fileID: 1844559863343442111}
   tooltipCanvas: {fileID: 7245887157248096258}
-  soilStateSprites:
-    m_Keys: 0000000001000000
+  weedSprites:
+    m_Keys: 000000000100000002000000030000000400000005000000060000000700000008000000
     m_Values:
-    - {fileID: 119042714, guid: d4516da9c8e4ed5449c17a4e2fc72c1c, type: 3}
-    - {fileID: 1891560870, guid: ee00ba23e78533546a1f05fdd4868c8a, type: 3}
+    - m_Keys: 00000000010000000200000003000000
+      m_Values:
+      - {fileID: 120251868, guid: 9c0636227f77e314ab0f816149efa468, type: 3}
+      - {fileID: -6246265938867245609, guid: c15f072bfc374d149a16e33c8a0d7283, type: 3}
+      - {fileID: 1137390547879970276, guid: d4516da9c8e4ed5449c17a4e2fc72c1c, type: 3}
+      - {fileID: -710923647714019550, guid: bbd64db52831b924fb5d66fde5207d00, type: 3}
+    - m_Keys: 00000000010000000200000003000000
+      m_Values:
+      - {fileID: 1525117420, guid: 9c0636227f77e314ab0f816149efa468, type: 3}
+      - {fileID: -15598136, guid: c15f072bfc374d149a16e33c8a0d7283, type: 3}
+      - {fileID: -1294824982, guid: d4516da9c8e4ed5449c17a4e2fc72c1c, type: 3}
+      - {fileID: -1201544092, guid: bbd64db52831b924fb5d66fde5207d00, type: 3}
+    - m_Keys: 00000000010000000200000003000000
+      m_Values:
+      - {fileID: -378618988, guid: 9c0636227f77e314ab0f816149efa468, type: 3}
+      - {fileID: -2072125468, guid: c15f072bfc374d149a16e33c8a0d7283, type: 3}
+      - {fileID: 1352157295, guid: d4516da9c8e4ed5449c17a4e2fc72c1c, type: 3}
+      - {fileID: 1544223474, guid: bbd64db52831b924fb5d66fde5207d00, type: 3}
+    - m_Keys: 00000000010000000200000003000000
+      m_Values:
+      - {fileID: -1445350028, guid: 9c0636227f77e314ab0f816149efa468, type: 3}
+      - {fileID: 1046662412, guid: c15f072bfc374d149a16e33c8a0d7283, type: 3}
+      - {fileID: 463067415, guid: d4516da9c8e4ed5449c17a4e2fc72c1c, type: 3}
+      - {fileID: -1092977332, guid: bbd64db52831b924fb5d66fde5207d00, type: 3}
+    - m_Keys: 00000000010000000200000003000000
+      m_Values:
+      - {fileID: -108020430, guid: 9c0636227f77e314ab0f816149efa468, type: 3}
+      - {fileID: -1923977169, guid: c15f072bfc374d149a16e33c8a0d7283, type: 3}
+      - {fileID: 119042714, guid: d4516da9c8e4ed5449c17a4e2fc72c1c, type: 3}
+      - {fileID: -574257564, guid: bbd64db52831b924fb5d66fde5207d00, type: 3}
+    - m_Keys: 00000000010000000200000003000000
+      m_Values:
+      - {fileID: 1066001545, guid: 9c0636227f77e314ab0f816149efa468, type: 3}
+      - {fileID: 1257168855, guid: c15f072bfc374d149a16e33c8a0d7283, type: 3}
+      - {fileID: 27526051, guid: d4516da9c8e4ed5449c17a4e2fc72c1c, type: 3}
+      - {fileID: 491136213, guid: bbd64db52831b924fb5d66fde5207d00, type: 3}
+    - m_Keys: 00000000010000000200000003000000
+      m_Values:
+      - {fileID: -1771935985, guid: 9c0636227f77e314ab0f816149efa468, type: 3}
+      - {fileID: -505063341, guid: c15f072bfc374d149a16e33c8a0d7283, type: 3}
+      - {fileID: 1882186234, guid: d4516da9c8e4ed5449c17a4e2fc72c1c, type: 3}
+      - {fileID: -1227646079, guid: bbd64db52831b924fb5d66fde5207d00, type: 3}
+    - m_Keys: 00000000010000000200000003000000
+      m_Values:
+      - {fileID: -2144790561, guid: 9c0636227f77e314ab0f816149efa468, type: 3}
+      - {fileID: 313435007, guid: c15f072bfc374d149a16e33c8a0d7283, type: 3}
+      - {fileID: -722441927, guid: d4516da9c8e4ed5449c17a4e2fc72c1c, type: 3}
+      - {fileID: 488969464, guid: bbd64db52831b924fb5d66fde5207d00, type: 3}
+    - m_Keys: 00000000010000000200000003000000
+      m_Values:
+      - {fileID: 1072088736, guid: 9c0636227f77e314ab0f816149efa468, type: 3}
+      - {fileID: 623829227, guid: c15f072bfc374d149a16e33c8a0d7283, type: 3}
+      - {fileID: -124078129, guid: d4516da9c8e4ed5449c17a4e2fc72c1c, type: 3}
+      - {fileID: 1120910376, guid: bbd64db52831b924fb5d66fde5207d00, type: 3}
+  tilledSprites:
+    m_Keys: 000000000100000002000000030000000400000005000000060000000700000008000000
+    m_Values:
+    - m_Keys: 00000000010000000200000003000000
+      m_Values:
+      - {fileID: 746325005, guid: bacb4ec225bc9484e95b669d1a840ab0, type: 3}
+      - {fileID: -8574139604841927457, guid: aaf436ea69d95a241824ddfe5e00e318, type: 3}
+      - {fileID: -4683075912869890423, guid: ee00ba23e78533546a1f05fdd4868c8a, type: 3}
+      - {fileID: 3814695086525706881, guid: 7c6bff0459cc36641b4058b28f68def5, type: 3}
+    - m_Keys: 00000000010000000200000003000000
+      m_Values:
+      - {fileID: -1691004108, guid: bacb4ec225bc9484e95b669d1a840ab0, type: 3}
+      - {fileID: -469136622, guid: aaf436ea69d95a241824ddfe5e00e318, type: 3}
+      - {fileID: -233976190, guid: ee00ba23e78533546a1f05fdd4868c8a, type: 3}
+      - {fileID: 273743159, guid: 7c6bff0459cc36641b4058b28f68def5, type: 3}
+    - m_Keys: 00000000010000000200000003000000
+      m_Values:
+      - {fileID: 1277396421, guid: bacb4ec225bc9484e95b669d1a840ab0, type: 3}
+      - {fileID: 1273820416, guid: aaf436ea69d95a241824ddfe5e00e318, type: 3}
+      - {fileID: 743770131, guid: ee00ba23e78533546a1f05fdd4868c8a, type: 3}
+      - {fileID: -1892712528, guid: 7c6bff0459cc36641b4058b28f68def5, type: 3}
+    - m_Keys: 00000000010000000200000003000000
+      m_Values:
+      - {fileID: -1457411114, guid: bacb4ec225bc9484e95b669d1a840ab0, type: 3}
+      - {fileID: -309256497, guid: aaf436ea69d95a241824ddfe5e00e318, type: 3}
+      - {fileID: -856928080, guid: ee00ba23e78533546a1f05fdd4868c8a, type: 3}
+      - {fileID: -623280324, guid: 7c6bff0459cc36641b4058b28f68def5, type: 3}
+    - m_Keys: 00000000010000000200000003000000
+      m_Values:
+      - {fileID: 1106958023, guid: bacb4ec225bc9484e95b669d1a840ab0, type: 3}
+      - {fileID: 512690714, guid: aaf436ea69d95a241824ddfe5e00e318, type: 3}
+      - {fileID: 1891560870, guid: ee00ba23e78533546a1f05fdd4868c8a, type: 3}
+      - {fileID: -531142730, guid: 7c6bff0459cc36641b4058b28f68def5, type: 3}
+    - m_Keys: 00000000010000000200000003000000
+      m_Values:
+      - {fileID: 1572089619, guid: bacb4ec225bc9484e95b669d1a840ab0, type: 3}
+      - {fileID: 1912769067, guid: aaf436ea69d95a241824ddfe5e00e318, type: 3}
+      - {fileID: 1603042155, guid: ee00ba23e78533546a1f05fdd4868c8a, type: 3}
+      - {fileID: -617622591, guid: 7c6bff0459cc36641b4058b28f68def5, type: 3}
+    - m_Keys: 00000000010000000200000003000000
+      m_Values:
+      - {fileID: -1728735378, guid: bacb4ec225bc9484e95b669d1a840ab0, type: 3}
+      - {fileID: 1979755387, guid: aaf436ea69d95a241824ddfe5e00e318, type: 3}
+      - {fileID: -444563333, guid: ee00ba23e78533546a1f05fdd4868c8a, type: 3}
+      - {fileID: 1674875242, guid: 7c6bff0459cc36641b4058b28f68def5, type: 3}
+    - m_Keys: 00000000010000000200000003000000
+      m_Values:
+      - {fileID: 1783527671, guid: bacb4ec225bc9484e95b669d1a840ab0, type: 3}
+      - {fileID: 582122722, guid: aaf436ea69d95a241824ddfe5e00e318, type: 3}
+      - {fileID: 1506730046, guid: ee00ba23e78533546a1f05fdd4868c8a, type: 3}
+      - {fileID: 1411558648, guid: 7c6bff0459cc36641b4058b28f68def5, type: 3}
+    - m_Keys: 00000000010000000200000003000000
+      m_Values:
+      - {fileID: 1981035738, guid: bacb4ec225bc9484e95b669d1a840ab0, type: 3}
+      - {fileID: -709375550, guid: aaf436ea69d95a241824ddfe5e00e318, type: 3}
+      - {fileID: -900884813, guid: ee00ba23e78533546a1f05fdd4868c8a, type: 3}
+      - {fileID: 1863133428, guid: 7c6bff0459cc36641b4058b28f68def5, type: 3}
   soilState: 0
+  edgeType: 0
   gardenPosition: {x: 0, y: 0}
   isAtGardenEdge: 0
   plantTooltipContainer: {fileID: 3065927529361685872}

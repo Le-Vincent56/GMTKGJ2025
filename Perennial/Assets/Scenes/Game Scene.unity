@@ -149,6 +149,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   tilePrefab: {fileID: 7902424495938158857, guid: f9b2b4d3ebabf6f40ba832d964f65177, type: 3}
+  grassPrefab: {fileID: 4745717985714926117, guid: 07a50b04ef0eaef45a930de4648ce4cc, type: 3}
+  grassSprites:
+    m_Keys: 00000000010000000200000003000000
+    m_Values:
+    - {fileID: 2831004496122310556, guid: 28787d56b62536a4e854dc5a4fdc1062, type: 3}
+    - {fileID: 2278518055348858174, guid: e70c5449f0a5b31478163773d13e7124, type: 3}
+    - {fileID: 4599783654673240884, guid: e4d46dec6842e2443ab4276c0fd427ba, type: 3}
+    - {fileID: 8996853730593261701, guid: b95f12905e39afd41928dd1d34e9ca94, type: 3}
   gardenWidth: 5
   gardenHeight: 5
   startTilledPercentage: 0.5

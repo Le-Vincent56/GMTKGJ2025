@@ -23,14 +23,21 @@ namespace Perennial.Garden
 		WEEDS, TILLED
 	}
 
+	public enum EdgeType
+	{
+		TOP_LEFT, TOP_MIDDLE, TOP_RIGHT, MIDDLE_LEFT, MIDDLE, MIDDLE_RIGHT, BOTTOM_LEFT, BOTTOM_MIDDLE, BOTTOM_RIGHT
+	}
+
 	public class Tile : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerClickHandler
 	{
 		[SerializeField] private SpriteRenderer plantSpriteRenderer;
 		[SerializeField] private SpriteRenderer soilSpriteRenderer;
 		[SerializeField] private Canvas tooltipCanvas;
-		[SerializeField] private SerializedDictionary<SoilState, Sprite> soilStateSprites;
+		[SerializeField] private SerializedDictionary<EdgeType, SerializedDictionary<Season, Sprite>> weedSprites;
+		[SerializeField] private SerializedDictionary<EdgeType, SerializedDictionary<Season, Sprite>> tilledSprites;
 		[Space]
 		[SerializeField] private SoilState soilState;
+		[SerializeField] private EdgeType edgeType;
 		[SerializeField] private Vector2Int gardenPosition;
 		[SerializeField] private bool isAtGardenEdge;
 		[Space]
@@ -124,9 +131,11 @@ namespace Perennial.Garden
 		/// </summary>
 		public TurnController TurnController { get; private set; }
 
+		public SeasonManager SeasonManager { get; private set; }
+
 		private void OnValidate ( )
 		{
-			UpdateSoilSprite( );
+			//UpdateSoilSprite( );
 		}
 
 		private void Awake ( )
@@ -135,6 +144,7 @@ namespace Perennial.Garden
 
 			GardenManager = FindFirstObjectByType<GardenManager>( );
 			TurnController = FindFirstObjectByType<TurnController>( );
+			SeasonManager = FindFirstObjectByType<SeasonManager>( );
 
 			tooltipCanvas.worldCamera = Camera.main;
 			IsTooltipEnabled = false;
@@ -227,8 +237,67 @@ namespace Perennial.Garden
 		/// </summary>
 		public void UpdateSoilSprite ( )
 		{
-			// Later this can be expanded to update surrounding tile soil sprites as well
-			soilSpriteRenderer.sprite = soilStateSprites[SoilState];
+			switch (SoilState)
+			{
+				case SoilState.WEEDS:
+					soilSpriteRenderer.sprite = weedSprites[edgeType][SeasonManager.CurrentSeason];
+					break;
+				case SoilState.TILLED:
+					soilSpriteRenderer.sprite = tilledSprites[edgeType][SeasonManager.CurrentSeason];
+					break;
+			}
+		}
+
+		/// <summary>
+		/// Update the current edge type of this tile
+		/// </summary>
+		public void UpdateEdgeType ( )
+		{
+			if (GardenPosition.x == 0)
+			{
+				if (GardenPosition.y == 0)
+				{
+					edgeType = EdgeType.BOTTOM_LEFT;
+				}
+				else if (GardenPosition.y == GardenManager.GardenHeight - 1)
+				{
+					edgeType = EdgeType.TOP_LEFT;
+				}	
+				else
+				{
+					edgeType = EdgeType.MIDDLE_LEFT;
+				}
+			}
+			else if (GardenPosition.x == GardenManager.GardenWidth - 1)
+			{
+				if (GardenPosition.y == 0)
+				{
+					edgeType = EdgeType.BOTTOM_RIGHT;
+				}
+				else if (GardenPosition.y == GardenManager.GardenHeight - 1)
+				{
+					edgeType = EdgeType.TOP_RIGHT;
+				}
+				else
+				{
+					edgeType = EdgeType.MIDDLE_RIGHT;
+				}
+			}
+			else
+			{
+				if (GardenPosition.y == 0)
+				{
+					edgeType = EdgeType.BOTTOM_MIDDLE;
+				}
+				else if (GardenPosition.y == GardenManager.GardenHeight - 1)
+				{
+					edgeType = EdgeType.TOP_MIDDLE;
+				}
+				else
+				{
+					edgeType = EdgeType.MIDDLE;
+				}
+			}
 		}
 
 		/// <summary>
