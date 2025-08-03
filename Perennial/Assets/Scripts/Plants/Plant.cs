@@ -20,6 +20,7 @@ namespace Perennial.Plants
         public SerializableGuid ID { get; private set; }
         public string Name => _definition.Name;
         
+        public PlantDefinition Definition => _definition;
         public bool SkipGrowth { get; set; }
         public bool SkipPassive { get; set; }
         public Tile Tile { get; }
