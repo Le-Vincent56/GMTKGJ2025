@@ -38,7 +38,7 @@ namespace Perennial.Actions.UI
         {
             StringBuilder stringBuilder = new StringBuilder();
             stringBuilder.Append(actionsRemaining);
-            stringBuilder.Append(" Actions Left");
+            stringBuilder.Append(" ACTIONS LEFT");
             actionsText.text = stringBuilder.ToString();
         }
 

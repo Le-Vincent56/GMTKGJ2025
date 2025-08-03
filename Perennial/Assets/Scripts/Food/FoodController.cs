@@ -1,4 +1,3 @@
-using System;
 using Perennial.Core.Architecture.Event_Bus;
 using Perennial.Core.Architecture.Event_Bus.Events;
 using Perennial.Plants.Data;
@@ -47,7 +46,7 @@ namespace Perennial.FoodMVC
 
         private void ConnectView()
         {
-            _view.Initialize(this);
+            _view.Initialize(this, startingFood);
             
             //update text with new amount
             _model.AddFood(new Food(startingFood));
