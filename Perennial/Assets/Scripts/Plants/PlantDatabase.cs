@@ -17,6 +17,11 @@ namespace Perennial.Plants
 
         private Dictionary<SerializableGuid, PlantDefinition> _lookup;
 
+
+        public void Validate()
+        {
+            OnValidate();
+        }
         private void OnValidate()
         {
             // Initialize the lookup

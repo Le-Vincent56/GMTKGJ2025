@@ -21,6 +21,7 @@ namespace Perennial.Plants.UI
         public PlantStorageModel(PlantDatabase database)
         {
             _database  = database;
+            _database.Validate();
             _availablePlants = new Dictionary<SerializableGuid, StorageAmount>();
 
             List<SerializableGuid> databaseIDs = _database.GetIDs();
