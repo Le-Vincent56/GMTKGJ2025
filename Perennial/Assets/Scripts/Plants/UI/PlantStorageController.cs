@@ -21,7 +21,8 @@ namespace Perennial.Plants.UI
         private PlantStorageModel _model;
         private PlantStorageView _view;
 
-        private EventBinding<PerformCommand> _performCommandEventBinding;
+        private EventBinding<TakePlant> _onTakePlant;
+        private EventBinding<StorePlant> _onStorePlant;
 
         private void Awake()
         {
@@ -35,23 +36,17 @@ namespace Perennial.Plants.UI
 
         private void OnEnable()
         {
-            _performCommandEventBinding = new EventBinding<PerformCommand>((performCommand) =>
-            {
-                if (performCommand.Command is PlantCommand plantCommand)
-                {
-                    _model.RemovePlant(plantCommand.PlantDefinition.ID);
-                }
-                else if (performCommand.Command is HarvestCommand harvestCommand)
-                {
-                    _model.AddPlants(harvestCommand.HarvestedPlant.Definition.ID, new StorageAmount(UnityEngine.Random.Range(0, 3)));
-                }
-            });
-            EventBus<PerformCommand>.Register(_performCommandEventBinding);
+            _onTakePlant = new EventBinding<TakePlant>(RemovePlant);
+            EventBus<TakePlant>.Register(_onTakePlant);
+            
+            _onStorePlant = new EventBinding<StorePlant>(AddPlant);
+            EventBus<StorePlant>.Register(_onStorePlant);
         }
 
         private void OnDisable()
         {
-            EventBus<PerformCommand>.Deregister(_performCommandEventBinding);
+            EventBus<TakePlant>.Deregister(_onTakePlant);
+            EventBus<StorePlant>.Deregister(_onStorePlant);
         }
 
         private void ConnectModel()
@@ -113,7 +108,16 @@ namespace Perennial.Plants.UI
                     StateType = ActionStateType.Plant,
                     SelectedPlantDefinition = plantDefinition
             });
-            
         }
+
+        /// <summary>
+        /// Remove a plant from storage
+        /// </summary>
+        private void RemovePlant(TakePlant eventData) => _model.RemovePlant(eventData.ID);
+        
+        /// <summary>
+        /// Add a number of plants to storage
+        /// </summary>
+        private void AddPlant(StorePlant eventData) => _model.AddPlants(eventData.ID, eventData.Quantity);
     }
 }

@@ -8,6 +8,7 @@ namespace Perennial.Plants.Data
         public static explicit operator int(StorageAmount amount) => StayAboveMinimum(amount.Value);
         public static explicit operator StorageAmount(int value) => new StorageAmount(StayAboveMinimum(value));
         public static explicit operator string(StorageAmount amount) => amount.Value.ToString();
+        public static explicit operator StorageAmount(float value) => new StorageAmount(StayAboveMinimum((int)value));
         
         public static StorageAmount operator +(StorageAmount left, StorageAmount right) => new StorageAmount(left.Value + right.Value);
         public static bool operator <(StorageAmount left, int right) => left.Value < right;

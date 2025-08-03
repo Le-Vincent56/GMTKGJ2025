@@ -3,6 +3,7 @@ using UnityEngine;
 
 namespace Perennial.Plants.Mutations
 {
+    [CreateAssetMenu(fileName = "Mutation Weight Settings", menuName = "Plants/Mutations/Weight Settings")]
     public class MutationWeightSettings : ScriptableObject, IMutationWeightCalculator
     {
         [Header("Base Weights")]

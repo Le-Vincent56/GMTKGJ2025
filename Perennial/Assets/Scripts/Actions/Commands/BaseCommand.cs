@@ -1,6 +1,7 @@
 using System.Threading.Tasks;
 using Perennial.Garden;
 using Perennial.Plants;
+using Perennial.Plants.UI;
 
 namespace Perennial.Actions.Commands
 {
@@ -26,6 +27,7 @@ namespace Perennial.Actions.Commands
     
     public class HarvestArgs : BaseArgs, ICommandArgs<HarvestCommand>
     {
+        public PlantStorageController PlantStorage { get; set; }
     }
     
     public class TillArgs : BaseArgs, ICommandArgs<TillCommand>

@@ -56,7 +56,7 @@ namespace Perennial.Plants
                 _owner.Stats.SeedsMin, 
                 _owner.Stats.SeedsMax
             );
-            return new Seeds(_owner.Definition.ID, seedsToReturn);
+            return new Seeds(_owner.Definition.ID, (StorageAmount)seedsToReturn);
         }
 
         /// <summary>
@@ -95,7 +95,7 @@ namespace Perennial.Plants
                 LogType.Info);
             
             // Create and return mutation with the plant ID and a drop rate depending on the plant's stats
-            return new Seeds(selected.ResultingPlant.ID, (int)(1 * _owner.Stats.MutationDropRate));
+            return new Seeds(selected.ResultingPlant.ID, (StorageAmount)(1f * _owner.Stats.MutationDropRate));
         }
 
         /// <summary>
