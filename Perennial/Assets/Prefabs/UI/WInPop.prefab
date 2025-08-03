@@ -372,6 +372,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1808bdc7148a86642ac6fec39fb3cc37, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  titleText: {fileID: 8158781671923381684}
+  titleImage: {fileID: 5228713539745264606}
   replayButton: {fileID: 2996168627758681231}
   quitButton: {fileID: 396816820952876004}
   winCanvas: {fileID: 5666662090575751369}
