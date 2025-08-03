@@ -32,7 +32,10 @@ namespace Perennial
 
         private void CheckLost()
         {
-            
+            if (_gardenManager.Plants.Count == 0 && _plantStorageController.Model.AvailablePlants.Count == 0)
+            {
+                EventBus<LoseGameEvent>.Raise(new LoseGameEvent());
+            }
         }
     }
 }
