@@ -1,5 +1,3 @@
-using System;
-using System.Text;
 using Perennial.Plants.Data;
 using TMPro;
 using UnityEngine;
@@ -11,9 +9,9 @@ namespace Perennial.FoodMVC
         [SerializeField] private TextMeshProUGUI displayText;
         [SerializeField] private TextMeshProUGUI goalText;
 
-        public void Initialize(float startingFood)
+        public void Initialize(float foodToWin)
         {
-            SetGoal(startingFood);
+            SetGoal(foodToWin);
         }
 
         /// <summary>
