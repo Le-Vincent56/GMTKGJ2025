@@ -51,7 +51,7 @@ namespace Perennial.Plants.Abilities.Definitions
                     });
                     
                     // Apply VFX
-                    VFXManager.Instance.AddVFX(tile, VFXType.Ivy, context.Plant.ID);
+                    VFXManager.Instance.AddVFX(tile, VFXType.Ivy, context.Plant.ID, true);
                 }
                 
                 // TODO: Apply soil decay delay
@@ -78,7 +78,7 @@ namespace Perennial.Plants.Abilities.Definitions
                 plant.Stats.Mediator.RemoveModifier(context.Plant.ID);
                 
                 // Remove VFX
-                VFXManager.Instance.AddVFX(plant.Tile, VFXType.Ivy, context.Plant.ID);
+                VFXManager.Instance.RemoveVFX(plant.Tile, VFXType.Ivy, context.Plant.ID);
             }
         }
     }

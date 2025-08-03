@@ -18,13 +18,6 @@ namespace Perennial.VFX
         Carrot = 5, // Technically not used
         Scorched = 6
     }
-
-    public enum VFXBehavior
-    {
-        AttachedToTile,
-        AttachedToPlant,
-        Instantaneous
-    }
     
     public class VFXManager : MonoBehaviour
     {
@@ -67,8 +60,11 @@ namespace Perennial.VFX
         /// </summary>
         /// <param name="tile"></param>
         /// <param name="vfx"></param>
-        public void AddVFX(Tile tile, VFXType vfx, SerializableGuid id)
+        public void AddVFX(Tile tile, VFXType vfx, SerializableGuid id, bool isAttachedToPlant = false)
         {
+            // Don't add if plant was marked for removal anyway.
+            if (isAttachedToPlant && tile.Plant.MarkedForRemoval) return;
+            
             // Check if the current tile exists in the dictionary,
             if (!tileVFXList.TryGetValue(tile, out TileVFX tileVfx))
             {
@@ -107,6 +103,8 @@ namespace Perennial.VFX
                 {
                     newVfxCount.vfx = Instantiate(newVFX, tile.transform.position + Vector3.back, Quaternion.Euler(-90, 0, 0));
                 }
+
+                newVfxCount.isAttachedToPlant = isAttachedToPlant;
                 tileVfx.vfxOnTile.Add(vfx, newVfxCount);
             }
         }
@@ -135,25 +133,28 @@ namespace Perennial.VFX
             }
         }
 
-        private static VFXBehavior getVFXBehavior(VFXType type)
+        public void RemovePlantVFX(Tile tile)
         {
-            switch (type)
+            // Check if the current tile exists in the dictionary,
+            if (!tileVFXList.TryGetValue(tile, out TileVFX tileVfx))
             {
-                case VFXType.Ivy:
-                case VFXType.Garlic:
-                case VFXType.Carrot:
-                case VFXType.Scorched:
-                    // Attached to tile.
-                    return VFXBehavior.AttachedToTile;
-                
-                case VFXType.Pearl:
-                    // Attached to plant.
-                    return VFXBehavior.AttachedToPlant;
-                
-                case VFXType.Fire:
-                case VFXType.Snow:
-                    // Instantaneous.
-                    return VFXBehavior.Instantaneous;
+                return;
+            }
+
+            LinkedList<VFXType> keys = new LinkedList<VFXType>();
+            
+            // Check to see if dictionary already has an entry for the vfx
+            foreach (var currVFX in tileVfx.vfxOnTile)
+            {
+                if (currVFX.Value.isAttachedToPlant)
+                {
+                    keys.AddLast(currVFX.Key);
+                }
+            }
+
+            foreach (var key in keys)
+            {
+                tileVfx.vfxOnTile.Remove(key);
             }
         }
 
@@ -165,6 +166,7 @@ namespace Perennial.VFX
             {
                 public ParticleSystem vfx;
                 public HashSet<SerializableGuid> ids;
+                public bool isAttachedToPlant = false;
 
                 public VfxCount()
                 {

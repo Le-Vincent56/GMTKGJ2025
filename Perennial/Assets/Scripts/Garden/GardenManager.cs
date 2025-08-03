@@ -7,6 +7,7 @@ using Perennial.Core.Architecture.Event_Bus;
 using Perennial.Core.Architecture.Event_Bus.Events;
 using Perennial.Seasons;
 using Perennial.TurnManagement;
+using Perennial.VFX;
 using Unity.VisualScripting;
 using UnityEngine;
 using Random = UnityEngine.Random;
@@ -227,6 +228,8 @@ namespace Perennial.Garden
 				return false;
 			}
 			
+			VFXManager.Instance.RemovePlantVFX(tile);
+			tile.Plant.Death();
 			Plants.Remove(tile.Plant);
 			tile.RemovePlantFromTile();
 			tile.UpdatePlantSprite(null);

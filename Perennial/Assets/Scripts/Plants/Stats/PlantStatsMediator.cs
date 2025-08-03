@@ -49,11 +49,16 @@ namespace Perennial.Plants.Stats
             while (node != null && !removed)
             {
                 // Skip if the IDs mismatch
-                if (node.Value.ID != id) continue;
+                if (node.Value.ID != id)
+                {
+                    node = node.Next;
+                    continue;
+                }
                 
                 // Mark the node for removal and break the loop
                 node.Value.MarkedForRemoval = true;
                 removed = true;
+                node = node.Next;
             }
         }
 

@@ -43,7 +43,7 @@ namespace Perennial.Plants.Abilities.Definitions
                 });
                 
                 // Apply VFX
-                VFXManager.Instance.AddVFX(plant.Tile, VFXType.Pearl, context.Plant.ID);
+                VFXManager.Instance.AddVFX(plant.Tile, VFXType.Pearl, context.Plant.ID, true);
             }
         }
 
@@ -66,7 +66,7 @@ namespace Perennial.Plants.Abilities.Definitions
                 plant.Stats.Mediator.RemoveModifier(context.Plant.ID);
                 
                 // Remove VFX
-                VFXManager.Instance.AddVFX(plant.Tile, VFXType.Pearl, context.Plant.ID);
+                VFXManager.Instance.RemoveVFX(plant.Tile, VFXType.Pearl, context.Plant.ID);
             }
         }
     }

@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using Perennial.Plants.Behaviors;
+using Perennial.VFX;
 using UnityEngine;
 
 namespace Perennial.Plants.Abilities.Definitions
@@ -18,6 +19,9 @@ namespace Perennial.Plants.Abilities.Definitions
             foreach (Plant plant in affectedPlants)
             {
                 plant.SendSignal(PlantSignal.RefreshHarvest, null);
+                
+                // Apply VFX
+                VFXManager.Instance.AddVFX(plant.Tile, VFXType.Snow, context.Plant.ID, false);
             }
         }
     }
