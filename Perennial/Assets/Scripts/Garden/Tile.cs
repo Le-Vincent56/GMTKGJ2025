@@ -161,7 +161,7 @@ namespace Perennial.Garden
 			if (Plant != null)
 			{
 				plantNameText.text = Plant.Name;
-				plantFoodText.text = $"<color=#3E2309>{Plant.Rewards.CalculateFood(lifetimeOffset: 1).Value} Food</color> <color=#9EC699>+ {Plant.Rewards.CalculateFood(lifetimeOffset: 1).Value}</color>";
+				plantFoodText.text = $"<color=#3E2309>{Plant.Rewards.CalculateFood( ).Value} Food</color> <color=#9EC699>+ {Plant.Rewards.CalculateFood(lifetimeOffset: 1).Value}</color>";
 				plantLifetimeText.text = $"<color=#DDDDDD>Lifetime:</color> {Plant.Definition.HarvestTime + Plant.Definition.GrowTime} Months";
 				plantTurnsUntilText.text = (Plant.Lifetime.FullyGrown ? $"<color=#DDDDDD>Dies in:</color> {Plant.Definition.HarvestTime + Plant.Definition.GrowTime - Plant.Lifetime.CurrentLifetime.Value + 1} Months" : $"<color=#DDDDDD>Grows in:</color> {Plant.Definition.GrowTime - Plant.Lifetime.CurrentLifetime.Value + 1} Months");
 				plantAbilityText.text = Plant.Definition.Description;
@@ -262,7 +262,7 @@ namespace Perennial.Garden
 				else if (GardenPosition.y == GardenManager.GardenHeight - 1)
 				{
 					edgeType = EdgeType.TOP_LEFT;
-				}	
+				}
 				else
 				{
 					edgeType = EdgeType.MIDDLE_LEFT;
