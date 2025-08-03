@@ -16,7 +16,7 @@ namespace Perennial.VFX
         Pearl = 3,
         Garlic = 4, // Technically not used
         Carrot = 5, // Technically not used
-        Scorched = 6
+        //Scorched = 6
     }
     
     public class VFXManager : MonoBehaviour
@@ -86,7 +86,9 @@ namespace Perennial.VFX
                 }
                 else
                 {
-                    var newVFX = vfxPlantList[vfx];
+                    ParticleSystem newVFX;
+                    if(!vfxPlantList.TryGetValue(vfx, out newVFX)) return;
+                    
                     if (newVFX != null)
                     {
                         vfxCount.vfx = Instantiate(newVFX, tile.transform.position + Vector3.back, Quaternion.Euler(-90, 0, 0));
@@ -98,7 +100,10 @@ namespace Perennial.VFX
             {
                 TileVFX.VfxCount newVfxCount = new TileVFX.VfxCount();
                 newVfxCount.ids.Add(id);
-                var newVFX = vfxPlantList[vfx];
+                
+                ParticleSystem newVFX;
+                if(!vfxPlantList.TryGetValue(vfx, out newVFX)) return;
+                
                 if (newVFX != null)
                 {
                     newVfxCount.vfx = Instantiate(newVFX, tile.transform.position + Vector3.back, Quaternion.Euler(-90, 0, 0));
@@ -155,6 +160,36 @@ namespace Perennial.VFX
             foreach (var key in keys)
             {
                 tileVfx.vfxOnTile.Remove(key);
+            }
+        }
+
+        public void SetWeatherParticles(Season season)
+        {
+            switch (season)
+            {
+                case Season.Spring:
+                    vfxWeatherList[Season.Spring].Play();
+                    vfxWeatherList[Season.Fall].Stop();
+                    vfxWeatherList[Season.Winter].Stop();
+                    break;
+                
+                case Season.Summer:
+                    vfxWeatherList[Season.Spring].Stop();
+                    vfxWeatherList[Season.Fall].Stop();
+                    vfxWeatherList[Season.Winter].Stop();
+                    break;
+                
+                case Season.Fall:
+                    vfxWeatherList[Season.Spring].Stop();
+                    vfxWeatherList[Season.Fall].Play();
+                    vfxWeatherList[Season.Winter].Stop();
+                    break;
+                
+                case Season.Winter:
+                    vfxWeatherList[Season.Spring].Stop();
+                    vfxWeatherList[Season.Fall].Stop();
+                    vfxWeatherList[Season.Winter].Play();
+                    break;
             }
         }
 

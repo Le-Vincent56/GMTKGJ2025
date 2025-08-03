@@ -232,7 +232,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
+  - {fileID: 2100000, guid: 78438760e02fbd5468b3e276bec8d49b, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -318,8 +318,8 @@ MonoBehaviour:
   soilStateSprites:
     m_Keys: 0000000001000000
     m_Values:
-    - {fileID: 21300000, guid: 1c71ddb1a7bafbe4085a3ec44c8ac26a, type: 3}
-    - {fileID: 21300000, guid: 6deaae3a85d87e54fac06405b4e8a519, type: 3}
+    - {fileID: 119042714, guid: d4516da9c8e4ed5449c17a4e2fc72c1c, type: 3}
+    - {fileID: 1891560870, guid: ee00ba23e78533546a1f05fdd4868c8a, type: 3}
   soilState: 0
   gardenPosition: {x: 0, y: 0}
   isAtGardenEdge: 0
@@ -445,7 +445,7 @@ SpriteRenderer:
   m_SortingLayerID: 749767309
   m_SortingLayer: 1
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 1c71ddb1a7bafbe4085a3ec44c8ac26a, type: 3}
+  m_Sprite: {fileID: 119042714, guid: d4516da9c8e4ed5449c17a4e2fc72c1c, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
