@@ -41,16 +41,16 @@ Material:
         m_Offset: {x: 0, y: 0}
     - _WindNoise:
         m_Texture: {fileID: 2800000, guid: 73ba7db7175dcab49b5cff27574279f3, type: 3}
-        m_Scale: {x: 0.19, y: 0.2}
+        m_Scale: {x: 0.1, y: 0.05}
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
     - _EnableExternalAlpha: 0
-    - _WindNoiseThreshold: 0.271
-    - _WindPower: 1.34
-    - _WindSampleRange: 0.2
-    - _WindSpeed: 3.1
-    - _WindStrength: 0.853
+    - _WindNoiseThreshold: 0.287
+    - _WindPower: 0.82
+    - _WindSampleRange: 0.36
+    - _WindSpeed: 4.24
+    - _WindStrength: 0.581
     - _ZWrite: 0
     m_Colors:
     - _Color: {r: 1, g: 1, b: 1, a: 1}
